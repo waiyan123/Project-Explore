@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorAccent">#D81B60</color>
+
+    <color name="colorPaleWhite">#C6FFFFFF</color>
+    <color name="colorFacebook">#3b5998</color>
+    <color name="colorPd1">#001726</color>
+
+    <color name="colorDetailTitle">#80001726</color>
+
+    <color name="banner_background">#1c2e4a</color>
+
+    <color name="white_full">#FFF</color>
+    <color name="light_grey">#D6E6F1</color>
+    <color name="dark_grey">#A9A9A9</color>
+    <color name="gray_grey">#808080</color>
+    <color name="dim_grey">#696969</color>
+
+    <color name="transparent_blue">#800892D0</color>
+
+    <color name="blue">#000099</color>
+    <color name="electric_blue">#0892D0</color>
+    <color name="deep_electric_blue">#2C75FF</color>
+    <color name="medium_electric_blue">	#035096</color>
+
+    <color name="mint">#98ff98</color>
+    
+    <color name="turquoise">#AFEEEE</color>
+
+    <color name="orange">#FF6347</color>
+
+    <color name="mtrl_ti_default_box_stroke_color">#fff</color>
+
+    <color name="blue2">#FF005a9c</color>
+    <color name="lightBlue">#ff6691c4</color>
+    <color name="lighterBlue">#ffcdd8ec</color>
+    <color name="controlBackground">#ffffffff</color>
+
+    <color name="forest_green">#228B22</color>
+
+</resources>

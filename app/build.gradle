@@ -1,0 +1,137 @@
+apply plugin: 'com.android.application'
+
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'com.google.gms.google-services'
+
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.2"
+    defaultConfig {
+        applicationId "com.itachi.explore"
+        minSdkVersion 24
+        targetSdkVersion 29
+        versionCode 11
+        versionName "1.0.1"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.core:core-ktx:1.3.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+    implementation 'androidx.fragment:fragment-ktx:1.1.0'
+
+    //viewmodel livedata
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+
+    //for Youtube api
+    implementation files('libs/YouTubeAndroidPlayerApi.jar')
+
+    implementation group: 'commons-io', name: 'commons-io', version: '2.4'
+
+    //Facebook Login
+    implementation 'com.facebook.android:facebook-android-sdk:5.15.3'
+
+    //Firebase Auth
+    implementation 'com.google.firebase:firebase-auth:20.0.1'
+
+    //Firebase Store and Database
+    implementation 'com.google.firebase:firebase-firestore:22.0.1'
+    implementation 'com.google.firebase:firebase-storage:19.2.1'
+
+    //Material
+    implementation 'com.google.android.material:material:1.2.1'
+
+    //Testing with Mockito
+    testImplementation 'org.mockito:mockito-core:2.8.9'
+    testImplementation('com.nhaarman:mockito-kotlin-kt1.1:1.5.0', {
+        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib'
+    })
+
+    //Glide for images
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    kapt 'com.github.bumptech.glide:compiler:4.11.0'
+
+    //Circle image view for user profile picture
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+
+    //Room for persistence layer
+    implementation "androidx.room:room-runtime:2.2.6"
+    kapt "androidx.room:room-compiler:2.2.6"
+
+    //Room for coroutine
+    implementation 'androidx.room:room-ktx:2.3.0'
+
+    //RxAndroid
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+
+    //RxJava
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.10'
+
+    // RxJava support for Room
+    implementation 'androidx.room:room-rxjava2:2.2.5'
+
+    //Lottie for animation
+    implementation 'com.airbnb.android:lottie:3.0.0'
+
+    //Unicode && Zawgyi converter
+    implementation 'myatminsoe.mdetect.android:mdetect-android:3.2'
+
+    //Unicode && Zawgyi string detector
+    implementation 'com.google.myanmartools:myanmar-tools:1.1.3'
+
+    //Dependencies injection for context with Koin
+    implementation "org.koin:koin-androidx-scope:2.1.6"
+
+    //BannerSlider for Banner
+    implementation 'com.ss.bannerslider:bannerslider:2.0.0'
+
+    //For image picker
+    implementation 'com.sangcomz:FishBun:0.11.4'
+
+    //For loading animation
+    implementation 'com.facebook.shimmer:shimmer:0.1.0@aar'
+
+    //Zoomage for zooming image view
+    implementation 'com.jsibbold:zoomage:1.3.0'
+
+    //Firebase remote config
+    implementation 'com.google.firebase:firebase-config:19.2.0'
+
+    //Google Ads
+    implementation 'com.google.android.gms:play-services-ads:20.3.0'
+
+    implementation 'javax.annotation:javax.annotation-api:1.3.2'
+
+    //Reference with core module
+    implementation project(':core')
+
+}
+if (project.hasProperty('kapt')) {
+    // Reference for 'kapt' DSL: https://kotlinlang.org/docs/reference/kapt.html#java-compiler-options
+    kapt {
+        // we expect this closure to run over a org.jetbrains.kotlin.gradle.plugin.KaptExtension
+        javacOptions {
+            option("-source", "8")
+            option("-target", "8")
+        }
+    }
+}

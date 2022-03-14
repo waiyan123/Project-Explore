@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/white_full"
+    >
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/tv_view_profile"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="@id/tv_watchvideos"
+        app:icon="@drawable/ic_account_circle_black_24dp"
+        app:iconTint="@color/banner_background"
+        android:textColor="@color/banner_background"
+        app:iconSize="30dp"
+        android:textAlignment="textStart"
+        android:background="@android:color/transparent"
+        android:text="@string/view_profile"
+        android:layout_marginTop="5dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/tv_watchvideos"
+        app:layout_constraintTop_toBottomOf="@id/tv_view_profile"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:text="@string/watch_videos"
+        android:textAlignment="textStart"
+        app:iconTint="@color/banner_background"
+        android:textColor="@color/banner_background"
+        app:iconSize="30dp"
+        app:icon="@drawable/ic_video_library_24"
+        android:background="@android:color/transparent"
+        android:layout_marginTop="5dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/tv_logout"
+        app:layout_constraintTop_toBottomOf="@id/tv_watchvideos"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:text="@string/logout"
+        android:textAlignment="textStart"
+        app:iconSize="30dp"
+        app:icon="@drawable/ic_logout_24"
+        app:iconTint="@color/banner_background"
+        android:textColor="@color/banner_background"
+        android:background="@android:color/transparent"
+        android:layout_marginTop="5dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

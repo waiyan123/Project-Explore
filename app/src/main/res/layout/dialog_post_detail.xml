@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/loading_dialog_background"
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <TextView
+        android:id="@+id/tv_edit"
+        android:text="Edit"
+        android:layout_marginTop="5dp"
+        android:clickable="true"
+        android:focusable="true"
+        style="@style/TitleAppearanceBold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <View
+        android:background="@color/colorFacebook"
+        android:layout_margin="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+    <TextView
+        android:id="@+id/tv_delete"
+        android:text="Delete"
+        android:clickable="true"
+        android:focusable="true"
+        style="@style/MainTextAppearance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <View
+        android:layout_margin="10dp"
+        android:background="@color/colorFacebook"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+</LinearLayout>

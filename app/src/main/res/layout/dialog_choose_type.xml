@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/loading_dialog_background"
+    android:orientation="vertical"
+    android:gravity="center">
+
+
+    <LinearLayout
+        android:id="@+id/tv_pagoda_type"
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:paddingStart="40dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:src="@drawable/ic_pagoda"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:contentDescription="TODO" />
+        <TextView
+            android:text="@string/pagoda"
+            style="@style/type_text_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+    <View
+        android:background="@color/colorFacebook"
+        android:layout_margin="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+
+    <LinearLayout
+        android:id="@+id/tv_view_type"
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="40dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:src="@drawable/ic_views"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:contentDescription="TODO" />
+        <TextView
+            android:text="@string/view"
+            style="@style/type_text_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+    <View
+        android:layout_margin="10dp"
+        android:background="@color/colorFacebook"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+
+    <LinearLayout
+        android:id="@+id/tv_ancient_type"
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="40dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:src="@drawable/ic_ancient"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:contentDescription="TODO" />
+        <TextView
+            android:text="@string/ancient"
+            style="@style/type_text_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+    <View
+        android:layout_margin="10dp"
+        android:background="@color/colorFacebook"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+
+    <LinearLayout
+        android:id="@+id/tv_food_type"
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="40dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:src="@drawable/ic_food_drink"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:contentDescription="TODO" />
+        <TextView
+            android:text="@string/foods_en"
+            style="@style/type_text_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+    <View
+        android:layout_margin="10dp"
+        android:background="@color/colorFacebook"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+
+    <LinearLayout
+        android:id="@+id/tv_accessories_type"
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="40dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:src="@drawable/ic_accessories"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:contentDescription="TODO" />
+        <TextView
+            android:text="@string/accessory"
+            style="@style/type_text_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+    <View
+        android:layout_margin="10dp"
+        android:background="@color/colorFacebook"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+
+    <LinearLayout
+        android:id="@+id/tv_support_type"
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="40dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:src="@drawable/ic_supports"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:contentDescription="TODO" />
+        <TextView
+            android:text="@string/support"
+            style="@style/type_text_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+    <View
+        android:layout_margin="10dp"
+        android:background="@color/colorFacebook"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+</LinearLayout>

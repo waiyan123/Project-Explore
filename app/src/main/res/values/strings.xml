@@ -1,0 +1,261 @@
+<resources>
+    <string name="app_name">Explore</string>
+
+    <string name="facebook_app_id">175963093747235</string>
+    <string name="fb_login_protocol_scheme">fb175963093747235</string>
+
+
+    <string name="pagoda_en">Pagodas</string>
+    <string name="pagoda_mm_unicode">ဘုရား</string>
+    <string name="pagoda_mm_zawgyi">ဘုရား</string>
+
+    <string name="views_en">Views</string>
+    <string name="views_mm_zawgyi">ျမင္ကြင္းလွမ်ား</string>
+    <string name="views_mm_unicode">မြင်ကွင်းလှများ</string>
+
+    <string name="ancients_en">Ancients</string>
+    <string name="ancients_mm_zawgyi">ေရွးေဟာင္း/ေရွးက်ေသာ</string>
+    <string name="ancients_mm_unicode">ရှေးဟောင်း/ရှေးကျသော</string>
+
+    <string name="foods_en">Foods &amp; Drinks</string>
+    <string name="foods_mm_zawgyi">အစားအေသာက္</string>
+    <string name="foods_mm_unicode">အစားအသောက်</string>
+
+    <string name="accessories_en">Accessories</string>
+    <string name="accessories_mm_zawgyi">ဝယ္စရာ</string>
+    <string name="accessories_mm_unicode">ဝယ်စရာ</string>
+
+    <string name="supports_en">Supports</string>
+    <string name="supports_mm_zawgyi">အကူအညီ</string>
+    <string name="supports_mm_unicode">အကူအညီ</string>
+
+    <string name="created_date_en">Created Date</string>
+    <string name="created_date_mm_zawgyi">တည္ေထာင္သည့္ ခုႏွစ္</string>
+    <string name="created_date_mm_unicode">တည်ထောင်သည့် ခုနှစ်</string>
+
+    <string name="festival_date_en">Festival Date</string>
+    <string name="festival_date_mm_zawgyi">ပြဲေတာ္ေန႕</string>
+    <string name="festival_date_mm_unicode">ပွဲတော်နေ့</string>
+
+    <string name="name_en">Name</string>
+    <string name="name_mm_unicode">နာမည်</string>
+    <string name="name_mm_zawgyi">နာမည္</string>
+
+    <string name="choose_type_en">Choose Type</string>
+    <string name="choose_type_mm_unicode">အမျိုးအစား ရွေးချယ်ပါ</string>
+    <string name="choose_type_mm_zawgyi">အမ်ိဳးအစား ေရြးခ်ယ္ပါ</string>
+
+    <string name="about_en">About</string>
+    <string name="about_mm_unicode">အကြောင်းအရာ</string>
+    <string name="about_mm_zawgyi">အေၾကာင္းအရာ</string>
+
+    <string name="add_en">Add</string>
+    <string name="add_mm_unicode">ပေါင်းထည့်မယ်</string>
+    <string name="add_mm_zawgyi">ေပါင္းထည့္မယ္</string>
+
+    <string name="update_en">Update</string>
+    <string name="update_mm_unicode">ပြုပြင်မယ်</string>
+    <string name="update_mm_zawgyi">ျပဳျပင္မယ္</string>
+
+    <string name="btn_facebook_en">Continue with facebook</string>
+    <string name="btn_facebook_mm_unicode">ဖေ့ဘုတ်ဖြင့် ဝင်မည်</string>
+    <string name="btn_facebook_mm_zawgyi">ေဖ့ဘုတ္ျဖင့္ ဝင္မည္</string>
+
+    <string name="uploader_en">Uploader - </string>
+    <string name="uploader_mm_unicode">မူရင်းတင်သူ - </string>
+    <string name="uploader_mm_zawgyi">မူရင္းတင္သူ - </string>
+
+    <string name="details_en">Details</string>
+    <string name="details_mm_unicode">အသေးစိတ်</string>
+    <string name="details_mm_zawgyi">အေသးစိတ္</string>
+
+    <string name="related_views_en">Related Views</string>
+    <string name="related_views_mm_unicode">ဆက်နွယ်သော ပုံရိပ်များ</string>
+    <string name="related_views_mm_zawgyi">ဆက္ႏြယ္ေသာ ပံုရိပ္မ်ား</string>
+
+    <string name="continue_en">Continue</string>
+    <string name="continue_mm_unicode">ဆက်သွားမယ်</string>
+    <string name="continue_mm_zawgyi">ဆက္သြားမယ္</string>
+
+    <string name="welcome_text_en">Welcome to Shwebo</string>
+    <string name="welcome_text_mm_unicode">ရွှေဘိုမှ ကြိုဆိုပါတယ်။</string>
+    <string name="welcome_text_mm_zawgyi">ေရႊဘုိမွ ၾကိဳဆုိပါတယ္။</string>
+
+    <string name="got_it_en">Got it</string>
+    <string name="got_it_mm_unicode">ရပြီ</string>
+    <string name="got_it_mm_zawgyi">ရျပီ</string>
+
+    <string name="dont_show_en">Do not show this again</string>
+    <string name="dont_show_mm_unicode">ဒါကြီး ထပ်မကြည့်ချင်ဘူး</string>
+    <string name="dont_show_mm_zawgyi">ဒါၾကီး ထပ္မၾကည့္ခ်င္ဘူး</string>
+
+    <string name="en">en</string>
+    <string name="mm">mm</string>
+
+    <string name="pagoda">Pagoda</string>
+    <string name="view">View</string>
+    <string name="ancient">Ancient</string>
+    <string name="accessory">Accessory</string>
+    <string name="support">Support</string>
+
+    <string name="watch_videos">Watch videos</string>
+    <string name="view_profile">Profile</string>
+
+    <string name="logout">Logout</string>
+    //youtube player
+    <string name="player_error">Error initializing YouTube player: %s</string>
+
+    <string name="intro_title_en">The City of Shwebo</string>
+    <string name="intro_title_mm_unicode">ပြည်ရွှေဘို</string>
+    <string name="intro_title_mm_zawgyi">ျပည္ေရႊဘုိ</string>
+
+    <string name="intro_body_en">
+
+* Five names has the City of Shwebo: \n
+To start with Yangyi-aung and Konbaung,\n
+Magnificent is its Royal Palace. Glittering with four colours\n
+Mokesopo and Yadanatheingha!\n
+From that land of Alaungphaya enemies were annihilated.\n
+\n
+ * Unshakeable is the glory \n
+Of the City of Mokesopo.\n
+It eliminates all dangers.\n
+\n
+ * Relying on the king the military chief\n
+Cleared away enemies in their entirety\n
+Truly beautiful is Shwebo\n
+That Land of Victory.\n
+\n
+ * The name of Shwebo \n
+Will not disappear \n
+From the annals of history.\n
+Listen to the tale of our ancestors:\n
+It is said that a snake\n
+Was chasing a frog so as to eat it up.\n
+But when they reached the land of Shwebo,\n
+The frog made itself ready to bite the snake,\n
+And subsequently the snake creeped away.\n
+That was a precedent.\n
+[ an old Myanma long drum song ]\n
+translated by - \n
+The Most Rev. Friedrich V. Lustig, Buddhist Arch.\n
+bishop of Latvia (extracted from: "Burmese Poems Through the Ages")\n</string>
+    <string name="intro_body_mm_unicode">
+ * ရန်ကြီးအောင် ကုန်းဘောင်သ \n
+ငါးမည်ရ ပြည်ရွှေဘို။ \n
+လေးရောင်ရှိန် ဣန္ဒာနန်းမှာ \n
+ဆန်းသာနုပျိုလေ့။ \n
+မုဆိုးဖို \n
+ရန်ပြိုတဲ့ နာသိင်္ယမှာ ၊ ဘေးတော့် ဒေသ။ \n
+\n
+ * မတိမ်နိုင် ဂုဏ်တန်ခိုးနဲ့ \n
+မုဆိုးဖို ပြည်နဂိုရ်၊ ဘေးရန်ညွန့်ပြိုလေ့။ \n
+\n
+ * ဗိုလ်ပေါင်းရယ်ခို၊ ရန်ပေါင်းကို နှိမ်ဖြိုတဲ့ \n
+ပြည်ရွှေဘိုအောင်မြေရမို့ \n
+သာလှသလေး။	။ \n
+\n
+ * ရွှေဘိုဆို မတိမ်ထွန်းသကွဲ့ \n
+မော်ကွန်းရ ဥဒါန်းဝင် \n
+ရှေးစဉ်လာဆိုစကား၊ နားစေ့စေ့တင်လေ့။ \n
+\n
+ * မြွေကပင် စားချင်ငြားလို့ \n
+ဖားသို့လိုက်ရာ \n
+ရွှေဘိုမြေတစ်ဖန်ဆိုက်ပြန်တော့ \n
+ဖားကပင် မြွေကိုကိုက်မယ်တဲ့ \n
+လိုက်ငြားလျှင် လည်လို့ပြေးရတယ် \n
+ထုံးပုံကရှိသေး။	။ \n
+\n
+(ရှေးခေတ်ဗုံကြီးသံ သီချင်း)\n\n
+     * ရွှေဘိုမြို့က စစ်ကိုင်းတိုင်း ဒေသကြီးထဲမှာ တည်ရှိပြီးတော့ မန္တလေးကနေ အနောက်မြောက်ဘက် ၁၁၀ ကီလိုမီတာ တွင် တည်ရှိပါတယ်။\n
+ * ဦးအောင်ဇေယျ ခေါ် အလောင်းမင်းတရားကြီးက အင်္ဂလိပ် သက္ကရစ် (1752) မှာ ရွှေဘိုမြို့ကို
+အခြေပြုပြီး ကုန်းဘောင်မင်းဆက်ကို တည်ထောင်ခဲ့တယ်။ \n
+ * " ရန်ကြီးအောင် ကုန်းဘောင်ခပါလို့ ငါးမည်ရ ပြည်ရွှေဘို " ဟု အဆိုအတိုင်း ရွှေဘိုမြို့က အမည် ၅မျိုး ရှိပါတယ်။ \n
+အဲ့ဒီအမည်(၅)မျိုးကတော့ (၁) မုဆိုးဖို ၊ (၂) ရတနာသိင်္ဃ ၊ (၃) ကုန်းဘောင် ၊ (၄) ရန်ကြီးအောင် ၊ (၅) ရွှေဘို ဆိုပြီး ဖြစ်ပါတယ်။\n
+ မြန်မာနိုင်ငံက ကုန်းအခြေပြုလက်နက်နိုင်ငံ ဖြစ်လို့ ရှေးခေတ်က ဘုရင်တွေက နေပြည်တော်ကို ကုန်းတွင်းဘက်မှာ တည်ဆောက်တာများတယ်။
+ဒါကြောင့်မို့ ဆက်သွယ်ရေး လွယ်ကူစေရန် ဧရာဝတီ မြစ်ကမ်းတစ်လျှောက်မှာ တည်ဆောက်ကြတယ်။ ဒါပေမယ့်
+ အလောင်းမင်းတရားကြီးက ဇာတိမြေကို မစွန့်လွှတ်နိုင်လို့ ရွှေဘိုမှာပဲ မြို့တော် တည်ထောင်ခဲ့တယ်။ ဒါကြောင့် ရွှေဘိုမြို့က
+ဧရာဝတီမြစ်ကနေ (၁၇)မိုင် ၊ အနောက်ဘက် မူးမြစ်ကနေ
+(၁၀)မိုင်အကွာမှာ တည်ရှိတယ်။ အလောင်းမင်းတရားကြီး နတ်ရွာစံတော့ သားတော်ကြီးဖြစ်တဲ့ နောင်တော်ကြီးမင်း နန်းတက်တဲ့အချိန် မြို့တော်ကို ဧရာဝတီမြစ်ကမ်းဘက်ကို ရွှေ့ဖို့ ကြံစည်ခဲ့တယ်လို့ အဆိုရှိခဲ့တယ်။ ဒါပေမယ့် မင်းဆရာ အတုလဆရာတော်က
+ကန့်ကွက်ခဲ့တယ်။ အကြောင်းရင်းကတော့ အလောင်းမင်းတရားကြီးရဲ့ အယူအဆက တောရိပ်တောင်ရိပ် မြစ်ဆိပ်တို့မှာ ခိုလှုံတာထက်
+ဘုန်းတန်ခိုးမှာ ခိုလှုံတာ ပဓာန ဖြစ်တယ်လို့ ယုံကြည်ခဲ့လို့ဖြစ်တယ်။ ဆိုလိုချင်တာက ဒီအရပ်သည် ရန်အပေါင်းကို အောင်မြင်ခဲ့
+တဲ့ အောင်မြေအစစ်ဖြစ်လို့ မြို့တော်တည်ခဲ့ရခြင်းလဲ ဖြစ်တယ်။ \n
+ * မြို့တော် တည်ထောင်ခဲ့တဲ့ ခုနှစ်ကတော့ မြန်မာသက္ကရစ် (၁၁၁၅) ခုနှစ် ဖြစ်ပါတယ်။ \n
+ * မြို့တည်တဲ့ အချိန် (၁) မြို့တော် ၊ (၂) ကျုံး ၊ (၃) နန်းတော် ၊ (၄) ရွှေချက်သိုစေတီတော် ၊ (၅) ပဟိုရ်စင် ၊ (၆)
+နတ်ကွန်းတော် ၊ (၇) ကန်တော် တို့မှာ တစ်ချိန်တည်း ပန္နက်ချပြီး တည်ဆောက်စေခဲ့တယ်။ \n
+ * မြို့ရဲ့ ထူးခြားချက်က မြို့ ပတ်ပတ်လည်ကို ကျုံးဖြင့် ဝန်းရံထားခြင်းဖြစ်တယ်။ (Google map မှာ ရှာကြည့်နိုင်ပါတယ်။)
+ ( အခု အထင်ကရနေရာတွေ အကြောင်းကို နောက်ထပ် ဖော်ပြမယ့် ရှေးဟောင်း/ရှေးကျသော နေရာများနဲ့ ဘုရားများမှာ ကြည့်ရှုနိုင်ပါတယ်။ )  \n
+ * ရွှေဘိုမြို့ရဲ့ အဓိက ထွက်ကုန်တွေကတော့ ဆန်စပါး၊ပဲ၊နှမ်း တို့ ဖြစ်ကြပြီး မူးမြစ်နဲ့ ဧရာဝတီမြစ်ကမ်းတစ်လျှောက်မှာ စိုက်ပျိုးကြတာ
+ဖြစ်ပါတယ်။ \n
+ * ဆက်သွယ်ရေးအနေနဲ့ကတော့ မန္တလေး၊မြစ်ကြီးနား ရထားလမ်းဖောက်လုပ်ထားပြီး Express ကားကြီးများလဲ ရန်ကုန်၊မုံရွာ၊မန္တလေး အစရှိတဲ့
+မြို့ကြီးများသို့ ပြေးဆွဲနေပြီဖြစ်ပါတယ်။\n
+ * အထင်ကရနေရာများကတော့ (၁) ရွှေချက်သို စေတီတော် လို့ အမည်ရတဲ့ အလောင်းဘုရား မွေးဖွားချက်မြုပ်ရာ ၊
+(၂) မဟာနန္ဒာကန်တော် ၊ (၃) ဗဟိုရ်စည်တော် ၊ (၄) ဘုရင့်နန်းတော် ၊ (၅) မဟာအောင်မြေ ၊ (၆) မြို့ထောင်စေတီတော် ၊
+(၇) အလောင်းမင်းတရား အုတ်နန်းပြာသာဒ်တော် ၊ (၈) ရွှေတံဆာ ဘုရား ၊ (၉) ကိုးမြို့ရှင် နတ်ကွန်း (နတ်ကြီးကိုးပါး) တို့ပဲ ဖြစ်ပါတယ်။\n\n
+
+Ref - ရွှေဘိုနိဒါန်း နှင့် Wikipedia ။
+</string>
+
+    <string name="intro_body_mm_zawgyi">
+ * ရန္ႀကီးေအာင္ ကုန္းေဘာင္သ \n
+ငါးမည္ရ ျပည္ေ႐ႊဘို။ \n
+ေလးေရာင္ရွိန္ ဣႏၵာနန္းမွာ \n
+ဆန္းသာႏုပ်ိဳေလ့။ \n
+မုဆိုးဖို \n
+ရန္ၿပိဳတဲ့ နာသိယၤမွာ ၊ ေဘးေတာ့္ ေဒသ။ \n
+\n
+ * မတိမ္ႏိုင္ ဂုဏ္တန္ခိုးနဲ႔ \n
+မုဆိုးဖို ျပည္နဂိုရ္၊ ေဘးရန္ၫြန႔္ၿပိဳေလ့။ \n
+\n
+ * ဗိုလ္ေပါင္းရယ္ခို၊ ရန္ေပါင္းကို ႏွိမ္ၿဖိဳတဲ့ \n
+ျပည္ေ႐ႊဘိုေအာင္ေျမရမို႔ \n
+သာလွသေလး။	။ \n
+\n
+ * ေ႐ႊဘိုဆို မတိမ္ထြန္းသကြဲ႕ \n
+ေမာ္ကြန္းရ ဥဒါန္းဝင္ \n
+ေရွးစဥ္လာဆိုစကား၊ နားေစ့ေစ့တင္ေလ့။ \n
+\n
+ * ေႁမြကပင္ စားခ်င္ျငားလို႔ \n
+ဖားသို႔လိုက္ရာ \n
+ေ႐ႊဘိုေျမတစ္ဖန္ဆိုက္ျပန္ေတာ့ \n
+ဖားကပင္ ေႁမြကိုကိုက္မယ္တဲ့ \n
+လိုက္ျငားလွ်င္ လည္လို႔ေျပးရတယ္ \n
+ထုံးပုံကရွိေသး။	။ \n
+\n
+(ေရွးေခတ္ဗုံႀကီးသံ သီခ်င္း) \n\n
+     * ေ႐ႊဘိုၿမိဳ႕က စစ္ကိုင္းတိုင္း ေဒသႀကီးထဲမွာ တည္ရွိၿပီးေတာ့ မႏၲေလးကေန အေနာက္ေျမာက္ဘက္ ၁၁၀ ကီလိုမီတာ တြင္ တည္ရွိပါတယ္။\n
+ * ဦးေအာင္ေဇယ် ေခၚ အေလာင္းမင္းတရားႀကီးက အဂၤလိပ္ သကၠရစ္ (1752) မွာ ေ႐ႊဘိုၿမိဳ႕ကို
+အေျချပဳၿပီး ကုန္းေဘာင္မင္းဆက္ကို တည္ေထာင္ခဲ့တယ္။ \n
+ * " ရန္ႀကီးေအာင္ ကုန္းေဘာင္ခပါလို႔ ငါးမည္ရ ျပည္ေ႐ႊဘို " ဟု အဆိုအတိုင္း ေ႐ႊဘိုၿမိဳ႕က အမည္ ၅မ်ိဳး ရွိပါတယ္။ \n
+အဲ့ဒီအမည္(၅)မ်ိဳးကေတာ့ (၁) မုဆိုးဖို ၊ (၂) ရတနာသိဃၤ ၊ (၃) ကုန္းေဘာင္ ၊ (၄) ရန္ႀကီးေအာင္ ၊ (၅) ေ႐ႊဘို ဆိုၿပီး ျဖစ္ပါတယ္။\n
+ ျမန္မာႏိုင္ငံက ကုန္းအေျချပဳလက္နက္ႏိုင္ငံ ျဖစ္လို႔ ေရွးေခတ္က ဘုရင္ေတြက ေနျပည္ေတာ္ကို ကုန္းတြင္းဘက္မွာ တည္ေဆာက္တာမ်ားတယ္။
+ဒါေၾကာင့္မို႔ ဆက္သြယ္ေရး လြယ္ကူေစရန္ ဧရာဝတီ ျမစ္ကမ္းတစ္ေလွ်ာက္မွာ တည္ေဆာက္ၾကတယ္။ ဒါေပမယ့္
+ အေလာင္းမင္းတရားႀကီးက ဇာတိေျမကို မစြန႔္လႊတ္ႏိုင္လို႔ ေ႐ႊဘိုမွာပဲ ၿမိဳ႕ေတာ္ တည္ေထာင္ခဲ့တယ္။ ဒါေၾကာင့္ ေ႐ႊဘိုၿမိဳ႕က
+ဧရာဝတီျမစ္ကေန (၁၇)မိုင္ ၊ အေနာက္ဘက္ မူးျမစ္ကေန
+(၁၀)မိုင္အကြာမွာ တည္ရွိတယ္။ အေလာင္းမင္းတရားႀကီး နတ္႐ြာစံေတာ့ သားေတာ္ႀကီးျဖစ္တဲ့ ေနာင္ေတာ္ႀကီးမင္း နန္းတက္တဲ့အခ်ိန္ ၿမိဳ႕ေတာ္ကို ဧရာဝတီျမစ္ကမ္းဘက္ကို ေ႐ႊ႕ဖို႔ ႀကံစည္ခဲ့တယ္လို႔ အဆိုရွိခဲ့တယ္။ ဒါေပမယ့္ မင္းဆရာ အတုလဆရာေတာ္က
+ကန႔္ကြက္ခဲ့တယ္။ အေၾကာင္းရင္းကေတာ့ အေလာင္းမင္းတရားႀကီးရဲ႕ အယူအဆက ေတာရိပ္ေတာင္ရိပ္ ျမစ္ဆိပ္တို႔မွာ ခိုလႈံတာထက္
+ဘုန္းတန္ခိုးမွာ ခိုလႈံတာ ပဓာန ျဖစ္တယ္လို႔ ယုံၾကည္ခဲ့လို႔ျဖစ္တယ္။ ဆိုလိုခ်င္တာက ဒီအရပ္သည္ ရန္အေပါင္းကို ေအာင္ျမင္ခဲ့
+တဲ့ ေအာင္ေျမအစစ္ျဖစ္လို႔ ၿမိဳ႕ေတာ္တည္ခဲ့ရျခင္းလဲ ျဖစ္တယ္။ \n
+ * ၿမိဳ႕ေတာ္ တည္ေထာင္ခဲ့တဲ့ ခုႏွစ္ကေတာ့ ျမန္မာသကၠရစ္ (၁၁၁၅) ခုႏွစ္ ျဖစ္ပါတယ္။ \n
+ * ၿမိဳ႕တည္တဲ့ အခ်ိန္ (၁) ၿမိဳ႕ေတာ္ ၊ (၂) က်ဳံး ၊ (၃) နန္းေတာ္ ၊ (၄) ေ႐ႊခ်က္သိုေစတီေတာ္ ၊ (၅) ပဟိုရ္စင္ ၊ (၆)
+နတ္ကြန္းေတာ္ ၊ (၇) ကန္ေတာ္ တို႔မွာ တစ္ခ်ိန္တည္း ပႏၷက္ခ်ၿပီး တည္ေဆာက္ေစခဲ့တယ္။ \n
+ * ၿမိဳ႕ရဲ႕ ထူးျခားခ်က္က ၿမိဳ႕ ပတ္ပတ္လည္ကို က်ဳံးျဖင့္ ဝန္းရံထားျခင္းျဖစ္တယ္။ (Google map မွာ ရွာၾကည့္ႏိုင္ပါတယ္။)
+ ( အခု အထင္ကရေနရာေတြ အေၾကာင္းကို ေနာက္ထပ္ ေဖာ္ျပမယ့္ ေရွးေဟာင္း/ေရွးက်ေသာ ေနရာမ်ားနဲ႔ ဘုရားမ်ားမွာ ၾကည့္ရႈႏိုင္ပါတယ္။ )  \n
+ * ေ႐ႊဘိုၿမိဳ႕ရဲ႕ အဓိက ထြက္ကုန္ေတြကေတာ့ ဆန္စပါး၊ပဲ၊ႏွမ္း တို႔ ျဖစ္ၾကၿပီး မူးျမစ္နဲ႔ ဧရာဝတီျမစ္ကမ္းတစ္ေလွ်ာက္မွာ စိုက္ပ်ိဳးၾကတာ
+ျဖစ္ပါတယ္။ \n
+ * ဆက္သြယ္ေရးအေနနဲ႔ကေတာ့ မႏၲေလး၊ျမစ္ႀကီးနား ရထားလမ္းေဖာက္လုပ္ထားၿပီး Express ကားႀကီးမ်ားလဲ ရန္ကုန္၊မုံ႐ြာ၊မႏၲေလး အစရွိတဲ့
+ၿမိဳ႕ႀကီးမ်ားသို႔ ေျပးဆြဲေနၿပီျဖစ္ပါတယ္။\n
+ * အထင္ကရေနရာမ်ားကေတာ့ (၁) ေ႐ႊခ်က္သို ေစတီေတာ္ လို႔ အမည္ရတဲ့ အေလာင္းဘုရား ေမြးဖြားခ်က္ျမဳပ္ရာ ၊
+(၂) မဟာနႏၵာကန္ေတာ္ ၊ (၃) ဗဟိုရ္စည္ေတာ္ ၊ (၄) ဘုရင့္နန္းေတာ္ ၊ (၅) မဟာေအာင္ေျမ ၊ (၆) ၿမိဳ႕ေထာင္ေစတီေတာ္ ၊
+(၇) အေလာင္းမင္းတရား အုတ္နန္းျပာသာဒ္ေတာ္  ၊ (၈) ေ႐ႊတံဆာ ဘုရား ၊ (၉) ကိုးၿမိဳ႕ရွင္ နတ္ကြန္း (နတ္ႀကီးကိုးပါး) တို႔ပဲ ျဖစ္ပါတယ္။ \n\n
+
+Ref - ေရႊဘုိနိဒါန္း ႏွင့္ Wikipedia ။</string>
+
+    <string name="new_version_available">New version available!!</string>
+    <string name="go_to_playstore">Go to Playstore</string>
+
+    <string-array name="facebook_read_permissions">
+        <item>public_profile</item>
+        <item>email</item>
+    </string-array>
+</resources>

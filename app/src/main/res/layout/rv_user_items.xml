@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white_full"
+    android:layout_margin="10dp"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="5dp"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <LinearLayout
+            android:id="@+id/ll_items"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:gravity="center"
+            android:padding="10dp"
+            >
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/img_user_item"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/intro_pic" />
+
+            <TextView
+                android:id="@+id/tv_user_item"
+                android:textSize="10sp"
+                android:gravity="center_vertical"
+                android:maxLines="2"
+                android:textColor="@color/banner_background"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="User item" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/ll_edit_item"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            >
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_view_item"
+                android:layout_margin="5dp"
+                android:visibility="gone"
+                android:layout_weight="1"
+                android:text="View"
+                android:textSize="12sp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"/>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_edit_item"
+                android:layout_margin="5dp"
+                android:visibility="gone"
+                android:layout_weight="1"
+                android:textSize="12sp"
+                android:text="Edit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

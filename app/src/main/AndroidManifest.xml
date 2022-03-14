@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.itachi.explore">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <application
+        android:name=".MyApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher_e2"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_e2_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme.NoActionBar"
+        android:largeHeap="true"
+        android:hardwareAccelerated="true">
+
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-3232751636100261~6719948953"/>
+
+        <activity android:name=".activities.SplashActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".activities.LoginActivity"
+            >
+
+        </activity>
+
+        <activity android:name=".activities.MainActivity"
+            android:hardwareAccelerated="true"
+            >
+
+        </activity>
+
+        <activity android:name=".activities.PagodasActivity"/>
+
+        <activity android:name=".activities.FormActivity"
+            android:windowSoftInputMode="stateHidden|adjustPan"/>
+
+        <activity android:name=".activities.ActivityDetail"/>
+
+        <activity android:name=".activities.ViewsActivity"/>
+
+        <activity android:name=".activities.PreviewActivity"/>
+
+        <activity android:name=".activities.AncientActivity"/>
+
+        <meta-data android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id"/>
+
+        <activity android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name" />
+
+        <activity
+            android:name="com.facebook.CustomTabActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="@string/fb_login_protocol_scheme" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".activities.YoutubePlayerActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            >
+        </activity>
+
+        <activity android:name=".activities.IntroActivity"/>
+
+        <activity android:name=".activities.UserProfileActivity"
+            android:screenOrientation="portrait"/>
+
+    </application>
+
+</manifest>

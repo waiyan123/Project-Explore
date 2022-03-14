@@ -1,0 +1,88 @@
+<resources>
+
+    <!-- Base application theme. -->
+
+    <style name="AppTheme.NoActionBar" parent="Theme.MaterialComponents.Light.NoActionBar">
+
+        <item name="android:windowBackground">#000</item>
+        <item name="colorPrimary">@color/banner_background</item>
+        <item name="colorPrimaryDark">@color/colorPd1</item>
+        <item name="colorAccent">@android:color/transparent</item>
+        <item name="android:statusBarColor">@color/colorPd1</item>
+        <item name="android:fitsSystemWindows">true</item>
+
+    </style>
+
+    <style name="MainTextAppearance" parent="TextAppearance.AppCompat">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
+        <item name="android:textColor">@color/banner_background</item>
+        <item name="android:fontFamily">@font/font_ct</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:padding">2dp</item>
+    </style>
+
+    <style name="TitleAppearance" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/light_grey</item>
+        <item name="android:fontFamily">@font/font_tb</item>
+        <item name="android:textSize">10sp</item>
+    </style>
+
+    <style name="TitleAppearanceBold" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/banner_background</item>
+        <item name="android:fontFamily">@font/font_ct</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:icon">@drawable/ic_placeholder</item>
+    </style>
+
+    <style name="DialogLoading">
+        <item name="android:windowEnterAnimation">
+            @anim/fade_in
+        </item>
+
+        <item name="android:windowExitAnimation">
+            @anim/fade_out
+        </item>
+    </style>
+
+    <style name="DialogChosing">
+        <item name="android:windowEnterAnimation">
+            @anim/translate_left
+        </item>
+        <item name="android:windowExitAnimation">
+            @anim/translate_right
+        </item>
+    </style>
+
+    <style name="form_et_style">
+        <item name="android:textColorHint">@color/banner_background</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Small</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_margin">5dp</item>
+        <item name="android:background">@drawable/textinput_background</item>
+    </style>
+
+    <style name="type_text_style">
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Small</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginLeft">50dp</item>
+    </style>
+
+    <style name="MyRounded.MaterialComponents.MaterialAlertDialog" parent="@style/ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.App.CustomDialog.Rounded</item>
+        <item name="colorSurface">@color/white_full</item>
+    </style>
+
+    <style name="ShapeAppearanceOverlay.App.CustomDialog.Rounded" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">5dp</item>
+    </style>
+
+    <style name="MyCheckBox" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorControlNormal">#FFF</item>   <!-- normal border color change as you wish -->
+        <item name="colorControlActivated">#000</item> <!-- activated color change as you wish -->
+        <item name="android:textColor">#FFFF3F3C</item> <!-- checkbox text color -->
+    </style>
+
+</resources>

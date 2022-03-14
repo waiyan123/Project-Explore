@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/bot_nav_timeline"
+        android:title="Timeline"
+        android:icon="@drawable/ic_timeline_black_24dp"
+        android:iconTint="@color/dim_grey"/>
+
+    <item android:id="@+id/bot_nav_items"
+        android:title="Items"
+        android:icon="@drawable/ic_view_comfy_black_24dp"
+        android:iconTint="@color/dim_grey"/>
+
+</menu>

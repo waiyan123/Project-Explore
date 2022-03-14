@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/main_screen_background"
+    tools:context=".activities.MainActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="5dp"
+        tools:layout_editor_absoluteY="5dp">
+
+        <FrameLayout
+            android:id="@+id/layout_banner"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:background="@color/banner_background"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/tv_user_name"
+                    style="@style/TitleAppearance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_margin="20dp"
+                    />
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/btn_user_profile"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_margin="15dp"
+                    android:elevation="10dp"
+                    android:src="@drawable/ic_account_circle_black_24dp"
+                    app:civ_border_color="#FF000000"
+                    app:civ_border_width="1dp" />
+            </RelativeLayout>
+            <com.google.android.gms.ads.AdView
+                xmlns:ads="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/adView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true"
+                ads:adSize="BANNER"
+                ads:adUnitId="ca-app-pub-3232751636100261/3937695331">
+            </com.google.android.gms.ads.AdView>
+        </FrameLayout>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card1"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="10dp"
+            android:backgroundTint="@color/light_grey"
+            android:translationY="-50dp"
+            app:cardCornerRadius="5dp"
+            app:cardElevation="10dp"
+            app:layout_constraintHeight_percent="@dimen/card_height_percent_main"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/card2"
+            app:layout_constraintTop_toBottomOf="@id/layout_banner"
+            app:layout_constraintWidth_percent="@dimen/card_width_percent_main">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="@dimen/main_icon_size"
+                    android:layout_height="@dimen/main_icon_size"
+                    android:src="@drawable/ic_pagoda"
+                    android:contentDescription="TODO" />
+
+                <TextView
+                    android:id="@+id/tv_pagoda"
+                    style="@style/MainTextAppearance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                     />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card2"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="10dp"
+            android:backgroundTint="@color/light_grey"
+            android:translationY="-50dp"
+            app:cardCornerRadius="5dp"
+            app:cardElevation="10dp"
+            app:layout_constraintHeight_percent="@dimen/card_height_percent_main"
+            app:layout_constraintLeft_toRightOf="@id/card1"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layout_banner"
+            app:layout_constraintWidth_percent="@dimen/card_width_percent_main">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="@dimen/main_icon_size"
+                    android:layout_height="@dimen/main_icon_size"
+                    android:src="@drawable/ic_views"
+                    android:contentDescription="TODO" />
+
+                <TextView
+                    android:id="@+id/tv_views"
+                    style="@style/MainTextAppearance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                     />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card3"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="@color/light_grey"
+            android:translationY="-50dp"
+            app:cardCornerRadius="5dp"
+            app:cardElevation="10dp"
+            app:layout_constraintEnd_toStartOf="@+id/card4"
+            app:layout_constraintHeight_percent="@dimen/card_height_percent_main"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/card1"
+            app:layout_constraintWidth_percent="@dimen/card_width_percent_main">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="@dimen/main_icon_size"
+                    android:layout_height="@dimen/main_icon_size"
+                    android:src="@drawable/ic_ancient"
+                    android:contentDescription="TODO" />
+
+                <TextView
+                    android:id="@+id/tv_ancients"
+                    style="@style/MainTextAppearance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                     />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card4"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="10dp"
+            android:backgroundTint="@color/light_grey"
+            android:translationY="-50dp"
+            app:cardCornerRadius="5dp"
+            app:cardElevation="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_percent="@dimen/card_height_percent_main"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/card3"
+            app:layout_constraintTop_toBottomOf="@id/card2"
+            app:layout_constraintWidth_percent="@dimen/card_width_percent_main">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="@dimen/main_icon_size"
+                    android:layout_height="@dimen/main_icon_size"
+                    android:src="@drawable/ic_food_drink"
+                    android:contentDescription="TODO" />
+
+                <TextView
+                    android:id="@+id/tv_foods"
+                    style="@style/MainTextAppearance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card5"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="10dp"
+            android:backgroundTint="@color/light_grey"
+            android:translationY="-30dp"
+            app:cardCornerRadius="5dp"
+            app:cardElevation="10dp"
+            app:layout_constraintEnd_toStartOf="@+id/card6"
+            app:layout_constraintHeight_percent="@dimen/card_height_percent_main"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/card3"
+            app:layout_constraintBottom_toTopOf="@id/toggle_group_language"
+            app:layout_constraintWidth_percent="@dimen/card_width_percent_main">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="@dimen/main_icon_size"
+                    android:layout_height="@dimen/main_icon_size"
+                    android:src="@drawable/ic_accessories"
+                    android:contentDescription="TODO" />
+
+                <TextView
+                    android:id="@+id/tv_accessories"
+                    style="@style/MainTextAppearance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card6"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="10dp"
+            android:backgroundTint="@color/light_grey"
+            android:translationY="-30dp"
+            app:cardCornerRadius="5dp"
+            app:cardElevation="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_percent="@dimen/card_height_percent_main"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/card5"
+            app:layout_constraintTop_toBottomOf="@id/card4"
+            app:layout_constraintWidth_percent="@dimen/card_width_percent_main">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="@dimen/main_icon_size"
+                    android:layout_height="@dimen/main_icon_size"
+                    android:src="@drawable/ic_supports"
+                    android:contentDescription="TODO" />
+
+                <TextView
+                    android:id="@+id/tv_supports"
+                    style="@style/MainTextAppearance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                     />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/toggle_group_language"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:singleSelection="true"
+            app:checkedButton="@id/toggle_btn_en"
+            android:translationY="-20dp"
+            android:translationX="40dp"
+            style="?attr/materialButtonToggleGroupStyle"
+            >
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/toggle_btn_en"
+                style="?attr/materialButtonOutlinedStyle"
+                android:textAllCaps="false"
+                android:textSize="8sp"
+                android:layout_width="50dp"
+                android:layout_height="40dp"
+                android:text="@string/en" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/toggle_btn_mm"
+                style="?attr/materialButtonOutlinedStyle"
+                android:textAllCaps="false"
+                android:textSize="8sp"
+                android:layout_width="50dp"
+                android:layout_height="40dp"
+                android:text="@string/mm" />
+
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
+        <ImageView
+            android:id="@+id/fab_add"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:src="@drawable/ic_add_sign"
+            android:background="@drawable/circle_rounded_background"
+            android:scaleType="centerCrop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:elevation="10dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="20dp"
+            android:contentDescription="TODO" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>
