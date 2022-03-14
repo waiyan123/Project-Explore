@@ -150,6 +150,8 @@ class PagodasActivity : BaseActivity(),View.OnClickListener{
         }
     }
 
+    /* this is a testing commit */
+
     private fun startTimer(photoList : ArrayList<String>) {
         var position = 0
 
