@@ -80,7 +80,7 @@ class MyApplication : Application() {
             viewVoToFirebaseMapper,ListMapperImpl(viewEntityToVoMapper),
             ListMapperImpl(viewVoToEntityMapper)
         )
-        val viewFirebaseDataSource = ViewFirebaseDa
+        val viewFirebaseDataSource = ViewFirebaseDataSourceImpl(viewMapper,firestoreRef,firebaseStorageRef,firebaseAuthRef)
 
         MyViewModelProviderFactory.inject(
             Interactors(
