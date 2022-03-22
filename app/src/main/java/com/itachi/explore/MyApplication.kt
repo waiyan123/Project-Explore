@@ -7,6 +7,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.itachi.core.data.PagodaRepository
+import com.itachi.core.data.ViewRepository
 import com.itachi.core.interactors.*
 import com.itachi.explore.di.applicationModule
 import com.itachi.explore.framework.*
@@ -81,23 +82,34 @@ class MyApplication : Application() {
             ListMapperImpl(viewVoToEntityMapper)
         )
         val viewFirebaseDataSource = ViewFirebaseDataSourceImpl(viewMapper,firestoreRef,firebaseStorageRef,firebaseAuthRef)
+        val viewRoomDataSource = ViewRoomDataSourceImpl(viewMapper)
+
+        val viewRepository = ViewRepository(viewFirebaseDataSource,viewRoomDataSource)
 
         MyViewModelProviderFactory.inject(
             Interactors(
                 AddAncient(ancientRepository),
                 AddPagoda(pagodaRepository),
+                AddView(viewRepository),
                 AddAllAncients(ancientRepository),
                 AddAllPagodas(pagodaRepository),
+                AddAllViews(viewRepository),
                 DeleteAncient(ancientRepository),
                 DeletePagoda(pagodaRepository),
+                DeleteView(viewRepository),
                 DeleteAllAncients(ancientRepository),
                 DeleteAllPagodas(pagodaRepository),
+                DeleteAllViews(viewRepository),
                 GetAncient(ancientRepository),
                 GetPagoda(pagodaRepository),
+                GetView(viewRepository),
                 GetAllAncient(ancientRepository),
                 GetAllPagodas(pagodaRepository),
+                GetAllViews(viewRepository),
+                GetAllPhotoViews(viewRepository),
                 UpdateAncient(ancientRepository),
-                UpdatePagoda(pagodaRepository)
+                UpdatePagoda(pagodaRepository),
+                UpdateView(viewRepository)
             )
         )
 
