@@ -75,7 +75,12 @@ class MyApplication : Application() {
         val viewEntityToVoMapper = ViewEntityToVoMapper()
         val viewVoToEntityMapper = ViewVoToEntityMapper()
         val viewVoToFirebaseMapper = ViewVoToFirebaseMapper()
-
+        val viewMapper = ViewMapper(
+            viewEntityToVoMapper,viewVoToEntityMapper,
+            viewVoToFirebaseMapper,ListMapperImpl(viewEntityToVoMapper),
+            ListMapperImpl(viewVoToEntityMapper)
+        )
+        val viewFirebaseDataSource = ViewFirebaseDa
 
         MyViewModelProviderFactory.inject(
             Interactors(
