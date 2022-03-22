@@ -5,5 +5,12 @@ import com.itachi.core.domain.ViewVO
 
 class UpdateView(private val viewRepository: ViewRepository) {
 
-    suspend operator fun invoke(viewVO: ViewVO) = viewRepository.updateView(viewVO)
+    suspend fun toRoom(viewVO: ViewVO) = viewRepository.updateViewToRoom(viewVO)
+
+    suspend fun toFirebase(
+        viewVO: ViewVO,
+        onSuccess: (String) -> Unit,
+        onFailure: (String) -> Unit
+    ) = viewRepository.updateViewToFirebase(viewVO,onSuccess,onFailure)
+
 }

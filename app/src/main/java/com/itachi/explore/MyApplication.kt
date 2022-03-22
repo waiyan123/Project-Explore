@@ -34,6 +34,7 @@ class MyApplication : Application() {
         Slider.init(imageLoadingService)
         FacebookSdk.sdkInitialize(this@MyApplication)
 
+        //for ancient
         val ancientEntityToVoMapper = AncientEntityToVoMapper()
         val ancientVoToEntityMapper = AncientVoToEntityMapper()
         val ancientVoToFirebaseMapper = AncientVoToFirebaseMapper()
@@ -57,6 +58,7 @@ class MyApplication : Application() {
 
         val ancientRepository = AncientRepository(ancientFirebaseDataSource, ancientRoomDataSource)
 
+        //for pagoda
         val pagodaEntityToVoMapper = PagodaEntityToVoMapper()
         val pagodaVoToEntityMapper = PagodaVoToEntityMapper()
         val pagodaVoToFirebaseMapper = PagodaVoToFirebaseMapper()
@@ -68,6 +70,9 @@ class MyApplication : Application() {
         val pagodaRoomDataSource = PagodaRoomDataSourceImpl(pagodaMapper)
 
         val pagodaRepository = PagodaRepository(pagodaFirebaseDataSource,pagodaRoomDataSource)
+
+        //for view
+        val viewEntity
 
         MyViewModelProviderFactory.inject(
             Interactors(
