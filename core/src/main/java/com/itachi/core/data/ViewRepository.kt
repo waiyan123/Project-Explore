@@ -53,7 +53,7 @@ class ViewRepository(
     suspend fun addViewToRoom(viewVO : ViewVO) = viewRoomDataSource.add(viewVO)
     suspend fun addAllViewsToRoom(viewVoList : List<ViewVO>) = viewRoomDataSource.addAll(viewVoList)
     suspend fun deleteViewFromRoom(viewVO: ViewVO) = viewRoomDataSource.delete(viewVO)
-    suspend fun deleteAllViewsFromRoom(viewVoList: List<ViewVO>) = viewRoomDataSource.deleteAll(viewVoList)
+    suspend fun deleteAllViewsFromRoom() = viewRoomDataSource.deleteAll()
     suspend fun getViewByIdFromRoom(id : String) = viewRoomDataSource.get(id)
     suspend fun getAllViewsFromRoom() = viewRoomDataSource.getAll()
     suspend fun updateViewToRoom(viewVO: ViewVO) = viewRoomDataSource.update(viewVO)

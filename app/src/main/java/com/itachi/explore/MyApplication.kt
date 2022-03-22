@@ -72,7 +72,10 @@ class MyApplication : Application() {
         val pagodaRepository = PagodaRepository(pagodaFirebaseDataSource,pagodaRoomDataSource)
 
         //for view
-        val viewEntity
+        val viewEntityToVoMapper = ViewEntityToVoMapper()
+        val viewVoToEntityMapper = ViewVoToEntityMapper()
+        val viewVoToFirebaseMapper = ViewVoToFirebaseMapper()
+
 
         MyViewModelProviderFactory.inject(
             Interactors(

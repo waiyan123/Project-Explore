@@ -5,7 +5,7 @@ import com.itachi.core.domain.ViewVO
 
 class DeleteAllViews(private val viewRepository: ViewRepository) {
 
-    suspend fun fromRoom() = viewRepository.getAllViewsFromRoom()
+    suspend fun fromRoom() = viewRepository.deleteAllViewsFromRoom()
 
     suspend fun fromFirebase(
         onSuccess : (List<ViewVO>) -> Unit,
