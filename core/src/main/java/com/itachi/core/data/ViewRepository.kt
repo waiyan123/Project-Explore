@@ -10,52 +10,52 @@ class ViewRepository(
     private val viewFirebaseDataSource: ViewFirebaseDataSource,
     private val viewRoomDataSource: ViewRoomDataSource
 ) {
-    suspend fun getPhotoViews(
+    suspend fun getAllPhotoViewsFromFirebase(
         onSuccess: (uploadedPhotoList: ArrayList<UploadedPhotoVO>) -> Unit,
         onFailure: (error: String) -> Unit
     ) = viewFirebaseDataSource.getPhotoViews(onSuccess,onFailure)
 
-    suspend fun getViewsList(
+    suspend fun getAllViewsFromFirebase(
         onSuccess : (List<ViewVO>) -> Unit,
         onFailure : (String) -> Unit
     ) = viewFirebaseDataSource.getViewsList(onSuccess,onFailure)
 
-    suspend fun getViewById(
+    suspend fun getViewByIdFromFirebase(
         viewId : String,
         onSuccess : (ViewVO) -> Unit,
         onFailure : (String) -> Unit
     ) = viewFirebaseDataSource.getViewById(viewId,onSuccess,onFailure)
 
-    suspend fun getViewsListByUserId(
+    suspend fun getViewsListByUserIdFromFirebase(
         userId : String,
         onSuccess : (List<ViewVO>) -> Unit,
         onFailure: (String) -> Unit
     ) = viewFirebaseDataSource.getViewsListByUserId(userId,onSuccess,onFailure)
 
-    suspend fun deleteViewById(
+    suspend fun deleteViewFromFirebase(
         viewVO: ViewVO,
         onSuccess : (String) -> Unit,
         onFailure: (String) -> Unit
     ) = viewFirebaseDataSource.deleteViewById(viewVO,onSuccess,onFailure)
 
-    suspend fun addView(
+    suspend fun addViewToFirebase(
         viewVO: ViewVO ,
         onSuccess : (String) -> Unit,
         onFailure: (String) -> Unit
     ) = viewFirebaseDataSource.addView(viewVO,onSuccess,onFailure)
 
-    suspend fun updateView(
+    suspend fun updateViewToFirebase(
         viewVO: ViewVO,
         onSuccess: (String) -> Unit,
         onFailure: (String) -> Unit
     ) = viewFirebaseDataSource.updateView(viewVO,onSuccess,onFailure)
 
-    suspend fun add(viewVO : ViewVO) = viewRoomDataSource.add(viewVO)
-    suspend fun addAll(viewVoList : List<ViewVO>) = viewRoomDataSource.addAll(viewVoList)
-    suspend fun delete(viewVO: ViewVO) = viewRoomDataSource.delete(viewVO)
-    suspend fun deleteAll(viewVoList: List<ViewVO>) = viewRoomDataSource.deleteAll(viewVoList)
-    suspend fun get(id : String) : ViewVO = viewRoomDataSource.get(id)
-    suspend fun getAll() : List<ViewVO> = viewRoomDataSource.getAll()
-    suspend fun update(viewVO: ViewVO) = viewRoomDataSource.update(viewVO)
+    suspend fun addViewToRoom(viewVO : ViewVO) = viewRoomDataSource.add(viewVO)
+    suspend fun addAllViewsToRoom(viewVoList : List<ViewVO>) = viewRoomDataSource.addAll(viewVoList)
+    suspend fun deleteViewFromRoom(viewVO: ViewVO) = viewRoomDataSource.delete(viewVO)
+    suspend fun deleteAllViewsFromRoom(viewVoList: List<ViewVO>) = viewRoomDataSource.deleteAll(viewVoList)
+    suspend fun getViewByIdFromRoom(id : String) = viewRoomDataSource.get(id)
+    suspend fun getAllViewsFromRoom() = viewRoomDataSource.getAll()
+    suspend fun updateViewToRoom(viewVO: ViewVO) = viewRoomDataSource.update(viewVO)
 
 }

@@ -4,5 +4,13 @@ import com.itachi.core.data.ViewRepository
 import com.itachi.core.domain.ViewVO
 
 class DeleteView(private val viewRepository: ViewRepository) {
-    suspend operator fun invoke(viewVO: ViewVO) = viewRepository.deleteView(viewVO)
+
+    suspend fun fromRoom(viewVO: ViewVO) = viewRepository.deleteViewFromRoom(viewVO)
+
+    suspend fun fromFirebase(
+        viewVO: ViewVO,
+        onSuccess : (String) -> Unit,
+        onFailure: (String) -> Unit
+    ) = viewRepository.deleteViewFromFirebase(viewVO,onSuccess,onFailure)
+
 }

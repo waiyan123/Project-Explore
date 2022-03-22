@@ -4,5 +4,13 @@ import com.itachi.core.data.ViewRepository
 import com.itachi.core.domain.ViewVO
 
 class GetView(private val viewRepository: ViewRepository) {
-    suspend operator fun invoke(id : String) = viewRepository.getView(id)
+
+    suspend fun fromRoom(id : String) = viewRepository.getViewByIdFromRoom(id)
+
+    suspend fun fromFirebase(
+        viewId : String,
+        onSuccess : (ViewVO) -> Unit,
+        onFailure : (String) -> Unit
+    ) = viewRepository.getViewByIdFromFirebase(viewId,onSuccess,onFailure)
+
 }
