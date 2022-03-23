@@ -12,7 +12,7 @@ android {
     buildToolsVersion "29.0.2"
     defaultConfig {
         applicationId "com.itachi.explore"
-        minSdkVersion 24
+        minSdkVersion 26
         targetSdkVersion 32
         versionCode 11
         versionName "1.0.1"

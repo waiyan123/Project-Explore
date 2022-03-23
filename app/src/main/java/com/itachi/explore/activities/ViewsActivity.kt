@@ -6,14 +6,10 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.itachi.core.domain.UploadedPhotoVO
 import com.itachi.explore.R
 import com.itachi.explore.adapters.recycler.ViewsRecyclerAdapter
-import com.itachi.explore.mvp.presenters.ViewsPresenter
-import com.itachi.explore.mvp.views.ViewsView
-import com.itachi.explore.mvvm.viewmodel.AncientViewModel
 import com.itachi.explore.mvvm.viewmodel.MyViewModelProviderFactory
 import com.itachi.explore.mvvm.viewmodel.ViewsViewModel
 import kotlinx.android.synthetic.main.activity_views.*
@@ -36,14 +32,12 @@ class ViewsActivity : BaseActivity(),View.OnClickListener{
     }
 
     companion object {
-//        const val EXTRA_EVENT_ID = "Extra_to_extra"
         fun newIntent(context: Context): Intent {
             return Intent(context, ViewsActivity::class.java).apply {
             }
         }
     }
 
-//    lateinit var mPresenter : ViewsPresenter
     lateinit var mViewModel : ViewsViewModel
     private lateinit var mAdapter : ViewsRecyclerAdapter
 
@@ -53,9 +47,6 @@ class ViewsActivity : BaseActivity(),View.OnClickListener{
 
         mViewModel = ViewModelProvider(this, MyViewModelProviderFactory)
             .get(ViewsViewModel::class.java)
-//        mPresenter = ViewModelProviders.of(this).get(ViewsPresenter::class.java)
-//        mPresenter.initPresenter(this)
-//        mPresenter.checkLanguage()
 
         setUpRecyclerView()
 
@@ -104,7 +95,6 @@ class ViewsActivity : BaseActivity(),View.OnClickListener{
         layoutManager.reverseLayout = false
         layoutManager.gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_NONE
         rv_views.layoutManager = layoutManager
-
 
     }
 }
