@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.itachi.core.domain.UploadedPhotoVO
@@ -11,26 +13,13 @@ import com.itachi.explore.R
 import com.itachi.explore.adapters.recycler.ViewsRecyclerAdapter
 import com.itachi.explore.mvp.presenters.ViewsPresenter
 import com.itachi.explore.mvp.views.ViewsView
+import com.itachi.explore.mvvm.viewmodel.AncientViewModel
+import com.itachi.explore.mvvm.viewmodel.MyViewModelProviderFactory
+import com.itachi.explore.mvvm.viewmodel.ViewsViewModel
 import kotlinx.android.synthetic.main.activity_views.*
 import kotlinx.android.synthetic.main.activity_views.img_back
 
-class ViewsActivity : BaseActivity(),ViewsView,View.OnClickListener{
-
-    override fun checkLanguage(lang: String) {
-        when(lang) {
-            "en" -> {
-                tv_views_title.text = getString(R.string.views_en)
-            }
-
-            "mm_unicode" -> {
-                tv_views_title.text = getString(R.string.views_mm_unicode)
-            }
-
-            "mm_zawgyi" -> {
-                tv_views_title.text = getString(R.string.views_mm_zawgyi)
-            }
-        }
-    }
+class ViewsActivity : BaseActivity(),View.OnClickListener{
 
     override fun onClick(p0: View?) {
         when(p0?.id) {
@@ -40,20 +29,10 @@ class ViewsActivity : BaseActivity(),ViewsView,View.OnClickListener{
         }
     }
 
-    override fun navigateViewPhoto(uploadedPhotoVO: UploadedPhotoVO) {
+    private fun navigateViewPhoto(uploadedPhotoVO: UploadedPhotoVO) {
         val intent = PreviewActivity.newIntent(this)
         intent.putExtra(PreviewActivity.EXTRA_EVENT_ID,uploadedPhotoVO)
         startActivity(intent)
-    }
-
-    override fun showPhotoViews(uploadedPhotoList: ArrayList<UploadedPhotoVO>) {
-
-        mAdapter.setNewData(uploadedPhotoList)
-    }
-
-    override fun showError(error: String) {
-        showToast(error)
-        mAdapter.clearAllData()
     }
 
     companion object {
@@ -64,16 +43,19 @@ class ViewsActivity : BaseActivity(),ViewsView,View.OnClickListener{
         }
     }
 
-    lateinit var mPresenter : ViewsPresenter
+//    lateinit var mPresenter : ViewsPresenter
+    lateinit var mViewModel : ViewsViewModel
     private lateinit var mAdapter : ViewsRecyclerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_views)
 
-        mPresenter = ViewModelProviders.of(this).get(ViewsPresenter::class.java)
-        mPresenter.initPresenter(this)
-        mPresenter.checkLanguage()
+        mViewModel = ViewModelProvider(this, MyViewModelProviderFactory)
+            .get(ViewsViewModel::class.java)
+//        mPresenter = ViewModelProviders.of(this).get(ViewsPresenter::class.java)
+//        mPresenter.initPresenter(this)
+//        mPresenter.checkLanguage()
 
         setUpRecyclerView()
 
@@ -82,14 +64,39 @@ class ViewsActivity : BaseActivity(),ViewsView,View.OnClickListener{
 
     override fun onResume() {
         super.onResume()
-        mPresenter.showPhotoList()
+//        mPresenter.showPhotoList()
+        mViewModel.showPhotoList().observe(this, Observer { viewPhotoList->
+            mAdapter.setNewData(viewPhotoList)
+        })
+        mViewModel.checkLanguage().observe(this, Observer { lang->
+            when(lang) {
+                "en" -> {
+                    tv_views_title.text = getString(R.string.views_en)
+                }
+
+                "mm_unicode" -> {
+                    tv_views_title.text = getString(R.string.views_mm_unicode)
+                }
+
+                "mm_zawgyi" -> {
+                    tv_views_title.text = getString(R.string.views_mm_zawgyi)
+                }
+            }
+        })
+        mViewModel.getErrorMessage().observe(this, Observer {
+            showToast(it)
+            mAdapter.clearAllData()
+        })
+
     }
 
     private fun setUpRecyclerView() {
 
         rv_views.recycledViewPool.setMaxRecycledViews(0,0)
-        mAdapter = ViewsRecyclerAdapter {
-            mPresenter.clickViewItem(it)
+        mAdapter = ViewsRecyclerAdapter {index->
+            mViewModel.clickViewItem(index).observe(this, Observer { uploadedPhotoVO->
+                navigateViewPhoto(uploadedPhotoVO)
+            })
         }
         rv_views.adapter = mAdapter
         val layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
