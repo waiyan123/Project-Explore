@@ -23,7 +23,7 @@ import com.itachi.explore.mvp.views.UserItemsView
 import com.itachi.explore.utils.ANCIENT_TYPE
 import com.itachi.explore.utils.PAGODA_TYPE
 import com.itachi.explore.utils.VIEW_TYPE
-import com.itachi.explore.view_model.UserProfileViewModel
+import com.itachi.explore.mvvm.viewmodel.UserProfileViewModel
 import kotlinx.android.synthetic.main.fragment_user_items.*
 
 class UserItemsFragment : Fragment(),UserItemsView{

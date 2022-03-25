@@ -22,7 +22,7 @@ import com.itachi.explore.mvp.presenters.UserProfilePresenter
 import com.itachi.explore.mvp.views.UserProfileView
 import com.itachi.explore.utils.REQUEST_BACKGROUND_PIC
 import com.itachi.explore.utils.REQUEST_PROFILE_PIC
-import com.itachi.explore.view_model.UserProfileViewModel
+import com.itachi.explore.mvvm.viewmodel.UserProfileViewModel
 import kotlinx.android.synthetic.main.activity_user_profile.*
 import kotlinx.android.synthetic.main.dialog_change_user_image.*
 

@@ -8,6 +8,8 @@ import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.google.android.gms.ads.*
@@ -17,34 +19,37 @@ import com.itachi.core.domain.UserVO
 import com.itachi.explore.R
 import com.itachi.explore.mvp.presenters.MainPresenter
 import com.itachi.explore.mvp.views.MainView
+import com.itachi.explore.mvvm.viewmodel.AncientViewModel
+import com.itachi.explore.mvvm.viewmodel.MainViewModel
+import com.itachi.explore.mvvm.viewmodel.MyViewModelProviderFactory
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.dialog_profile.*
 
 
-class MainActivity : BaseActivity(),MainView,View.OnClickListener{
+class MainActivity : BaseActivity(),View.OnClickListener{
 
-    override fun dismissUpdate() {
+    private fun dismissUpdate() {
         if(alertDialog!=null) {
             alertDialog!!.dismiss()
         }
     }
 
-    override fun forceUpdate() {
+    private fun forceUpdate() {
         showForceUpdateDialog()
     }
 
-    override fun isUploader(uploader: Boolean) {
+//    override fun isUploader(uploader: Boolean) {
+//
+//        if(uploader) {
+//
+//            fab_add.visibility = View.VISIBLE
+//        }
+//        else {
+//            fab_add.visibility = View.GONE
+//        }
+//    }
 
-        if(uploader) {
-
-            fab_add.visibility = View.VISIBLE
-        }
-        else {
-            fab_add.visibility = View.GONE
-        }
-    }
-
-    override fun checkLanguage(lang: String) {
+    private fun checkLanguage(lang: String) {
         when(lang) {
             "en" -> {
                 toggle_btn_en.isChecked = true
@@ -87,23 +92,23 @@ class MainActivity : BaseActivity(),MainView,View.OnClickListener{
         }
     }
 
-    override fun isUserLogout() {
+    private fun isUserLogout() {
         startActivity(LoginActivity.newIntent(this))
         hideLoading()
         finish()
     }
 
-    override fun showUserInfo(userVO: UserVO) {
-        tv_user_name.text = userVO.name
-        Glide.with(applicationContext)
-            .load(userVO.profile_pic!!.url)
-            .placeholder(R.drawable.ic_account_circle_black_24dp)
-            .into(btn_user_profile)
-    }
+//    override fun showUserInfo(userVO: UserVO) {
+//        tv_user_name.text = userVO.name
+//        Glide.with(applicationContext)
+//            .load(userVO.profile_pic!!.url)
+//            .placeholder(R.drawable.ic_account_circle_black_24dp)
+//            .into(btn_user_profile)
+//    }
 
-    override fun failedUserInfo(msg: String?) {
-        showToast(msg!!)
-    }
+//    override fun failedUserInfo(msg: String?) {
+//        showToast(msg!!)
+//    }
 
     companion object {
 //        const val EXTRA_EVENT_ID = "Extra_to_extra"
@@ -113,7 +118,8 @@ class MainActivity : BaseActivity(),MainView,View.OnClickListener{
         }
     }
 
-    private lateinit var mPresenter : MainPresenter
+//    private lateinit var mPresenter : MainPresenter
+    private lateinit var mViewModel : MainViewModel
     private var mInterstitialAd: InterstitialAd? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -156,11 +162,18 @@ class MainActivity : BaseActivity(),MainView,View.OnClickListener{
             Log.d("test---", "The interstitial ad wasn't ready yet.")
         }
 
-        mPresenter = ViewModelProviders.of(this).get(MainPresenter::class.java)
-        mPresenter.initPresenter(this)
+//        mPresenter = ViewModelProviders.of(this).get(MainPresenter::class.java)
+//        mPresenter.initPresenter(this)
 
-        mPresenter.checkLanguage()
-        setUpForceUpdate()
+        mViewModel = ViewModelProvider(this, MyViewModelProviderFactory)
+            .get(MainViewModel::class.java)
+
+        mViewModel.language.observe(this, Observer {
+            checkLanguage(it)
+        })
+
+//        mPresenter.checkLanguage()
+        setUpForceUpdateDialog()
         showAd()
 
         card1.setOnClickListener(this)
@@ -180,7 +193,7 @@ class MainActivity : BaseActivity(),MainView,View.OnClickListener{
                     if(isChecked) {
                         toggle_btn_en.isCheckable = false
                         toggle_btn_mm.isCheckable = true
-                        mPresenter.setLanguage("en",this)
+                        mViewModel.setLanguage("en")
                     }
 
                 }
@@ -189,7 +202,7 @@ class MainActivity : BaseActivity(),MainView,View.OnClickListener{
                     if(isChecked) {
                         toggle_btn_mm.isCheckable = false
                         toggle_btn_en.isCheckable = true
-                        mPresenter.setLanguage("mm",this)
+                        mViewModel.setLanguage("mm")
                     }
 
                 }
@@ -200,8 +213,12 @@ class MainActivity : BaseActivity(),MainView,View.OnClickListener{
 
     override fun onResume() {
         super.onResume()
-        mPresenter.onCheckUpdate()
-        mPresenter.getUserInfo()
+        mViewModel.update.observe(this, Observer {
+            if(it==true) {
+                forceUpdate()
+            }else dismissUpdate()
+        })
+//        mPresenter.getUserInfo()
     }
 
     override fun onClick(p0: View?) {
@@ -240,7 +257,8 @@ class MainActivity : BaseActivity(),MainView,View.OnClickListener{
                 lp.width = 350
                 lp.height = 300
                 alertDialog!!.window!!.attributes = lp
-                mPresenter.logout()
+                mViewModel.onClickedLogout()
+                isUserLogout()
             }
 
             R.id.tv_view_profile -> {

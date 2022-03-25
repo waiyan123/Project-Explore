@@ -2,7 +2,10 @@ package com.itachi.explore.mvvm.model
 
 import android.annotation.SuppressLint
 import com.itachi.core.domain.UserVO
+import com.itachi.explore.framework.mappers.PhotoEntityToVoMapper
+import com.itachi.explore.framework.mappers.UserMapper
 import com.itachi.explore.persistence.MyDatabase
+import com.itachi.explore.persistence.entities.UserEntity
 import com.itachi.explore.utils.*
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -59,8 +62,9 @@ class UserModelImpl : BaseModel(),UserModel,KoinComponent{
             .get()
             .addOnSuccessListener {
                 if (it.documents.isNotEmpty()) {
-                    val userVO = it.documents[0].toObject(UserVO::class.java)
-                    observable = Observable.just(userVO)
+                    val userEntity = it.documents[0].toObject(UserEntity::class.java)
+                    val userMapper = UserMapper(PhotoEntityToVoMapper())
+                    observable = Observable.just(userMapper.map(userEntity))
                     onSuccess(observable)
                 }
             }

@@ -77,7 +77,7 @@ abstract class BaseActivity : AppCompatActivity(){
         }
     }
 
-    fun setUpForceUpdate() {
+    fun setUpForceUpdateDialog() {
         val dialogBuilder = MaterialAlertDialogBuilder(this,R.style.MyRounded_MaterialComponents_MaterialAlertDialog)
         val view = layoutInflater.inflate(R.layout.dialog_force_update, null)
         dialogBuilder.setView(view)

@@ -1,4 +1,4 @@
-package com.itachi.explore.view_model
+package com.itachi.explore.mvvm.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
