@@ -45,7 +45,7 @@ class ViewsViewModel(interactors : Interactors) : AppViewmodel(interactors),Koin
         GlobalScope.launch {
             interactors.getAllPhotoViews.fromFirebase(
                 {
-                    uploadedPhotoVOList.postValue(it)
+                    uploadedPhotoVOList.postValue(ArrayList(it))
                 },
                 {
                     errorMsg.postValue(it)

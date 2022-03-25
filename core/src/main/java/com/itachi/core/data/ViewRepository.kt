@@ -11,7 +11,7 @@ class ViewRepository(
     private val viewRoomDataSource: ViewRoomDataSource
 ) {
     suspend fun getAllPhotoViewsFromFirebase(
-        onSuccess: (uploadedPhotoList: ArrayList<UploadedPhotoVO>) -> Unit,
+        onSuccess: (uploadedPhotoList: List<UploadedPhotoVO>) -> Unit,
         onFailure: (error: String) -> Unit
     ) = viewFirebaseDataSource.getPhotoViews(onSuccess,onFailure)
 

@@ -76,7 +76,9 @@ class MyApplication : Application() {
         val viewEntityToVoMapper = ViewEntityToVoMapper()
         val viewVoToEntityMapper = ViewVoToEntityMapper()
         val viewVoToFirebaseMapper = ViewVoToFirebaseMapper()
+        val photoEntityToVoMapper = UploadedPhotoEntityToVoMapper()
         val viewMapper = ViewMapper(
+            ListMapperImpl(photoEntityToVoMapper),
             viewEntityToVoMapper,viewVoToEntityMapper,
             viewVoToFirebaseMapper,ListMapperImpl(viewEntityToVoMapper),
             ListMapperImpl(viewVoToEntityMapper)

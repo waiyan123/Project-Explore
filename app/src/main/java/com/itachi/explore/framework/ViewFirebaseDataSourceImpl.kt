@@ -11,6 +11,7 @@ import com.itachi.core.domain.ViewVO
 import com.itachi.explore.framework.mappers.PagodaMapper
 import com.itachi.explore.framework.mappers.ViewMapper
 import com.itachi.explore.persistence.entities.PagodaEntity
+import com.itachi.explore.persistence.entities.UploadedPhotoEntity
 import com.itachi.explore.utils.*
 import io.reactivex.Observable
 
@@ -20,7 +21,7 @@ class ViewFirebaseDataSourceImpl(private val viewMapper: ViewMapper,
                                  auth : FirebaseAuth
 ) : ViewFirebaseDataSource,FirebaseDataSourceImpl(firestoreRef,firebaseStorage,auth){
     override suspend fun getPhotoViews(
-        onSuccess: (uploadedPhotoList: ArrayList<UploadedPhotoVO>) -> Unit,
+        onSuccess: (uploadedPhotoList: List<UploadedPhotoVO>) -> Unit,
         onFailure: (error: String) -> Unit
     ) {
         firestoreRef.collection(UPLOADED_PHOTO)
@@ -28,8 +29,8 @@ class ViewFirebaseDataSourceImpl(private val viewMapper: ViewMapper,
             .addOnSuccessListener {
                 if (it.documents.size != 0) {
 
-                    val viewPhotoList = it.toObjects(UploadedPhotoVO::class.java)
-                    onSuccess(viewPhotoList as ArrayList<UploadedPhotoVO>)
+                    val viewPhotoList = it.toObjects(UploadedPhotoEntity::class.java)
+                    onSuccess(viewMapper.uploadedPhotoEntityToVoList(viewPhotoList))
                 }
                 else {
                     onFailure("There's no item yet ")
@@ -50,7 +51,7 @@ class ViewFirebaseDataSourceImpl(private val viewMapper: ViewMapper,
                 if (it.documents.size != 0) {
 
                     val viewsList = it.toObjects(ViewVO::class.java)
-                    onSuccess(viewsList as ArrayList<ViewVO>)
+                    onSuccess(viewsList)
                 }
                 else {
                     onFailure("There's no item yet ")

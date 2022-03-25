@@ -6,7 +6,7 @@ import com.itachi.core.domain.ViewVO
 interface ViewFirebaseDataSource {
 
     suspend fun getPhotoViews(
-        onSuccess: (uploadedPhotoList: ArrayList<UploadedPhotoVO>) -> Unit,
+        onSuccess: (uploadedPhotoList: List<UploadedPhotoVO>) -> Unit,
         onFailure: (error: String) -> Unit
     )
 

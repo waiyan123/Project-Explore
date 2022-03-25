@@ -7,7 +7,7 @@ import com.itachi.core.domain.UploadedPhotoVO
 class GetAllPhotoViews(private val viewRepository: ViewRepository) {
 
     suspend fun fromFirebase(
-        onSuccess: (uploadedPhotoList: ArrayList<UploadedPhotoVO>) -> Unit,
+        onSuccess: (uploadedPhotoList: List<UploadedPhotoVO>) -> Unit,
         onFailure: (error: String) -> Unit
     ) = viewRepository.getAllPhotoViewsFromFirebase(onSuccess,onFailure)
 
