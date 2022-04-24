@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import com.itachi.core.data.FirestoreResult
 import com.itachi.core.data.db.AncientRoomDataSource
 import com.itachi.core.data.network.AncientFirebaseDataSource
 import com.itachi.core.domain.AncientVO
@@ -14,13 +15,22 @@ import com.itachi.explore.persistence.entities.AncientEntity
 import com.itachi.explore.persistence.entities.ItemEntity
 import com.itachi.explore.utils.*
 import io.reactivex.Observable
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.withContext
 import org.koin.core.KoinComponent
+import kotlin.system.measureTimeMillis
 
-class AncientFirebaseDataSourceImpl(private val ancientMapper: AncientMapper,
-                                    firestoreRef : FirebaseFirestore,
-                                    firebaseStorage : FirebaseStorage,
-                                    auth : FirebaseAuth
-) : AncientFirebaseDataSource,FirebaseDataSourceImpl(firestoreRef,firebaseStorage,auth){
+class AncientFirebaseDataSourceImpl(
+    private val ancientMapper: AncientMapper,
+    firestoreRef: FirebaseFirestore,
+    firebaseStorage: FirebaseStorage,
+    auth: FirebaseAuth
+) : AncientFirebaseDataSource, FirebaseDataSourceImpl(firestoreRef, firebaseStorage, auth) {
 
     override suspend fun getAncientBackground(
         onSuccess: (String) -> Unit,
@@ -31,7 +41,7 @@ class AncientFirebaseDataSourceImpl(private val ancientMapper: AncientMapper,
             .addOnSuccessListener {
                 onSuccess(it.get(ANCIENT_BACKGROUND_PHOTO) as String)
             }
-            .addOnFailureListener{
+            .addOnFailureListener {
                 onFailure(it.localizedMessage)
             }
     }
@@ -39,19 +49,27 @@ class AncientFirebaseDataSourceImpl(private val ancientMapper: AncientMapper,
     override suspend fun getAncientList(
         onSuccess: (List<AncientVO>) -> Unit,
         onFailure: (String) -> Unit
-    ) {
+    ): Flow<FirestoreResult<List<AncientVO>>> = callbackFlow {
+
+//        firestoreRef.collection(ANCIENTS)
+//            .get().addOnSuccessListener {
+//                onSuccess(ancientMapper.entityListToVOList(it.toObjects(AncientEntity::class.java)))
+//            }
+//            .addOnFailureListener {
+//
+//            }
+
         firestoreRef.collection(ANCIENTS)
             .get()
             .addOnSuccessListener {
-                if (it.documents.size != 0) {
 
-                    val ancientList = it.toObjects(AncientEntity::class.java)
-                    onSuccess(ancientMapper.entityListToVOList(ancientList))
-                }
-                else {
-                    onFailure("There's no item yet ")
-                }
+                offer(FirestoreResult.Success(ancientMapper.entityListToVOList(it.toObjects(AncientEntity::class.java))))
+
             }
+            .addOnFailureListener {
+                offer(FirestoreResult.Error(it.localizedMessage))
+            }
+        awaitClose()
     }
 
     override suspend fun getAncientById(
@@ -79,11 +97,14 @@ class AncientFirebaseDataSourceImpl(private val ancientMapper: AncientMapper,
         onSuccess: (List<AncientVO>) -> Unit,
         onFailure: (String) -> Unit
     ) {
+        withContext(Dispatchers.IO) {
+
+        }
 
         firestoreRef.collection(ANCIENTS).whereEqualTo(UPLOADER_ID, userId)
 
             .get()
-            .addOnSuccessListener {snapShot->
+            .addOnSuccessListener { snapShot ->
                 if (snapShot.documents.isNotEmpty()) {
                     val ancientList = snapShot.toObjects(AncientEntity::class.java)
                     onSuccess(ancientMapper.entityListToVOList(ancientList))
@@ -99,7 +120,7 @@ class AncientFirebaseDataSourceImpl(private val ancientMapper: AncientMapper,
         onSuccess: (String) -> Unit,
         onFailure: (String) -> Unit
     ) {
-        deletePhotos(ancientVO.photos,ancientVO.item_id)
+        deletePhotos(ancientVO.photos, ancientVO.item_id)
 
         firestoreRef.collection(ANCIENTS)
             .document(ancientVO.item_id)

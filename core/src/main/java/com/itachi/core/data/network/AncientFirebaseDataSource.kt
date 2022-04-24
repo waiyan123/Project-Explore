@@ -1,7 +1,9 @@
 package com.itachi.core.data.network
 
+import com.itachi.core.data.FirestoreResult
 import com.itachi.core.domain.AncientVO
 import com.itachi.core.domain.ItemVO
+import kotlinx.coroutines.flow.Flow
 
 interface AncientFirebaseDataSource {
     suspend fun getAncientBackground(
@@ -12,7 +14,7 @@ interface AncientFirebaseDataSource {
     suspend fun getAncientList(
         onSuccess : (List<AncientVO>) -> Unit,
         onFailure : (String) -> Unit
-    )
+    ) : Flow<FirestoreResult<List<AncientVO>>>
 
     suspend fun getAncientById(
         ancientId : String,

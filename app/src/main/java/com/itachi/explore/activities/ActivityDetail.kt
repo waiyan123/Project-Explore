@@ -169,19 +169,19 @@ class ActivityDetail : BaseActivity(),DetailView,View.OnClickListener{
         when {
             pagodaItem!=null -> {
                 pagodaItem.photos?.let {
-//                    setUpSlider(it)
+                    setUpSlider(ArrayList(it))
                 }
                 mPresenter.showPagodaDetails(pagodaItem)
             }
             viewItem!=null -> {
                 viewItem.photos?.let {
-//                    setUpSlider(it)
+                    setUpSlider(ArrayList(it))
                 }
                 mPresenter.showViewDetails(viewItem)
             }
             ancientItem!=null -> {
                 ancientItem.photos?.let {
-//                    setUpSlider(it)
+                    setUpSlider(ArrayList(it))
                 }
                 mPresenter.showAncientDetails(ancientItem)
 

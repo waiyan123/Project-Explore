@@ -1,9 +1,13 @@
 package com.itachi.explore.mvvm.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import com.itachi.core.data.FirestoreResult
 import com.itachi.core.domain.AncientVO
 import com.itachi.explore.framework.Interactors
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.koin.core.KoinComponent
 
@@ -30,19 +34,25 @@ class AncientViewModel(interactors: Interactors) : AppViewmodel(interactors),Koi
     }
 
     fun getAncients() : MutableLiveData<ArrayList<AncientVO>>{
-        GlobalScope.launch {
+        GlobalScope.async {
             ancientList.postValue(ArrayList(interactors.getAllAncient.fromRoom()))
             interactors.getAllAncient.fromFirebase(
                 {
+//                    ancientList.postValue(ArrayList(it))
+//                    GlobalScope.launch {
+//                        interactors.addAllAncients.toRoom(it)
+//                    }
                     ancientList.postValue(ArrayList(it))
-                    GlobalScope.launch {
-                        interactors.addAllAncients.toRoom(it)
-                    }
+                Log.d("list---","list from onSuccess ${it.size}")
                 },
                 {
-                    errorStr.postValue(it)
+//                    errorStr.postValue(it)
                 }
-            )
+            ).collect {
+                ancientList.postValue(ArrayList(it.data))
+                Log.d("list---","List from Result ${it.data?.size}")
+                errorStr.postValue(it.errorMessage)
+            }
 
         }
         return ancientList

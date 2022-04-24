@@ -10,16 +10,10 @@ import android.view.WindowManager
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
-import com.bumptech.glide.Glide
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
-import com.itachi.core.domain.UserVO
 import com.itachi.explore.R
-import com.itachi.explore.mvp.presenters.MainPresenter
-import com.itachi.explore.mvp.views.MainView
-import com.itachi.explore.mvvm.viewmodel.AncientViewModel
 import com.itachi.explore.mvvm.viewmodel.MainViewModel
 import com.itachi.explore.mvvm.viewmodel.MyViewModelProviderFactory
 import kotlinx.android.synthetic.main.activity_main.*
