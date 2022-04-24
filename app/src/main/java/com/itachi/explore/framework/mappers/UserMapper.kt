@@ -6,24 +6,12 @@ import com.itachi.core.domain.UserVO
 import com.itachi.explore.persistence.entities.AncientEntity
 import com.itachi.explore.persistence.entities.UserEntity
 
-class UserMapper(private val photoEntityToVoMapper : PhotoEntityToVoMapper) : Mapper<UserEntity, UserVO> {
-
-    override fun map(input: UserEntity?): UserVO {
-        if(input!=null) {
-            return UserVO(
-                input.facebook_id,
-                input.user_id ?: "",
-                input.phone_number ?: "",
-                input.facebook_profile_url ?: "",
-                input.email ?: "",
-                input.name ?: "",
-                photoEntityToVoMapper.map(input.profile_pic),
-                photoEntityToVoMapper.map(input.background_pic),
-                input.brief_bio ?: "",
-                input.get_is_uploader ?: false
-            )
-        }
-        else return UserVO("","","","",
-            "","",PhotoVO("","",""),PhotoVO("","",""),"",false)
-    }
+class UserMapper(
+    private val userEntityToVoMapper: UserEntityToVoMapper,
+    private val userVoToEntityMapper: UserVoToEntityMapper,
+    private val userVoToFirebaseMapper: UserVoToFirebaseMapper
+) {
+    fun entityToVO(userEntity: UserEntity) = userEntityToVoMapper.map(userEntity)
+    fun voToEntity(userVO: UserVO) = userVoToEntityMapper.map(userVO)
+    fun voToFirebaseHashmap(userVO: UserVO) = userVoToFirebaseMapper.map(userVO)
 }

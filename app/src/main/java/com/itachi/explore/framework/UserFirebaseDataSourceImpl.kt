@@ -5,13 +5,15 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.itachi.core.data.network.UserFirebaseDataSource
 import com.itachi.core.domain.UserVO
+import com.itachi.explore.framework.mappers.UserMapper
 import com.itachi.explore.persistence.entities.UserEntity
 import com.itachi.explore.utils.USER
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-class UserFirebaseDataSourceImpl(firestoreRef: FirebaseFirestore,
+class UserFirebaseDataSourceImpl(private val userMapper: UserMapper,
+                                 firestoreRef: FirebaseFirestore,
                                  firebaseStorage: FirebaseStorage,
                                  auth: FirebaseAuth
 ) : UserFirebaseDataSource,FirebaseDataSourceImpl(firestoreRef, firebaseStorage, auth){
@@ -21,7 +23,7 @@ class UserFirebaseDataSourceImpl(firestoreRef: FirebaseFirestore,
                              onFailure: (String) -> Unit) {
         firestoreRef.collection(USER)
             .document(userVO.user_id)
-            .set(firestoreNormalUser)
+            .set(userMapper.voToFirebaseHashmap(userVO))
             .addOnSuccessListener {
                 onSuccess(userVO)
             }
