@@ -259,7 +259,7 @@ class FormPresenter : BasePresenter<FormView>(), KoinComponent {
             type,
             emptyList(),
             name,
-            userVO.facebook_id
+            userVO.user_id
         )
 
         if (!MDetect.isUnicode()) {
@@ -303,7 +303,7 @@ class FormPresenter : BasePresenter<FormView>(), KoinComponent {
             type,
             emptyList(),
             name,
-            userVO.facebook_id
+            userVO.user_id
         )
 
         if (!MDetect.isUnicode()) {
@@ -348,7 +348,7 @@ class FormPresenter : BasePresenter<FormView>(), KoinComponent {
             type,
             emptyList(),
             name,
-            userVO.facebook_id
+            userVO.user_id
         )
 
         if (!MDetect.isUnicode()) {
@@ -470,7 +470,7 @@ class FormPresenter : BasePresenter<FormView>(), KoinComponent {
                             liveData.value = it
                             photoVOList = it
                             it.forEachIndexed { index,photoVO->
-                                uploadModel.uploadPhotoUrl(photoVO.url!!,userVO.facebook_id,itemId,type,geoPointsList[index])
+                                uploadModel.uploadPhotoUrl(photoVO.url!!,userVO.user_id,itemId,type,geoPointsList[index])
                             }
                         }
                 }

@@ -62,10 +62,10 @@ class UserModelImpl : BaseModel(),UserModel,KoinComponent{
             .get()
             .addOnSuccessListener {
                 if (it.documents.isNotEmpty()) {
-                    val userEntity = it.documents[0].toObject(UserEntity::class.java)
-                    val userMapper = UserMapper(PhotoEntityToVoMapper())
-                    observable = Observable.just(userMapper.map(userEntity))
-                    onSuccess(observable)
+//                    val userEntity = it.documents[0].toObject(UserEntity::class.java)
+//                    val userMapper = UserMapper(PhotoEntityToVoMapper())
+//                    observable = Observable.just(userMapper.map(userEntity))
+//                    onSuccess(observable)
                 }
             }
             .addOnFailureListener {

@@ -23,7 +23,6 @@ class MainViewModel(interactors : Interactors) : AppViewmodel(interactors),KoinC
     val update = MutableLiveData<Boolean>()
     val language = MutableLiveData<String>()
 
-
     init {
 //        userModel.getUserProfile(
 //            {

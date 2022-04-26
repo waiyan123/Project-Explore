@@ -5,14 +5,20 @@ import com.itachi.core.domain.UserVO
 
 interface UserFirebaseDataSource {
 
-    suspend fun add(
+    suspend fun addUser(
         userVO: UserVO,
         onSuccess: (UserVO) -> Unit,
         onFailure: (String) -> Unit
     )
 
-    suspend fun get(
+    suspend fun getUser(
         userVO: UserVO,
+        onSuccess: (UserVO) -> Unit,
+        onFailure: (String) -> Unit
+    )
+
+    suspend fun getUploader(
+        userId : String,
         onSuccess: (UserVO) -> Unit,
         onFailure: (String) -> Unit
     )

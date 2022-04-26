@@ -7,7 +7,9 @@ import com.itachi.core.data.network.UserFirebaseDataSource
 import com.itachi.core.domain.UserVO
 import com.itachi.explore.framework.mappers.UserMapper
 import com.itachi.explore.persistence.entities.UserEntity
+import com.itachi.explore.utils.FACEBOOK_ID
 import com.itachi.explore.utils.USER
+import com.itachi.explore.utils.USER_ID
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -18,7 +20,7 @@ class UserFirebaseDataSourceImpl(private val userMapper: UserMapper,
                                  auth: FirebaseAuth
 ) : UserFirebaseDataSource,FirebaseDataSourceImpl(firestoreRef, firebaseStorage, auth){
 
-    override suspend fun add(userVO: UserVO,
+    override suspend fun addUser(userVO: UserVO,
                              onSuccess: (UserVO) -> Unit,
                              onFailure: (String) -> Unit) {
         firestoreRef.collection(USER)
@@ -32,12 +34,41 @@ class UserFirebaseDataSourceImpl(private val userMapper: UserMapper,
             }
     }
 
-    override suspend fun get(
+    override suspend fun getUser(
         userVO: UserVO,
         onSuccess: (UserVO) -> Unit,
         onFailure: (String) -> Unit
     ) {
-        TODO("Not yet implemented")
+        firestoreRef.collection(USER)
+            .whereEqualTo(USER_ID,auth.currentUser!!.uid)
+            .get()
+            .addOnSuccessListener {snap->
+                val userVO = snap.documents[0].toObject(UserVO::class.java)
+                if (userVO != null) {
+                    onSuccess(userVO)
+                }
+            }
+            .addOnFailureListener {
+                onFailure(it.localizedMessage)
+            }
+    }
+
+    override suspend fun getUploader(
+        userId: String,
+        onSuccess: (UserVO) -> Unit,
+        onFailure: (String) -> Unit
+    ) {
+        firestoreRef.collection(USER).whereEqualTo(USER_ID, userId)
+
+            .get()
+            .addOnSuccessListener {
+                if (it.documents.isNotEmpty()) {
+                    val userEntity = it.documents[0].toObject(UserEntity::class.java)
+                    onSuccess(userMapper.entityToVO(userEntity!!))
+                }
+            }
+            .addOnFailureListener {
+            }
     }
 
     override suspend fun delete(
@@ -53,7 +84,15 @@ class UserFirebaseDataSourceImpl(private val userMapper: UserMapper,
         onSuccess: (UserVO) -> Unit,
         onFailure: (String) -> Unit
     ) {
-        TODO("Not yet implemented")
+        firestoreRef.collection(USER)
+            .document(userVO.user_id!!)
+            .update(userMapper.voToFirebaseHashmap(userVO))
+            .addOnSuccessListener {
+                onSuccess(userVO)
+            }
+            .addOnFailureListener {
+                onFailure(it.localizedMessage)
+            }
     }
 
 

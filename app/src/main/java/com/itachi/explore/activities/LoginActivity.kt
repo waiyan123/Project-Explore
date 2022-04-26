@@ -11,6 +11,7 @@ import com.itachi.explore.mvp.presenters.LoginPresenter
 import com.itachi.explore.mvp.views.LoginView
 import kotlinx.android.synthetic.main.activity_login.*
 
+
 class LoginActivity : BaseActivity(),LoginView{
 
     override fun checkLanguage(lang: String) {
@@ -56,6 +57,11 @@ class LoginActivity : BaseActivity(),LoginView{
         val intent = IntroActivity.newIntent(this)
         startActivity(intent)
         finish()
+    }
+
+    private fun signIn() {
+        val signInIntent: Intent = mGoogleSignInClient.getSignInIntent()
+        startActivityForResult(signInIntent, RC_SIGN_IN)
     }
 
     companion object {
