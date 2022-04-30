@@ -5,5 +5,15 @@ import com.itachi.core.domain.UserVO
 
 class UpdateUser(private val userRepository: UserRepository) {
 
-    suspend operator fun invoke(userVO : UserVO) = userRepository.updateUser(userVO)
+    suspend fun toRoom(
+        userVO: UserVO,
+        onSuccess: (UserVO) -> Unit,
+        onFailure: (String) -> Unit
+    ) = userRepository.updateUserToRoom(userVO, onSuccess, onFailure)
+
+    suspend fun toFirebase(
+        userVO: UserVO,
+        onSuccess: (UserVO) -> Unit,
+        onFailure: (String) -> Unit
+    ) = userRepository.updateUserToFirebase(userVO,onSuccess,onFailure)
 }

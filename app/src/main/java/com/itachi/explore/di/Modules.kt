@@ -2,6 +2,7 @@ package com.itachi.explore.di
 
 import android.content.SharedPreferences
 import androidx.room.Room
+import com.google.android.gms.auth.api.identity.Identity
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.myanmartools.ZawgyiDetector
 import com.itachi.explore.mvvm.model.*
@@ -13,6 +14,10 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
 val applicationModule = module(override = true) {
+
+    single {
+        Identity.getSignInClient(androidContext())
+    }
 
     single {
         LanguageModelImpl()

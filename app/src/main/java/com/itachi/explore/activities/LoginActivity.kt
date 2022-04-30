@@ -4,18 +4,22 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.WindowManager
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.itachi.explore.R
 import com.itachi.explore.mvp.presenters.LoginPresenter
 import com.itachi.explore.mvp.views.LoginView
+import com.itachi.explore.mvvm.viewmodel.LoginViewModel
+import com.itachi.explore.mvvm.viewmodel.MyViewModelProviderFactory
+import com.itachi.explore.mvvm.viewmodel.PagodaViewModel
 import kotlinx.android.synthetic.main.activity_login.*
 
 
-class LoginActivity : BaseActivity(),LoginView{
+class LoginActivity : BaseActivity(), LoginView {
 
     override fun checkLanguage(lang: String) {
-        when(lang) {
+        when (lang) {
             "en" -> {
                 btn_login_with_facebook.text = getString(R.string.btn_facebook_en)
             }
@@ -48,7 +52,7 @@ class LoginActivity : BaseActivity(),LoginView{
         finish()
     }
 
-    override fun loginFailed(message : String) {
+    override fun loginFailed(message: String) {
         showToast(message)
         hideLoading()
     }
@@ -59,13 +63,9 @@ class LoginActivity : BaseActivity(),LoginView{
         finish()
     }
 
-    private fun signIn() {
-        val signInIntent: Intent = mGoogleSignInClient.getSignInIntent()
-        startActivityForResult(signInIntent, RC_SIGN_IN)
-    }
 
     companion object {
-//        const val EXTRA_EVENT_ID = "Extra_to_extra"
+        //        const val EXTRA_EVENT_ID = "Extra_to_extra"
         fun newIntent(context: Context): Intent {
             return Intent(context, LoginActivity::class.java).apply {
 
@@ -73,18 +73,20 @@ class LoginActivity : BaseActivity(),LoginView{
         }
     }
 
-    lateinit var mPresenter : LoginPresenter
+    lateinit var mViewModel: LoginViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        mPresenter = ViewModelProviders.of(this).get(LoginPresenter::class.java)
-        mPresenter.initPresenter(this)
-        mPresenter.checkLanguage()
+        mViewModel =
+            ViewModelProvider(this, MyViewModelProviderFactory).get(LoginViewModel::class.java)
 
         btn_login_with_facebook.setOnClickListener {
-            mPresenter.fbButtonClicked(this)
+//            mPresenter.fbButtonClicked(this)
+        }
+        btn_login_with_google.setOnClickListener {
+            mViewModel.signInWithGoogle(this)
         }
 
         Glide.with(this)
@@ -95,9 +97,9 @@ class LoginActivity : BaseActivity(),LoginView{
     }
 
 
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        mPresenter.onActivityResult(requestCode,resultCode,data)
+//        mPresenter.onActivityResult(requestCode,resultCode,data)
+        mViewModel.onActivityResult(requestCode, resultCode, data)
     }
 }

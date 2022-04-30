@@ -10,22 +10,49 @@ class UserRepository(
 ) {
 
     //Firebase
-    suspend fun addUserToFirebase(userVO: UserVO) = userFirebaseDataSource.add(userVO)
+    suspend fun addUserToFirebase(
+        userVO: UserVO,
+        onSuccess: (UserVO) -> Unit,
+        onFailure: (String) -> Unit
+    ) = userFirebaseDataSource.addUser(userVO, onSuccess, onFailure)
 
-    suspend fun getUserFromFirebase() = userFirebaseDataSource.get()
+    suspend fun getUserFromFirebase(
+        userVO: UserVO,
+        onSuccess: (UserVO) -> Unit,
+        onFailure: (String) -> Unit
+    ) = userFirebaseDataSource.getUser(userVO, onSuccess, onFailure)
 
-    suspend fun deleteUserFromFirebase(userVO: UserVO) = userFirebaseDataSource.delete(userVO)
+    suspend fun deleteUserFromFirebase(
+        userVO: UserVO,
+        onSuccess: (UserVO) -> Unit,
+        onFailure: (String) -> Unit
+    ) = userFirebaseDataSource.delete(userVO, onSuccess, onFailure)
 
-    suspend fun updateUserToFirebase(userVO: UserVO) = userFirebaseDataSource.update(userVO)
+    suspend fun updateUserToFirebase(
+        userVO: UserVO,
+        onSuccess: (UserVO) -> Unit,
+        onFailure: (String) -> Unit
+    ) = userFirebaseDataSource.update(userVO, onSuccess, onFailure)
 
 
     //Room
-    suspend fun addUserToRoom(userVO: UserVO) = userRoomDataSource.add(userVO)
+    suspend fun addUserToRoom(
+        userVO: UserVO,
+        onSuccess: (UserVO) -> Unit,
+        onFailure: (String) -> Unit
+    ) = userRoomDataSource.add(userVO,onSuccess,onFailure)
 
-    suspend fun getUserFromRoom() = userRoomDataSource.get()
+    suspend fun getUserFromRoom(
+        onSuccess: (UserVO) -> Unit,
+        onFailure: (String) -> Unit
+    ) = userRoomDataSource.get(onSuccess,onFailure)
 
-    suspend fun deleteUserFromRoom(userVO: UserVO) = userRoomDataSource.delete(userVO)
+    suspend fun deleteUserFromRoom() = userRoomDataSource.delete()
 
-    suspend fun updateUserToRoom(userVO: UserVO) = userRoomDataSource.update(userVO)
+    suspend fun updateUserToRoom(
+        userVO: UserVO,
+        onSuccess: (UserVO) -> Unit,
+        onFailure: (String) -> Unit
+    ) = userRoomDataSource.update(userVO,onSuccess,onFailure)
 
 }
