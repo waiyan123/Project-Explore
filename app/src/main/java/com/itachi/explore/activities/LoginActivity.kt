@@ -46,10 +46,10 @@ class LoginActivity : BaseActivity(), LoginView {
 
 
     override fun loginSuccess() {
-        val intent = IntroActivity.newIntent(this)
-        hideLoading()
-        startActivity(intent)
-        finish()
+//        val intent = IntroActivity.newIntent(this)
+//        hideLoading()
+//        startActivity(intent)
+//        finish()
     }
 
     override fun loginFailed(message: String) {
@@ -58,9 +58,9 @@ class LoginActivity : BaseActivity(), LoginView {
     }
 
     override fun isAlreadyLogin() {
-        val intent = IntroActivity.newIntent(this)
-        startActivity(intent)
-        finish()
+//        val intent = IntroActivity.newIntent(this)
+//        startActivity(intent)
+//        finish()
     }
 
 

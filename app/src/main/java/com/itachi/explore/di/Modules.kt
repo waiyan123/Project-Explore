@@ -16,10 +16,6 @@ import org.koin.dsl.module
 val applicationModule = module(override = true) {
 
     single {
-        Identity.getSignInClient(androidContext())
-    }
-
-    single {
         LanguageModelImpl()
     }
     single {
