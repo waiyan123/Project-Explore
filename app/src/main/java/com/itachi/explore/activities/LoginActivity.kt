@@ -99,7 +99,6 @@ class LoginActivity : BaseActivity(), LoginView {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-//        mPresenter.onActivityResult(requestCode,resultCode,data)
         mViewModel.onActivityResult(requestCode, resultCode, data)
     }
 }
