@@ -1,11 +1,9 @@
 package com.itachi.explore.mvvm.viewmodel
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
+import com.google.firebase.remoteconfig.BuildConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
-import com.itachi.explore.BuildConfig
-import com.itachi.explore.activities.MainActivity
 import com.itachi.explore.framework.Interactors
 import com.itachi.explore.mvvm.model.LanguageModelImpl
 import com.itachi.explore.mvvm.model.UserModelImpl
@@ -55,16 +53,16 @@ class MainViewModel(interactors : Interactors) : AppViewmodel(interactors),KoinC
     fun onCheckUpdate() {
         val firebaseDefaultMap = HashMap<String,Any>()
         firebaseDefaultMap.put(VERSION_CODE_KEY, BuildConfig.VERSION_CODE)
-        remoteConfig.setDefaults(firebaseDefaultMap)
+        remoteConfig.setDefaultsAsync(firebaseDefaultMap)
 
-        remoteConfig.setConfigSettings(
-            FirebaseRemoteConfigSettings.Builder().setDeveloperModeEnabled(BuildConfig.DEBUG)
+        remoteConfig.setConfigSettingsAsync(
+            FirebaseRemoteConfigSettings.Builder()
                 .build()
         )
 
         remoteConfig.fetch().addOnCompleteListener {
             if (it.isSuccessful()) {
-                remoteConfig.activateFetched()
+                remoteConfig.activate()
                 if(remoteConfig.getDouble(VERSION_CODE_KEY)> BuildConfig.VERSION_CODE) {
                     update.postValue(true)
                 }

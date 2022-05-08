@@ -22,7 +22,7 @@ data class PagodaEntity (
     var festival_date: String?= "",
 
     @ColumnInfo(name = "is_there_festival")
-    var is_there_festival: Boolean? = false,
+    var is_there_festival : Boolean?= false,
 
     @PrimaryKey
     @ColumnInfo(name = "item_id")

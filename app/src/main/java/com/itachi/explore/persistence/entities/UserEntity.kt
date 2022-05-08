@@ -13,7 +13,7 @@ data class UserEntity(
     var facebook_id: String= "",
 
     @ColumnInfo(name="user_id")
-    val user_id: String?= "",
+    var user_id: String = "",
 
     @ColumnInfo(name="phone_number")
     var phone_number : String?= "",
