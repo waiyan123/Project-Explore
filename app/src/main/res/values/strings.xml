@@ -4,6 +4,8 @@
     <string name="facebook_app_id">175963093747235</string>
     <string name="fb_login_protocol_scheme">fb175963093747235</string>
 
+    <string name="firebase_client_id">1093689593287-fvf61gg16jcqu68kvvt5va504lcmgq4q.apps.googleusercontent.com</string>
+
 
     <string name="pagoda_en">Pagodas</string>
     <string name="pagoda_mm_unicode">ဘုရား</string>

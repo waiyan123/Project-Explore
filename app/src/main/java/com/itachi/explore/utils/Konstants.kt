@@ -95,3 +95,6 @@ const val INTRO = "intro"
 
 //remote config
 const val VERSION_CODE_KEY = "latest_app_version"
+
+//google sign in
+const val REQ_GOOGLE_SIGN_IN = 1

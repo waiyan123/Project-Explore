@@ -16,6 +16,10 @@ import org.koin.dsl.module
 val applicationModule = module(override = true) {
 
     single {
+        androidContext()
+    }
+
+    single {
         LanguageModelImpl()
     }
     single {
