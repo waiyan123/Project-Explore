@@ -2,6 +2,7 @@ package com.itachi.explore.mvvm.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import com.itachi.core.data.AncientRepository
 import com.itachi.core.data.FirestoreResult
 import com.itachi.core.domain.AncientVO
 import com.itachi.explore.framework.Interactors

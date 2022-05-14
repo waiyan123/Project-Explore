@@ -11,6 +11,8 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.itachi.core.domain.PhotoVO
+import com.itachi.core.domain.UserVO
 import com.itachi.explore.R
 import com.itachi.explore.activities.LoginActivity
 import com.itachi.explore.framework.Interactors
@@ -19,6 +21,8 @@ import com.itachi.explore.persistence.entities.PhotoEntity
 import com.itachi.explore.persistence.entities.UserEntity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
@@ -26,13 +30,15 @@ import org.koin.core.inject
 class LoginViewModel(interactors: Interactors) : AppViewmodel(interactors), KoinComponent {
 
     private val firebaseAuthRef = FirebaseAuth.getInstance()
-    private val database : MyDatabase by inject()
     val loginSuccess = MutableLiveData<Boolean>()
+    val isAlreadyLogin = MutableLiveData<Boolean>()
+    val errorMessage = MutableLiveData<String>()
+    val displayLoading = MutableLiveData<Boolean>()
 
     private val REQ_ONE_TAP = 1
 
     init {
-
+        isAlreadyLogin.postValue(firebaseAuthRef.currentUser!=null)
     }
 
     fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -46,6 +52,7 @@ class LoginViewModel(interactors: Interactors) : AppViewmodel(interactors), Koin
     }
 
     private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
+        displayLoading.postValue(true)
         try {
             val account: GoogleSignInAccount = completedTask.getResult(ApiException::class.java)
 
@@ -74,15 +81,29 @@ class LoginViewModel(interactors: Interactors) : AppViewmodel(interactors), Koin
         firebaseAuthRef.signInWithCredential(credential)
             .addOnCompleteListener {
                 Log.d("test---","Firebase login successful")
-                database.userDao().insertUser(UserEntity("","$account.id","",
-                "",account.email,account.displayName, PhotoEntity("",account.photoUrl.toString(),"")
-                ))
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe {
-                        loginSuccess.postValue(true)
-
-                    }
+                loginSuccess.postValue(true)
+                GlobalScope.launch {
+                    interactors.addUser.toFirebase(UserVO("","$account.id","",
+                        "",account.email!!,account.displayName!!, PhotoVO("",account.photoUrl.toString(),""),
+                        PhotoVO("","",""),"",false),
+                        {
+                            GlobalScope.launch {
+                                interactors.addUser.toRoom(it,
+                                    {
+                                        loginSuccess.postValue(true)
+                                    },
+                                    {errorMsgFromRoom->
+                                        errorMessage.postValue(errorMsgFromRoom)
+                                    })
+                            }
+                        },
+                        {errorMsgFromFirebase->
+                            errorMessage.postValue(errorMsgFromFirebase)
+                        })
+            }
+            }
+            .addOnFailureListener { exception->
+                errorMessage.postValue(exception.localizedMessage)
             }
     }
 

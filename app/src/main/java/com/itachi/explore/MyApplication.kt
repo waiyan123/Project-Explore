@@ -7,6 +7,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.itachi.core.data.PagodaRepository
+import com.itachi.core.data.UserRepository
 import com.itachi.core.data.ViewRepository
 import com.itachi.core.interactors.*
 import com.itachi.explore.di.applicationModule
@@ -88,20 +89,32 @@ class MyApplication : Application() {
 
         val viewRepository = ViewRepository(viewFirebaseDataSource,viewRoomDataSource)
 
+        //for user
+        val userEntityToVoMapper = UserEntityToVoMapper()
+        val userVoToEntityMapper = UserVoToEntityMapper()
+        val userVoToFirebaseMapper = UserVoToFirebaseMapper()
+        val userMapper = UserMapper(userEntityToVoMapper,userVoToEntityMapper,userVoToFirebaseMapper)
+        val userFirebaseDataSource = UserFirebaseDataSourceImpl(userMapper,firestoreRef,firebaseStorageRef,firebaseAuthRef)
+        val userRoomDataSource = UserRoomDataSourceImpl(userMapper)
+        val userRepository = UserRepository(userRoomDataSource,userFirebaseDataSource)
+
         MyViewModelProviderFactory.inject(
             Interactors(
+                AddUser(userRepository),
                 AddAncient(ancientRepository),
                 AddPagoda(pagodaRepository),
                 AddView(viewRepository),
                 AddAllAncients(ancientRepository),
                 AddAllPagodas(pagodaRepository),
                 AddAllViews(viewRepository),
+                DeleteUser(userRepository),
                 DeleteAncient(ancientRepository),
                 DeletePagoda(pagodaRepository),
                 DeleteView(viewRepository),
                 DeleteAllAncients(ancientRepository),
                 DeleteAllPagodas(pagodaRepository),
                 DeleteAllViews(viewRepository),
+                GetUser(userRepository),
                 GetAncient(ancientRepository),
                 GetPagoda(pagodaRepository),
                 GetView(viewRepository),
@@ -109,6 +122,7 @@ class MyApplication : Application() {
                 GetAllPagodas(pagodaRepository),
                 GetAllViews(viewRepository),
                 GetAllPhotoViews(viewRepository),
+                UpdateUser(userRepository),
                 UpdateAncient(ancientRepository),
                 UpdatePagoda(pagodaRepository),
                 UpdateView(viewRepository)
