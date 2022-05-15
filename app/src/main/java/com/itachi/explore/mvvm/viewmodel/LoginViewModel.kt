@@ -80,10 +80,9 @@ class LoginViewModel(interactors: Interactors) : AppViewmodel(interactors), Koin
         val credential = GoogleAuthProvider.getCredential(account.idToken,null)
         firebaseAuthRef.signInWithCredential(credential)
             .addOnCompleteListener {
-                Log.d("test---","Firebase login successful")
-                loginSuccess.postValue(true)
+                val userId = account.id
                 GlobalScope.launch {
-                    interactors.addUser.toFirebase(UserVO("","$account.id","",
+                    interactors.addUser.toFirebase(UserVO("",""+userId,"",
                         "",account.email!!,account.displayName!!, PhotoVO("",account.photoUrl.toString(),""),
                         PhotoVO("","",""),"",false),
                         {

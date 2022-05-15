@@ -102,6 +102,7 @@ class LoginActivity : BaseActivity() {
         })
         mViewModel.loginSuccess.observe(this, Observer { success->
             if(success){
+                showToast("Login successful")
                 navigateToIntroActivity()
             }
         })
