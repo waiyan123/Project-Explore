@@ -16,6 +16,7 @@ import com.itachi.core.domain.UserVO
 import com.itachi.explore.R
 import com.itachi.explore.activities.LoginActivity
 import com.itachi.explore.framework.Interactors
+import com.itachi.explore.mvvm.model.LanguageModelImpl
 import com.itachi.explore.persistence.MyDatabase
 import com.itachi.explore.persistence.entities.PhotoEntity
 import com.itachi.explore.persistence.entities.UserEntity
@@ -30,15 +31,20 @@ import org.koin.core.inject
 class LoginViewModel(interactors: Interactors) : AppViewmodel(interactors), KoinComponent {
 
     private val firebaseAuthRef = FirebaseAuth.getInstance()
+    private val languageModel : LanguageModelImpl by inject()
     val loginSuccess = MutableLiveData<Boolean>()
     val isAlreadyLogin = MutableLiveData<Boolean>()
     val errorMessage = MutableLiveData<String>()
     val displayLoading = MutableLiveData<Boolean>()
+    val language = MutableLiveData<String>()
 
     private val REQ_ONE_TAP = 1
 
     init {
         isAlreadyLogin.postValue(firebaseAuthRef.currentUser!=null)
+        languageModel.getLanguage {
+            language.postValue(it)
+        }
     }
 
     fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

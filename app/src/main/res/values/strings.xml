@@ -62,6 +62,10 @@
     <string name="btn_facebook_en">Continue with facebook</string>
     <string name="btn_facebook_mm_unicode">ဖေ့ဘုတ်ဖြင့် ဝင်မည်</string>
     <string name="btn_facebook_mm_zawgyi">ေဖ့ဘုတ္ျဖင့္ ဝင္မည္</string>
+    
+    <string name="btn_google_en">Sign in with Google</string>
+    <string name="btn_google_mm_unicode">ဂူဂယ်ဖြင့် ဝင်မည်</string>
+    <string name="btn_google_mm_zawgyi">ဂူဂယ္ျဖင့္ ဝင္မည္</string>
 
     <string name="uploader_en">Uploader - </string>
     <string name="uploader_mm_unicode">မူရင်းတင်သူ - </string>

@@ -25,4 +25,5 @@ open class AppViewmodel(protected val interactors: Interactors) : ViewModel(){
             onSuccess(context)
         }
     }
+
 }

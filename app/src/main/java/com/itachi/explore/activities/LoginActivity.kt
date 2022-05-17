@@ -6,31 +6,27 @@ import android.os.Bundle
 import android.view.WindowManager
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.itachi.explore.R
-import com.itachi.explore.mvp.presenters.LoginPresenter
-import com.itachi.explore.mvp.views.LoginView
 import com.itachi.explore.mvvm.viewmodel.LoginViewModel
 import com.itachi.explore.mvvm.viewmodel.MyViewModelProviderFactory
-import com.itachi.explore.mvvm.viewmodel.PagodaViewModel
 import kotlinx.android.synthetic.main.activity_login.*
 
 
 class LoginActivity : BaseActivity() {
 
-    private fun checkLanguage(lang: String) {
+    private fun changeLanguage(lang: String) {
         when (lang) {
             "en" -> {
-                btn_login_with_facebook.text = getString(R.string.btn_facebook_en)
+                btn_login_with_google.text = getString(R.string.btn_google_en)
             }
 
             "mm_unicode" -> {
-                btn_login_with_facebook.text = getString(R.string.btn_facebook_mm_unicode)
+                btn_login_with_google.text = getString(R.string.btn_google_mm_unicode)
             }
 
             "mm_zawgyi" -> {
-                btn_login_with_facebook.text = getString(R.string.btn_facebook_mm_zawgyi)
+                btn_login_with_google.text = getString(R.string.btn_google_mm_zawgyi)
             }
         }
     }
@@ -59,7 +55,6 @@ class LoginActivity : BaseActivity() {
 
 
     companion object {
-        //        const val EXTRA_EVENT_ID = "Extra_to_extra"
         fun newIntent(context: Context): Intent {
             return Intent(context, LoginActivity::class.java).apply {
 
@@ -76,9 +71,6 @@ class LoginActivity : BaseActivity() {
         mViewModel =
             ViewModelProvider(this, MyViewModelProviderFactory).get(LoginViewModel::class.java)
 
-        btn_login_with_facebook.setOnClickListener {
-//            mPresenter.fbButtonClicked(this)
-        }
         btn_login_with_google.setOnClickListener {
             mViewModel.signInWithGoogle(this)
         }
@@ -92,25 +84,28 @@ class LoginActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        mViewModel.isAlreadyLogin.observe(this, Observer {success->
-            if(success) {
+        mViewModel.isAlreadyLogin.observe(this) { success ->
+            if (success) {
                 navigateToIntroActivity()
             }
-        })
-        mViewModel.errorMessage.observe(this, Observer {
+        }
+        mViewModel.errorMessage.observe(this) {
             loginFailed(it)
-        })
-        mViewModel.loginSuccess.observe(this, Observer { success->
-            if(success){
+        }
+        mViewModel.loginSuccess.observe(this) { success ->
+            if (success) {
                 showToast("Login successful")
                 navigateToIntroActivity()
             }
-        })
-        mViewModel.displayLoading.observe(this, Observer { loading->
-            if(loading) {
+        }
+        mViewModel.displayLoading.observe(this) { loading ->
+            if (loading) {
                 displayLoading()
             }
-        })
+        }
+        mViewModel.language.observe(this) { language->
+            changeLanguage(language)
+        }
     }
 
 
