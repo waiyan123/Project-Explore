@@ -71,16 +71,20 @@ class PagodasActivity : BaseActivity(),View.OnClickListener{
         setUpPagodaRecyclerView()
 
         img_back.setOnClickListener(this)
+
+        mViewModel.getBannerPhotos().observe(this){photoList->
+            showAnim(shimmer_banner,false)
+            app_bar_layout.visibility = View.VISIBLE
+            setUpBanner(photoList)
+        }
+
+        mViewModel.errorGettingBanner.observe(this) {
+            Toast.makeText(this,it,Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun onResume() {
         super.onResume()
-
-        mViewModel.getBannerPhotos().observe(this, androidx.lifecycle.Observer {photoList->
-            showAnim(shimmer_banner,false)
-            app_bar_layout.visibility = View.VISIBLE
-            setUpBanner(photoList)
-        })
 
         mViewModel.getPagodaList().observe(this, androidx.lifecycle.Observer {
             tv_no_items.visibility = View.GONE
@@ -91,9 +95,6 @@ class PagodasActivity : BaseActivity(),View.OnClickListener{
             rvAdapter.setNewData(it)
         })
 
-        mViewModel.errorGettingBanner.observe(this, androidx.lifecycle.Observer {
-            Toast.makeText(this,it,Toast.LENGTH_SHORT).show()
-        })
         mViewModel.errorGettingPagodaList.observe(this, androidx.lifecycle.Observer {
             tv_no_items.visibility = View.VISIBLE
             tv_no_items.text = it

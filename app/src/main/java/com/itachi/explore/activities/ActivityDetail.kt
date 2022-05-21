@@ -208,8 +208,14 @@ class ActivityDetail : BaseActivity(),View.OnClickListener{
         mViewModel.isUploader.observe(this) {
             showSettingIcon(it)
         }
+        mViewModel.successMsg.observe(this) {
+            successfullyDeletedItem(it)
+        }
         mViewModel.errorMsg.observe(this){
             showError(it)
+        }
+        mViewModel.language.observe(this){
+            changeLanguage(it)
         }
     }
 
@@ -235,7 +241,19 @@ class ActivityDetail : BaseActivity(),View.OnClickListener{
             }
 
             R.id.tv_edit -> {
-//                mPresenter.clickedEdit()
+                mViewModel.mItemVO.observe(this) {
+                    when(it.item_type){
+                        PAGODA_TYPE->{
+                            editPagoda(it as PagodaVO)
+                        }
+                        VIEW_TYPE->{
+                            editView(it as ViewVO)
+                        }
+                        ANCIENT_TYPE->{
+                            editAncient(it as AncientVO)
+                        }
+                    }
+                }
             }
 
             R.id.tv_delete -> {
@@ -247,7 +265,7 @@ class ActivityDetail : BaseActivity(),View.OnClickListener{
                 lp.width = 350
                 lp.height = 300
                 alertDialog!!.window!!.attributes = lp
-//                mPresenter.clickedDelete()
+                mViewModel.deleteItem()
             }
         }
     }
