@@ -10,8 +10,7 @@ class GetUser(private val userRepository: UserRepository) {
     ) = userRepository.getUserFromRoom(onSuccess,onFailure)
 
     suspend fun fromFirebase(
-        userVO: UserVO,
         onSuccess: (UserVO) -> Unit,
         onFailure: (String) -> Unit
-    ) = userRepository.getUserFromFirebase(userVO,onSuccess,onFailure)
+    ) = userRepository.getUserFromFirebase(onSuccess,onFailure)
 }

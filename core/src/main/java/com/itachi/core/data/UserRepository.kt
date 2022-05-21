@@ -17,10 +17,9 @@ class UserRepository(
     ) = userFirebaseDataSource.addUser(userVO, onSuccess, onFailure)
 
     suspend fun getUserFromFirebase(
-        userVO: UserVO,
         onSuccess: (UserVO) -> Unit,
         onFailure: (String) -> Unit
-    ) = userFirebaseDataSource.getUser(userVO, onSuccess, onFailure)
+    ) = userFirebaseDataSource.getUser(onSuccess, onFailure)
 
     suspend fun deleteUserFromFirebase(
         userVO: UserVO,

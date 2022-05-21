@@ -7,23 +7,26 @@ import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import com.itachi.core.domain.AncientVO
-import com.itachi.core.domain.PagodaVO
-import com.itachi.core.domain.PhotoVO
-import com.itachi.core.domain.ViewVO
+import com.itachi.core.domain.*
 import com.itachi.explore.R
 import com.itachi.explore.mvp.presenters.DetailPresenter
 import com.itachi.explore.mvp.views.DetailView
+import com.itachi.explore.mvvm.viewmodel.DetailsViewModel
+import com.itachi.explore.mvvm.viewmodel.MyViewModelProviderFactory
 import com.itachi.explore.third_parties.PagodaSliderAdapter
+import com.itachi.explore.utils.ANCIENT_TYPE
+import com.itachi.explore.utils.PAGODA_TYPE
+import com.itachi.explore.utils.VIEW_TYPE
 import kotlinx.android.synthetic.main.activity_detail.*
 import kotlinx.android.synthetic.main.dialog_post_detail.*
 import me.myatminsoe.mdetect.MDetect
 import me.myatminsoe.mdetect.Rabbit
 
-class ActivityDetail : BaseActivity(),DetailView,View.OnClickListener{
+class ActivityDetail : BaseActivity(),View.OnClickListener{
 
-    override fun checkLanguage(lang: String) {
+    private fun changeLanguage(lang: String) {
         when(lang) {
             "en" -> {
                 tv_key_created_date.text = getString(R.string.created_date_en)
@@ -42,21 +45,21 @@ class ActivityDetail : BaseActivity(),DetailView,View.OnClickListener{
         }
     }
 
-    override fun toEditPagoda(pagodaVO: PagodaVO?) {
+    private fun editPagoda(pagodaVO: PagodaVO?) {
         val intent = FormActivity.newIntent(this)
         intent.putExtra(FormActivity.EXTRA_EVENT_ID_PAGODA,pagodaVO)
         startActivity(intent)
         finish()
     }
 
-    override fun toEditView(viewVO: ViewVO?) {
+    private fun editView(viewVO: ViewVO?) {
         val intent = FormActivity.newIntent(this)
         intent.putExtra(FormActivity.EXTRA_EVENT_ID_VIEW,viewVO)
         startActivity(intent)
         finish()
     }
 
-    override fun toEditAncient(ancientVO: AncientVO?) {
+    private fun editAncient(ancientVO: AncientVO?) {
         val intent = FormActivity.newIntent(this)
         intent.putExtra(FormActivity.EXTRA_EVENT_ID_ANCIENT,ancientVO)
         startActivity(intent)
@@ -64,7 +67,7 @@ class ActivityDetail : BaseActivity(),DetailView,View.OnClickListener{
     }
 
     @SuppressLint("SetTextI18n")
-    override fun showAncientDetailViews(detail: AncientVO) {
+    private fun showAncientDetailViews(detail: AncientVO) {
         var name = detail.title
         var createdDate = detail.created_date
         var festivalDate = detail.festival_date
@@ -81,12 +84,12 @@ class ActivityDetail : BaseActivity(),DetailView,View.OnClickListener{
         tv_value_about.text = "\t\t\t" +about
     }
 
-    override fun successfullyDeletedItem(message: String) {
+    private fun successfullyDeletedItem(message: String) {
         showToast(message)
         finish()
     }
 
-    override fun showSettingIcon(show: Boolean) {
+    private fun showSettingIcon(show: Boolean) {
         if(show) {
             img_setting.visibility = View.VISIBLE
         }
@@ -95,12 +98,12 @@ class ActivityDetail : BaseActivity(),DetailView,View.OnClickListener{
         }
     }
 
-    override fun showError(error: String) {
+    private fun showError(error: String) {
         showError(error)
     }
 
     @SuppressLint("SetTextI18n")
-    override fun showPagodaDetailViews(detail: PagodaVO) {
+    private fun showPagodaDetailViews(detail: PagodaVO) {
         var name = detail.title
         var createdDate = detail.created_date
         var festivalDate = detail.festival_date
@@ -119,7 +122,7 @@ class ActivityDetail : BaseActivity(),DetailView,View.OnClickListener{
     }
 
     @SuppressLint("SetTextI18n")
-    override fun showViewDetailViews(detail: ViewVO) {
+    private fun showViewDetailViews(detail: ViewVO) {
         var name = detail.title
         var createdDate = detail.created_date
         var festivalDate = detail.festival_date
@@ -152,15 +155,15 @@ class ActivityDetail : BaseActivity(),DetailView,View.OnClickListener{
         }
     }
 
-    lateinit var mPresenter : DetailPresenter
+    lateinit var mViewModel : DetailsViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
 
-        mPresenter = ViewModelProviders.of(this).get(DetailPresenter::class.java)
-        mPresenter.initPresenter(this)
-        mPresenter.checkLanguage()
+        mViewModel = ViewModelProvider(this,MyViewModelProviderFactory)
+            .get(DetailsViewModel::class.java)
+
 
         val pagodaItem = intent.getSerializableExtra(EXTRA_EVENT_ID_PAGODA) as PagodaVO?
         val viewItem = intent.getSerializableExtra(EXTRA_EVENT_ID_VIEW) as ViewVO?
@@ -171,19 +174,19 @@ class ActivityDetail : BaseActivity(),DetailView,View.OnClickListener{
                 pagodaItem.photos?.let {
                     setUpSlider(ArrayList(it))
                 }
-                mPresenter.showPagodaDetails(pagodaItem)
+                mViewModel.setupItemVO(pagodaItem)
             }
             viewItem!=null -> {
                 viewItem.photos?.let {
                     setUpSlider(ArrayList(it))
                 }
-                mPresenter.showViewDetails(viewItem)
+                mViewModel.setupItemVO(viewItem)
             }
             ancientItem!=null -> {
                 ancientItem.photos?.let {
                     setUpSlider(ArrayList(it))
                 }
-                mPresenter.showAncientDetails(ancientItem)
+                mViewModel.setupItemVO(ancientItem)
 
             }
         }
@@ -191,6 +194,23 @@ class ActivityDetail : BaseActivity(),DetailView,View.OnClickListener{
 
         img_setting.setOnClickListener(this)
         img_back.setOnClickListener(this)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mViewModel.mItemVO.observe(this) {itemVO->
+            when(itemVO.item_type) {
+                PAGODA_TYPE -> showPagodaDetailViews(itemVO as PagodaVO)
+                VIEW_TYPE -> showViewDetailViews(itemVO as ViewVO)
+                ANCIENT_TYPE -> showAncientDetailViews(itemVO as AncientVO)
+            }
+        }
+        mViewModel.isUploader.observe(this) {
+            showSettingIcon(it)
+        }
+        mViewModel.errorMsg.observe(this){
+            showError(it)
+        }
     }
 
 
@@ -215,7 +235,7 @@ class ActivityDetail : BaseActivity(),DetailView,View.OnClickListener{
             }
 
             R.id.tv_edit -> {
-                mPresenter.clickedEdit()
+//                mPresenter.clickedEdit()
             }
 
             R.id.tv_delete -> {
@@ -227,7 +247,7 @@ class ActivityDetail : BaseActivity(),DetailView,View.OnClickListener{
                 lp.width = 350
                 lp.height = 300
                 alertDialog!!.window!!.attributes = lp
-                mPresenter.clickedDelete()
+//                mPresenter.clickedDelete()
             }
         }
     }

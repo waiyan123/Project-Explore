@@ -5,24 +5,24 @@ import java.io.Serializable
 
 data class PagodaVO (
 
-    var about: String,
+    override var about: String,
 
-    var comments: List<String>,
+    override var comments: List<String>,
 
-    var created_date: String,
+    override var created_date: String,
 
-    var festival_date: String,
+    override var festival_date: String,
 
-    var is_there_festival: Boolean,
+    override var is_there_festival: Boolean,
 
-    var item_id: String,
+    override var item_id: String,
 
-    var item_type: String,
+    override var item_type: String,
 
-    var photos: List<PhotoVO>,
+    override var photos: List<PhotoVO>,
 
-    var title: String,
+    override var title: String,
 
-    var uploader_id: String
+    override var uploader_id: String
 
-) : Serializable
+) : Serializable,ItemVO(false)

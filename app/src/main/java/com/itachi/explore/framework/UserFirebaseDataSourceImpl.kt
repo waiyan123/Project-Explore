@@ -36,7 +36,6 @@ class UserFirebaseDataSourceImpl(private val userMapper: UserMapper,
     }
 
     override suspend fun getUser(
-        userVO: UserVO,
         onSuccess: (UserVO) -> Unit,
         onFailure: (String) -> Unit
     ) {
