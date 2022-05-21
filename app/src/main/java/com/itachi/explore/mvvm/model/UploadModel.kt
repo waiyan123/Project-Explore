@@ -10,7 +10,8 @@ interface UploadModel {
             path: ArrayList<String>,
             geoPointsList : ArrayList<String>,
             mContext : Context,
-            onSuccess : (Observable<ArrayList<PhotoVO>>) -> Unit
+            onSuccess : (Observable<ArrayList<PhotoVO>>) -> Unit,
+            onFailure : (String) -> Unit
     )
 
     fun uploadPhotoUrl(path: String, userId: String,itemId: String,itemType : String,geoPoints : String)

@@ -448,32 +448,30 @@ class FormPresenter : BasePresenter<FormView>(), KoinComponent {
     @SuppressLint("CheckResult")
     private fun uploadPhotos(type : String) : LiveData<ArrayList<PhotoVO>>{
 
-
         photoVOList = ArrayList()
         val liveData = MutableLiveData<ArrayList<PhotoVO>>()
         mView.showProgressLoading()
-//        var geoPointsList = ArrayList<String>()
-//        pickUpImages.forEach {
-//            var geoPoint = Util.getGeoPointFromImage(Util.getRealPathFromUrl(mContext, it)!!)
-//            geoPointsList.add(geoPoint)
-//        }
 
         Util.getGeoPointsFromImageList(mContext,pickUpImages)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {geoPointsList->
-                uploadModel.uploadPhoto(pickUpImages,geoPointsList,mContext
-                ) {observable->
-                    observable.subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe {
-                            liveData.value = it
-                            photoVOList = it
-                            it.forEachIndexed { index,photoVO->
-                                uploadModel.uploadPhotoUrl(photoVO.url!!,userVO.user_id,itemId,type,geoPointsList[index])
+                uploadModel.uploadPhoto(pickUpImages,geoPointsList,mContext,
+                    {observable->
+                        observable.subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe {
+                                liveData.value = it
+                                photoVOList = it
+                                it.forEachIndexed { index,photoVO->
+                                    uploadModel.uploadPhotoUrl(photoVO.url!!,userVO.user_id,itemId,type,geoPointsList[index])
+                                }
                             }
-                        }
-                }
+                    },
+                    {
+
+                    }
+                )
             }
 
         return liveData

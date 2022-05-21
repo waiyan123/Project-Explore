@@ -21,7 +21,8 @@ class UploadModelImpl : UploadModel, BaseModel() {
         path: ArrayList<String>,
         geoPointsList : ArrayList<String>,
         mContext: Context,
-        onSuccess: (Observable<ArrayList<PhotoVO>>) -> Unit
+        onSuccess: (Observable<ArrayList<PhotoVO>>) -> Unit,
+        onFailure : (String)-> Unit
     ) {
 
         var count = 0
@@ -61,6 +62,7 @@ class UploadModelImpl : UploadModel, BaseModel() {
                                 }
                             }
                         }.addOnFailureListener {
+                            onFailure(it.localizedMessage)
                         }
                     }
                 }
