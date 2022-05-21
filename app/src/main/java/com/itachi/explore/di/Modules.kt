@@ -19,9 +19,6 @@ val applicationModule = module(override = true) {
         LanguageModelImpl()
     }
     single {
-        AuthenticationModelImpl()
-    }
-    single {
         UserModelImpl()
     }
     single {

@@ -4,6 +4,7 @@ import com.itachi.core.data.db.PagodaRoomDataSource
 import com.itachi.core.data.network.PagodaFirebaseDataSource
 import com.itachi.core.domain.ItemVO
 import com.itachi.core.domain.PagodaVO
+import com.itachi.core.domain.PhotoVO
 
 class PagodaRepository(
     private val pagodaFirebaseDataSource: PagodaFirebaseDataSource,
@@ -45,23 +46,28 @@ class PagodaRepository(
         onFailure: (String) -> Unit
     ) = pagodaFirebaseDataSource.deleteAllPagodas(pagodaList,onSuccess,onFailure)
 
-    suspend fun addPagodaToFirebase(
-        pagodaVO: PagodaVO,
-        onSuccess : (String) -> Unit,
-        onFailure: (String) -> Unit
-    ) = pagodaFirebaseDataSource.addPagoda(pagodaVO,onSuccess,onFailure)
-
     suspend fun addAllPagodasToFirebase(
         pagodaList : List<PagodaVO>,
         onSuccess: (String) -> Unit,
         onFailure: (String) -> Unit
     ) = pagodaFirebaseDataSource.addAllPagodas(pagodaList,onSuccess,onFailure)
 
+    suspend fun addPagodaToFirebase(
+        pagodaVO: PagodaVO,
+        byteArrayList: ArrayList<ByteArray>,
+        geoPointsList: ArrayList<String>,
+        onSuccess : (String) -> Unit,
+        onFailure: (String) -> Unit
+    ) = pagodaFirebaseDataSource.addPagoda(byteArrayList,geoPointsList,pagodaVO,onSuccess,onFailure)
+
     suspend fun updatePagodaToFirebase(
+        photoVOList : List<PhotoVO>,
+        byteArrayList: ArrayList<ByteArray>,
+        geoPointsList: ArrayList<String>,
         pagodaVO: PagodaVO,
         onSuccess : (String) -> Unit,
         onFailure: (String) -> Unit
-    ) = pagodaFirebaseDataSource.updatePagoda(pagodaVO,onSuccess,onFailure)
+    ) = pagodaFirebaseDataSource.updatePagoda(photoVOList,byteArrayList,geoPointsList,pagodaVO,onSuccess,onFailure)
 
     suspend fun addPagodaToRoom(pagodaVO: PagodaVO) = pagodaRoomDataSource.add(pagodaVO)
 

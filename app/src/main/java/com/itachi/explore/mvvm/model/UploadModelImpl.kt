@@ -18,56 +18,49 @@ class UploadModelImpl : UploadModel, BaseModel() {
 
     @SuppressLint("CheckResult")
     override fun uploadPhoto(
-        path: ArrayList<String>,
-        geoPointsList : ArrayList<String>,
-        mContext: Context,
+        byteArrayList: ArrayList<ByteArray>,
+        geoPointsList: ArrayList<String>,
         onSuccess: (Observable<ArrayList<PhotoVO>>) -> Unit,
-        onFailure : (String)-> Unit
+        onFailure: (String) -> Unit
     ) {
 
         var count = 0
 
-        Util.compressImage(path, mContext, 30)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
+        var photoVOList = ArrayList<PhotoVO>()
+        byteArrayList.forEachIndexed { index, data ->
 
-                var photoVOList = ArrayList<PhotoVO>()
-                it.forEachIndexed { index, data ->
+            var downloadUrl: String
+            if (data != null) {
+                val photoUrl = UUID.randomUUID().toString()
+                val ref = firebaseStorage.reference.child(PHOTO_PATH).child(photoUrl)
+                val uploadTask = ref.putBytes(data)
 
-                    var downloadUrl: String
-                    if (data != null) {
-                        val photoUrl = UUID.randomUUID().toString()
-                        val ref = firebaseStorage.reference.child(PHOTO_PATH).child(photoUrl)
-                        val uploadTask = ref.putBytes(data)
-
-                        uploadTask.continueWithTask(Continuation<UploadTask.TaskSnapshot, Task<Uri>> { task ->
-                            if (!task.isSuccessful) {
-                                task.exception?.let {
-                                    throw it
-                                }
-                            }
-                            return@Continuation ref.downloadUrl
-                        }).addOnCompleteListener { task ->
-                            if (task.isSuccessful) {
-                                count++
-                                val downloadUri = task.result
-                                downloadUrl = downloadUri.toString()
-                                val photoVO = PhotoVO(photoUrl, downloadUrl, geoPointsList[index])
-                                photoVOList.add(photoVO)
-
-                                if (count == path.size) {
-
-                                    onSuccess(Observable.just(photoVOList))
-                                }
-                            }
-                        }.addOnFailureListener {
-                            onFailure(it.localizedMessage)
+                uploadTask.continueWithTask(Continuation<UploadTask.TaskSnapshot, Task<Uri>> { task ->
+                    if (!task.isSuccessful) {
+                        task.exception?.let {
+                            throw it
                         }
                     }
-                }
+                    return@Continuation ref.downloadUrl
+                }).addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        count++
+                        val downloadUri = task.result
+                        downloadUrl = downloadUri.toString()
+                        val photoVO = PhotoVO(photoUrl, downloadUrl, geoPointsList[index])
+                        photoVOList.add(photoVO)
 
+                        if (count == byteArrayList.size) {
+
+                            onSuccess(Observable.just(photoVOList))
+                        }
+                    }
+                }.addOnFailureListener {
+                    onFailure(it.localizedMessage)
+                }
             }
+        }
+
     }
 
     override fun uploadPhotoUrl(

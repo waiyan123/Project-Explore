@@ -100,28 +100,13 @@ class FormViewModel(interactors: Interactors) : AppViewmodel(interactors), KoinC
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { geoPointsList ->
-                uploadModel.uploadPhoto(mPickupImages, geoPointsList, context,
-                    { observable ->
-                        observable.subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe { photoVOList ->
-                                mPhotoVOList.postValue(photoVOList)
-                                photoVOList.forEachIndexed { index, photoVO ->
-                                    uploadModel.uploadPhotoUrl(
-                                        photoVO.url!!,
-                                        mUserVO.user_id,
-                                        itemId,
-                                        type,
-                                        geoPointsList[index]
-                                    )
-                                }
+                Util.compressImage(mPickupImages,context,30)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe {byteArrayList->
 
-                            }
-                    },
-                    {
-                        errorMsg.postValue(it)
                     }
-                )
+
             }
     }
 

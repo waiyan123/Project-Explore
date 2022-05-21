@@ -9,7 +9,9 @@ class AddPagoda(private val pagodaRepository: PagodaRepository) {
 
     suspend fun toFirebase(
         pagodaVO: PagodaVO,
+        byteArrayList: ArrayList<ByteArray>,
+        geoPointsList: ArrayList<String>,
         onSuccess : (String) -> Unit,
         onFailure: (String) -> Unit
-    ) = pagodaRepository.addPagodaToFirebase(pagodaVO,onSuccess,onFailure)
+    ) = pagodaRepository.addPagodaToFirebase(pagodaVO,byteArrayList,geoPointsList,onSuccess,onFailure)
 }

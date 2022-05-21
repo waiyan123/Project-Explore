@@ -36,8 +36,6 @@ class Util {
                 bmp.compress(Bitmap.CompressFormat.JPEG, quality, baos)
                 list.add(baos.toByteArray())
             }
-
-
             return Observable.just(list)
         }
 

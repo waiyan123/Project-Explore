@@ -1,7 +1,7 @@
 package com.itachi.explore.mvp.presenters
 
 import android.content.SharedPreferences
-import com.itachi.explore.mvvm.model.AuthenticationModelImpl
+import com.google.firebase.auth.FirebaseAuth
 import com.itachi.explore.mvvm.model.LanguageModelImpl
 import com.itachi.explore.mvp.views.SplashView
 import com.itachi.explore.utils.DONT_SHOW_INTRO
@@ -10,7 +10,7 @@ import org.koin.core.inject
 
 class SplashPresenter : BasePresenter<SplashView>(),KoinComponent{
 
-    private val authModel : AuthenticationModelImpl by inject()
+    private val firebaseAuthRef = FirebaseAuth.getInstance()
 
     private val languageModel : LanguageModelImpl by inject()
 
@@ -18,7 +18,7 @@ class SplashPresenter : BasePresenter<SplashView>(),KoinComponent{
 
     fun checkAlreadyLogin() {
         mView.navigateToMain()
-        if(authModel.isAlreadyLogin()){
+        if(firebaseAuthRef.currentUser!=null){
             if(sharPreferences.getBoolean(DONT_SHOW_INTRO,false)) {
                 mView.navigateToMain()
             }

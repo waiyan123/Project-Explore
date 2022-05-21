@@ -9,26 +9,30 @@ import com.itachi.core.data.network.AncientFirebaseDataSource
 import com.itachi.core.data.network.PagodaFirebaseDataSource
 import com.itachi.core.domain.ItemVO
 import com.itachi.core.domain.PagodaVO
+import com.itachi.core.domain.PhotoVO
 import com.itachi.explore.framework.mappers.AncientMapper
 import com.itachi.explore.framework.mappers.PagodaMapper
 import com.itachi.explore.persistence.entities.PagodaEntity
 import com.itachi.explore.utils.*
 import io.reactivex.Observable
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
-class PagodaFirebaseDataSourceImpl (private val pagodaMapper: PagodaMapper,
-                                    firestoreRef : FirebaseFirestore,
-                                    firebaseStorage : FirebaseStorage,
-                                    auth : FirebaseAuth
-) : PagodaFirebaseDataSource,FirebaseDataSourceImpl(firestoreRef,firebaseStorage,auth){
+class PagodaFirebaseDataSourceImpl(
+    private val pagodaMapper: PagodaMapper,
+    firestoreRef: FirebaseFirestore,
+    firebaseStorage: FirebaseStorage,
+    auth: FirebaseAuth
+) : PagodaFirebaseDataSource, FirebaseDataSourceImpl(firestoreRef, firebaseStorage, auth) {
 
     override suspend fun getPagodaBanner(
-        onSuccess : (List<String>) -> Unit,
+        onSuccess: (List<String>) -> Unit,
         onFailure: (String) -> Unit
     ) {
         firestoreRef.collection(BANNERS).document(PAGODA_BANNER)
             .get()
             .addOnSuccessListener {
-                if(it.exists()) onSuccess(it.get(PAGODA_BANNER_PHOTOS) as List<String>)
+                if (it.exists()) onSuccess(it.get(PAGODA_BANNER_PHOTOS) as List<String>)
             }
 
     }
@@ -76,7 +80,7 @@ class PagodaFirebaseDataSourceImpl (private val pagodaMapper: PagodaMapper,
     ) {
         firestoreRef.collection(PAGODAS).whereEqualTo(UPLOADER_ID, userId)
             .get()
-            .addOnSuccessListener {snapShot->
+            .addOnSuccessListener { snapShot ->
                 if (snapShot.documents.isNotEmpty()) {
                     val pagodaList = snapShot.toObjects(PagodaEntity::class.java)
                     onSuccess(pagodaMapper.entityListToVOList(pagodaList))
@@ -113,24 +117,6 @@ class PagodaFirebaseDataSourceImpl (private val pagodaMapper: PagodaMapper,
         TODO("Not yet implemented")
     }
 
-    override suspend fun addPagoda(
-        pagodaVO: PagodaVO,
-        onSuccess: (String) -> Unit,
-        onFailure: (String) -> Unit
-    ) {
-        val firestorePagoda = pagodaMapper.voToFirebaseHashmap(pagodaVO)
-
-        firestoreRef.collection(PAGODAS)
-            .document(pagodaVO.item_id)
-            .set(firestorePagoda)
-            .addOnSuccessListener {
-                onSuccess("Successfully added Pagoda")
-            }
-            .addOnFailureListener {
-                onFailure("Failed to add Pagoda")
-            }
-    }
-
     override suspend fun addAllPagodas(
         pagodaList: List<PagodaVO>,
         onSuccess: (String) -> Unit,
@@ -139,21 +125,72 @@ class PagodaFirebaseDataSourceImpl (private val pagodaMapper: PagodaMapper,
         TODO("Not yet implemented")
     }
 
-    override suspend fun updatePagoda(
+    override suspend fun addPagoda(
+        byteArrayList: ArrayList<ByteArray>,
+        geoPointsList: ArrayList<String>,
         pagodaVO: PagodaVO,
         onSuccess: (String) -> Unit,
         onFailure: (String) -> Unit
     ) {
-        val firestorePagoda = pagodaMapper.voToFirebaseHashmap(pagodaVO)
-        firestoreRef.collection(PAGODAS)
-            .document(pagodaVO.item_id)
-            .update(firestorePagoda as Map<String, Any>)
-            .addOnSuccessListener {
-                onSuccess("Successfully updated Pagoda")
-            }
-            .addOnFailureListener {
-                onFailure("Failed to update Pagoda")
-            }
+        uploadPhoto(byteArrayList, geoPointsList,
+            { photoVOList ->
+                photoVOList.forEachIndexed { index, photoVO ->
 
+                    uploadPhotoUrl(
+                        photoVO.path,
+                        pagodaVO.uploader_id,
+                        pagodaVO.item_id,
+                        pagodaVO.item_type,
+                        geoPointsList[index]
+                    )
+                }
+            },
+            {
+                onFailure(it)
+            }).observeForever {
+            val firestorePagoda = pagodaMapper.voToFirebaseHashmap(pagodaVO)
+
+            firestoreRef.collection(PAGODAS)
+                .document(pagodaVO.item_id)
+                .set(firestorePagoda)
+                .addOnSuccessListener {
+                    onSuccess("Successfully added Pagoda")
+                }
+                .addOnFailureListener {
+                    onFailure("Failed to add Pagoda")
+                }
+        }
+
+    }
+
+    override suspend fun updatePagoda(
+        photoVOList: List<PhotoVO>,
+        byteArrayList: ArrayList<ByteArray>,
+        geoPointsList: ArrayList<String>,
+        pagodaVO: PagodaVO,
+        onSuccess: (String) -> Unit,
+        onFailure: (String) -> Unit
+    ) {
+        deletePhotos(photoVOList, pagodaVO.item_id)
+        uploadPhoto(byteArrayList,geoPointsList,
+            {photoVOList->
+                photoVOList.forEachIndexed { index, photoVO ->
+                    uploadPhotoUrl(photoVO.path,pagodaVO.uploader_id,pagodaVO.item_id,pagodaVO.item_type,geoPointsList[index])
+                }
+            },
+            {
+                onFailure(it)
+            }).observeForever {
+            val firestorePagoda = pagodaMapper.voToFirebaseHashmap(pagodaVO)
+            firestoreRef.collection(PAGODAS)
+                .document(pagodaVO.item_id)
+                .update(firestorePagoda as Map<String, Any>)
+                .addOnSuccessListener {
+                    onSuccess("Successfully updated Pagoda")
+                }
+                .addOnFailureListener {
+                    onFailure("Failed to update Pagoda")
+                }
+        }
     }
 }
