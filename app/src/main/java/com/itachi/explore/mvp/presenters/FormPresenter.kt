@@ -452,27 +452,27 @@ class FormPresenter : BasePresenter<FormView>(), KoinComponent {
         val liveData = MutableLiveData<ArrayList<PhotoVO>>()
         mView.showProgressLoading()
 
-        Util.getGeoPointsFromImageList(mContext,pickUpImages)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe {geoPointsList->
-                uploadModel.uploadPhoto(pickUpImages,geoPointsList,mContext,
-                    {observable->
-                        observable.subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe {
-                                liveData.value = it
-                                photoVOList = it
-                                it.forEachIndexed { index,photoVO->
-                                    uploadModel.uploadPhotoUrl(photoVO.url!!,userVO.user_id,itemId,type,geoPointsList[index])
-                                }
-                            }
-                    },
-                    {
-
-                    }
-                )
-            }
+//        Util.getGeoPointsFromImageList(mContext,pickUpImages)
+//            .subscribeOn(Schedulers.io())
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .subscribe {geoPointsList->
+//                uploadModel.uploadPhoto(pickUpImages,geoPointsList,mContext,
+//                    {observable->
+//                        observable.subscribeOn(Schedulers.io())
+//                            .observeOn(AndroidSchedulers.mainThread())
+//                            .subscribe {
+//                                liveData.value = it
+//                                photoVOList = it
+//                                it.forEachIndexed { index,photoVO->
+//                                    uploadModel.uploadPhotoUrl(photoVO.url!!,userVO.user_id,itemId,type,geoPointsList[index])
+//                                }
+//                            }
+//                    },
+//                    {
+//
+//                    }
+//                )
+//            }
 
         return liveData
     }

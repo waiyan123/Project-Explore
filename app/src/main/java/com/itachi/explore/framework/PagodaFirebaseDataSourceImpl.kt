@@ -134,6 +134,7 @@ class PagodaFirebaseDataSourceImpl(
     ) {
         uploadPhoto(byteArrayList, geoPointsList,
             { photoVOList ->
+                pagodaVO.photos = photoVOList
                 photoVOList.forEachIndexed { index, photoVO ->
 
                     uploadPhotoUrl(
@@ -174,6 +175,7 @@ class PagodaFirebaseDataSourceImpl(
         deletePhotos(photoVOList, pagodaVO.item_id)
         uploadPhoto(byteArrayList,geoPointsList,
             {photoVOList->
+                pagodaVO.photos= photoVOList
                 photoVOList.forEachIndexed { index, photoVO ->
                     uploadPhotoUrl(photoVO.path,pagodaVO.uploader_id,pagodaVO.item_id,pagodaVO.item_type,geoPointsList[index])
                 }

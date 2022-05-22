@@ -65,9 +65,10 @@ class AncientFirebaseDataSourceImpl(
 
                 offer(FirestoreResult.Success(ancientMapper.entityListToVOList(it.toObjects(AncientEntity::class.java))))
 
+                TODO("Something")
             }
             .addOnFailureListener {
-                offer(FirestoreResult.Error(it.localizedMessage))
+//                offer(FirestoreResult.Error(it.localizedMessage))
             }
         awaitClose()
     }

@@ -11,6 +11,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.itachi.core.domain.*
 import com.itachi.explore.framework.Interactors
+import com.itachi.explore.mvvm.model.LanguageModelImpl
 import com.itachi.explore.mvvm.model.UploadModelImpl
 import com.itachi.explore.utils.*
 import com.sangcomz.fishbun.FishBun
@@ -30,16 +31,20 @@ import kotlin.collections.ArrayList
 
 class FormViewModel(interactors: Interactors) : AppViewmodel(interactors), KoinComponent {
 
-    private val uploadModel: UploadModelImpl by inject()
+    private val languageModel : LanguageModelImpl by inject()
 
+    private val uris = ArrayList<Uri>()
     private val mPickupImages = ArrayList<String>()
     private var mPhotoVOList = MutableLiveData<ArrayList<PhotoVO>>()
-    val progressLoading = MutableLiveData<Boolean>()
-    val successMsg = MutableLiveData<String>()
-    val errorMsg = MutableLiveData<String>()
     private lateinit var mUserVO: UserVO
     private val itemId = UUID.randomUUID().toString()
 
+    val images = MutableLiveData<ArrayList<Uri>>()
+    val progressLoading = MutableLiveData<Boolean>()
+    val successMsg = MutableLiveData<String>()
+    val errorMsg = MutableLiveData<String>()
+    var formType = "Add"
+    val language = MutableLiveData<String>()
     init {
         GlobalScope.launch {
             interactors.getUser.fromRoom(
@@ -51,13 +56,16 @@ class FormViewModel(interactors: Interactors) : AppViewmodel(interactors), KoinC
                 }
             )
         }
+        languageModel.getLanguage {
+            language.postValue(it)
+        }
     }
 
-    fun checkValidateText(et: EditText): Boolean {
+    fun checkValidate(et: EditText): Boolean {
         return Util.checkEditTextValidattion(et)
     }
 
-    private fun chooseMultiplePhotos(context: Context) {
+    fun chooseMultiplePhotos(context: Context) {
 
         FishBun.with(context as Activity)
             .setImageAdapter(GlideAdapter())
@@ -83,8 +91,9 @@ class FormViewModel(interactors: Interactors) : AppViewmodel(interactors), KoinC
                     if (path != null) {
                         for (image in path) {
                             mPickupImages.add(image.toString())
+                            uris.add(image)
                         }
-
+                        images.postValue(uris)
                     }
                 }
             }
@@ -100,28 +109,35 @@ class FormViewModel(interactors: Interactors) : AppViewmodel(interactors), KoinC
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { geoPointsList ->
-                Util.compressImage(mPickupImages,context,30)
+                Util.compressImage(mPickupImages, context, 30)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe {byteArrayList->
+                    .subscribe { byteArrayList ->
 
                     }
 
             }
     }
 
-    fun addItem(name: String, created: String, festival: String, about: String, type: String,context: Context) {
+    fun addItem(
+        name: String,
+        created: String,
+        festival: String,
+        about: String,
+        type: String,
+        context: Context
+    ) {
         when (type) {
             PAGODA_TYPE -> {
-                addPagoda(name, created, festival, about, type,context)
+                addPagoda(name, created, festival, about, type, context)
             }
 
             VIEW_TYPE -> {
-                addView(name, created, festival, about, type,context)
+                addView(name, created, festival, about, type, context)
             }
 
             ANCIENT_TYPE -> {
-                addAncient(name, created, festival, about, type,context)
+                addAncient(name, created, festival, about, type, context)
             }
 
             FOOD_TYPE -> {
@@ -137,7 +153,11 @@ class FormViewModel(interactors: Interactors) : AppViewmodel(interactors), KoinC
             }
         }
     }
+    fun updateItem(name: String, created: String, festival: String, about: String, type: String) {
 
+    }
+
+    @SuppressLint("CheckResult")
     private fun addPagoda(
         name: String,
         created: String,
@@ -174,26 +194,42 @@ class FormViewModel(interactors: Interactors) : AppViewmodel(interactors), KoinC
 
         if (mPickupImages.size > 0) {
             progressLoading.postValue(true)
-            uploadPhotos(type, context)
-            mPhotoVOList.observeForever {photoVOList->
-                pagodaVO.photos = photoVOList
-                GlobalScope.launch {
-                    interactors.addPagoda.toFirebase(pagodaVO,
-                        { success ->
-                            successMsg.postValue(success)
-                        },
-                        { error ->
-                            errorMsg.postValue(error)
-                        })
-                }
-            }
+                Util.getGeoPointsFromImageList(context, mPickupImages)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe { geoPointsList ->
+                        Util.compressImage(mPickupImages, context, 30)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe { byteArrayList ->
+                                GlobalScope.launch {
+                                    interactors.addPagoda.toFirebase(pagodaVO,
+                                        byteArrayList,
+                                        geoPointsList,
+                                        { success ->
+                                            successMsg.postValue(success)
+                                        },
+                                        { error ->
+                                            errorMsg.postValue(error)
+                                        })
+                                }
+                            }
+
+                    }
 
         } else {
-            errorMsg.postValue("Pick up photo")
+//            errorMsg.postValue("Pick up photo")
         }
     }
 
-    private fun addView(name: String, created: String, festival: String, about: String, type: String,context: Context) {
+    private fun addView(
+        name: String,
+        created: String,
+        festival: String,
+        about: String,
+        type: String,
+        context: Context
+    ) {
         var isFestival = false
         if (festival.isNotEmpty()) isFestival = true
         val viewVO = ViewVO(
@@ -221,15 +257,15 @@ class FormViewModel(interactors: Interactors) : AppViewmodel(interactors), KoinC
 
         if (mPickupImages.size > 0) {
             progressLoading.postValue(true)
-            uploadPhotos(type,context)
-            mPhotoVOList.observeForever { photoVOList->
+            uploadPhotos(type, context)
+            mPhotoVOList.observeForever { photoVOList ->
                 viewVO.photos = photoVOList
                 GlobalScope.launch {
                     interactors.addView.toFirebase(viewVO,
-                        {success->
+                        { success ->
                             successMsg.postValue(success)
                         },
-                        {error->
+                        { error ->
                             errorMsg.postValue(error)
                         })
                 }
@@ -239,7 +275,15 @@ class FormViewModel(interactors: Interactors) : AppViewmodel(interactors), KoinC
             errorMsg.postValue("Pick up photo")
         }
     }
-    private fun addAncient(name: String, created: String, festival: String, about: String, type: String,context: Context) {
+
+    private fun addAncient(
+        name: String,
+        created: String,
+        festival: String,
+        about: String,
+        type: String,
+        context: Context
+    ) {
         var isFestival = false
         if (festival.isNotEmpty()) isFestival = true
         val ancientVO = AncientVO(
@@ -267,15 +311,15 @@ class FormViewModel(interactors: Interactors) : AppViewmodel(interactors), KoinC
 
         if (mPickupImages.size > 0) {
             progressLoading.postValue(true)
-            uploadPhotos(type,context)
-            mPhotoVOList.observeForever { photoVOList->
+            uploadPhotos(type, context)
+            mPhotoVOList.observeForever { photoVOList ->
                 ancientVO.photos = photoVOList
                 GlobalScope.launch {
                     interactors.addAncient.toFirebase(ancientVO,
-                        {success->
+                        { success ->
                             successMsg.postValue(success)
                         },
-                        {error->
+                        { error ->
                             errorMsg.postValue(error)
                         })
                 }

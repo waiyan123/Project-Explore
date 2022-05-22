@@ -1,6 +1,8 @@
 package com.itachi.explore.activities
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Context
 import android.view.Gravity
 import android.view.WindowManager
 import android.widget.Toast
@@ -16,7 +18,9 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.util.Base64
 import android.util.Log
+import androidx.core.app.ActivityCompat
 import com.itachi.explore.R
+import com.itachi.explore.utils.PERMISSION_STORAGE
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 
@@ -122,6 +126,22 @@ abstract class BaseActivity : AppCompatActivity(){
             )
         }
 
+    }
+
+    fun checkPermission(context: Context, requestCode : Int, onSuccess : (Context)->Unit) {
+        if (ActivityCompat.checkSelfPermission(
+                context,
+                "android.permission.READ_EXTERNAL_STORAGE"
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                context as Activity,
+                PERMISSION_STORAGE,
+                requestCode
+            )
+        } else {
+            onSuccess(context)
+        }
     }
 
 }

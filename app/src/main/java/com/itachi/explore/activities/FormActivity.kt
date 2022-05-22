@@ -18,19 +18,23 @@ import android.view.MotionEvent
 import android.view.View.OnTouchListener
 import android.view.WindowManager
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.itachi.core.domain.AncientVO
 import com.itachi.core.domain.PagodaVO
 import com.itachi.core.domain.ViewVO
 import com.itachi.explore.R
+import com.itachi.explore.mvvm.viewmodel.FormViewModel
+import com.itachi.explore.mvvm.viewmodel.LoginViewModel
+import com.itachi.explore.mvvm.viewmodel.MyViewModelProviderFactory
 import me.myatminsoe.mdetect.MDetect
 import me.myatminsoe.mdetect.Rabbit
 
 
-class FormActivity : BaseActivity(),View.OnClickListener,FormView{
+class FormActivity : BaseActivity(), View.OnClickListener {
 
-    override fun checkLanguage(lang: String) {
-        when(lang) {
+    private fun changeLanguage(lang: String) {
+        when (lang) {
             "en" -> {
                 ll_name.hint = getString(R.string.name_en)
                 tv_choose_type.text = getString(R.string.choose_type_en)
@@ -60,17 +64,7 @@ class FormActivity : BaseActivity(),View.OnClickListener,FormView{
         }
     }
 
-    override fun successUpdatingItem(message: String) {
-        showToast(message)
-        hideLoading()
-        finish()
-    }
-
-    override fun showErrorMessage(error: String) {
-        showToast(error)
-    }
-
-    override fun showEditDetails(
+    private fun showEditDetails(
         name: String,
         created: String,
         festival: String,
@@ -81,7 +75,7 @@ class FormActivity : BaseActivity(),View.OnClickListener,FormView{
         var mCreated = created
         var mFestival = festival
         var mAbout = about
-        if(!MDetect.isUnicode()) {
+        if (!MDetect.isUnicode()) {
             mName = Rabbit.uni2zg(mName)
             mCreated = Rabbit.uni2zg(mCreated)
             mFestival = Rabbit.uni2zg(mFestival)
@@ -96,22 +90,25 @@ class FormActivity : BaseActivity(),View.OnClickListener,FormView{
         rl_choose_type.isEnabled = false
         img_choose_type.isEnabled = false
         tv_choose_type.isEnabled = false
-        when(mPresenter.language) {
-            "en" -> {
-                btn_add.text = getString(R.string.update_en)
+        mViewModel.language.observe(this) {
+            when(it){
+                "en" -> {
+                    btn_add.text = getString(R.string.update_en)
+                }
+
+                "mm_unicode" -> {
+                    btn_add.text = getString(R.string.update_mm_unicode)
+                }
+
+                "mm_zawgyi" -> {
+                    btn_add.text = getString(R.string.update_mm_zawgyi)
+                }
             }
 
-            "mm_unicode" -> {
-                btn_add.text = getString(R.string.update_mm_unicode)
-            }
-
-            "mm_zawgyi" -> {
-                btn_add.text = getString(R.string.update_mm_zawgyi)
-            }
         }
     }
 
-    override fun showProgressLoading() {
+    private fun showProgressLoading() {
         showLoading()
         val lp = WindowManager.LayoutParams()
 
@@ -121,22 +118,22 @@ class FormActivity : BaseActivity(),View.OnClickListener,FormView{
         alertDialog!!.window!!.attributes = lp
     }
 
-    override fun showPhotoError(error: String) {
+    private fun showPhotoError(error: String) {
         showToast(error)
         hideLoading()
     }
 
-    override fun successAddingItem(name : String) {
+    private fun successAddingItem(name: String) {
         showToast(name)
         hideLoading()
         finish()
     }
 
-    override fun showPickUpImages(list: ArrayList<Uri>) {
+    private fun showPickUpImages(list: ArrayList<Uri>) {
         img_photo_item1.setImageResource(R.drawable.ic_tab_unselected_black_24dp)
         img_photo_item2.setImageResource(R.drawable.ic_tab_unselected_black_24dp)
         img_photo_item3.setImageResource(R.drawable.ic_tab_unselected_black_24dp)
-        when(list.size) {
+        when (list.size) {
             1 -> {
                 Glide.with(this)
                     .load(list[0])
@@ -168,28 +165,36 @@ class FormActivity : BaseActivity(),View.OnClickListener,FormView{
 
     override fun onClick(p0: View?) {
         when (p0?.id) {
-            R.id.img_add_photos -> mPresenter.checkPermission(this, REQUEST_EXTERNAL_STORAGE
-            ) {
-                mPresenter.chooseMultiplePhotos(it)
+            R.id.img_add_photos -> {
+                checkPermission(
+                    this, REQUEST_EXTERNAL_STORAGE
+                ) {
+                    mViewModel.chooseMultiplePhotos(it)
+                }
             }
 
             R.id.btn_add -> {
-                when(mPresenter.formType) {
+                when (mViewModel.formType) {
                     "Add" -> {
-                        if(checkEditTextValidation()) {
-                            mPresenter.addItem(et_name.text.toString(),
+                        if (checkEditTextValidation()) {
+                            mViewModel.addItem(
+                                et_name.text.toString(),
                                 et_created_date.text.toString(),
                                 et_festival_date.text.toString(),
                                 et_about.text.toString(),
-                                tv_choose_type.text.toString())
+                                tv_choose_type.text.toString(),
+                                this
+                            )
                         }
                     }
                     "Update" -> {
-                        mPresenter.updateItem(et_name.text.toString(),
+                        mViewModel.updateItem(
+                            et_name.text.toString(),
                             et_created_date.text.toString(),
                             et_festival_date.text.toString(),
                             et_about.text.toString(),
-                            tv_choose_type.text.toString())
+                            tv_choose_type.text.toString()
+                        )
                     }
                 }
             }
@@ -254,7 +259,8 @@ class FormActivity : BaseActivity(),View.OnClickListener,FormView{
         const val EXTRA_EVENT_ID_PAGODA = "pagoda"
         const val EXTRA_EVENT_ID_VIEW = "view"
         const val EXTRA_EVENT_ID_ANCIENT = "ancient"
-//        const val EXTRA_EVENT_ID_FOOD = "food"
+
+        //        const val EXTRA_EVENT_ID_FOOD = "food"
 //        const val EXTRA_EVENT_ID_ACCESSORIES = "accessories"
 //        const val EXTRA_EVENT_ID_SUPPORTS = "supports"
         fun newIntent(context: Context): Intent {
@@ -263,7 +269,7 @@ class FormActivity : BaseActivity(),View.OnClickListener,FormView{
         }
     }
 
-    lateinit var mPresenter : FormPresenter
+    lateinit var mViewModel: FormViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_form)
@@ -283,10 +289,8 @@ class FormActivity : BaseActivity(),View.OnClickListener,FormView{
             false
         })
 
-        mPresenter = ViewModelProviders.of(this).get(FormPresenter::class.java)
-        mPresenter.initPresenter(this)
-        mPresenter.addContext(this)
-        mPresenter.checkLanguage()
+        mViewModel =
+            ViewModelProvider(this, MyViewModelProviderFactory).get(FormViewModel::class.java)
 
         img_add_photos.setOnClickListener(this)
         btn_add.setOnClickListener(this)
@@ -298,15 +302,32 @@ class FormActivity : BaseActivity(),View.OnClickListener,FormView{
         val ancientItem = intent.getSerializableExtra(EXTRA_EVENT_ID_ANCIENT) as AncientVO?
 
         when {
-            pagodaItem!=null -> mPresenter.onEditPagodaDetails(pagodaItem)
-            viewItem!=null -> mPresenter.onEditViewDetails(viewItem)
-            ancientItem!=null -> mPresenter.onEditAncientDetails(ancientItem)
+//            pagodaItem!=null -> mPresenter.onEditPagodaDetails(pagodaItem)
+//            viewItem!=null -> mPresenter.onEditViewDetails(viewItem)
+//            ancientItem!=null -> mPresenter.onEditAncientDetails(ancientItem)
+        }
+        mViewModel.images.observe(this) {
+            showPickUpImages(it)
+        }
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mViewModel.progressLoading.observe(this){
+            showProgressLoading()
+        }
+        mViewModel.successMsg.observe(this){
+            successAddingItem(it)
+        }
+        mViewModel.errorMsg.observe(this){
+            showToast(it)
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        mPresenter.onActivityResult(requestCode,resultCode,data)
+        mViewModel.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun onRequestPermissionsResult(
@@ -315,38 +336,33 @@ class FormActivity : BaseActivity(),View.OnClickListener,FormView{
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if(requestCode == REQUEST_EXTERNAL_STORAGE) {
-            mPresenter.chooseMultiplePhotos(this)
+        if (requestCode == REQUEST_EXTERNAL_STORAGE) {
+            mViewModel.chooseMultiplePhotos(this)
         }
     }
 
-    private fun checkEditTextValidation() : Boolean{
+    private fun checkEditTextValidation(): Boolean {
         var valid = false
         ll_name.error = null
         ll_created_date.error = null
         ll_festival_date.error = null
         ll_about.error = null
 
-        if(!mPresenter.checkValidate(et_name)) {
+        if (!mViewModel.checkValidate(et_name)) {
             ll_name.error = "Invalid text"
             ll_name.requestFocus()
-        }
-        else if(tv_choose_type.text.toString() == "Choose Type") {
+        } else if (tv_choose_type.text.toString() == "Choose Type") {
             tv_choose_type.error = "Type required !"
-        }
-        else if(!mPresenter.checkValidate(et_created_date)) {
+        } else if (!mViewModel.checkValidate(et_created_date)) {
             ll_created_date.error = "Invalid text"
             ll_created_date.requestFocus()
-        }
-        else if(!mPresenter.checkValidate(et_festival_date)) {
+        } else if (!mViewModel.checkValidate(et_festival_date)) {
             ll_festival_date.error = "Invalid text"
             ll_festival_date.requestFocus()
-        }
-        else if(!mPresenter.checkValidate(et_about)) {
+        } else if (!mViewModel.checkValidate(et_about)) {
             ll_about.error = "Invalid text"
             ll_about.requestFocus()
-        }
-        else {
+        } else {
             valid = true
         }
 
@@ -356,18 +372,18 @@ class FormActivity : BaseActivity(),View.OnClickListener,FormView{
     @SuppressLint("InflateParams")
     private fun showChooseTypeDialog() {
         val dialogBuilder = AlertDialog.Builder(this)
-        val view = layoutInflater.inflate(R.layout.dialog_choose_type,null)
+        val view = layoutInflater.inflate(R.layout.dialog_choose_type, null)
         dialogBuilder.setView(view)
         alertDialog = dialogBuilder.create()
         alertDialog!!.window!!.attributes.windowAnimations = R.style.DialogChosing
         alertDialog!!.show()
 
-        alertDialog!!.tv_pagoda_type.setOnClickListener (this)
-        alertDialog!!.tv_view_type.setOnClickListener (this)
-        alertDialog!!.tv_ancient_type.setOnClickListener (this)
-        alertDialog!!.tv_food_type.setOnClickListener (this)
-        alertDialog!!.tv_accessories_type.setOnClickListener (this)
-        alertDialog!!.tv_support_type.setOnClickListener (this)
+        alertDialog!!.tv_pagoda_type.setOnClickListener(this)
+        alertDialog!!.tv_view_type.setOnClickListener(this)
+        alertDialog!!.tv_ancient_type.setOnClickListener(this)
+        alertDialog!!.tv_food_type.setOnClickListener(this)
+        alertDialog!!.tv_accessories_type.setOnClickListener(this)
+        alertDialog!!.tv_support_type.setOnClickListener(this)
     }
 
 

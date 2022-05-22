@@ -7,18 +7,12 @@ import io.reactivex.Observable
 interface UploadModel {
 
     fun uploadPhoto(
-        byteArrayList: ArrayList<ByteArray>,
-        geoPointsList: ArrayList<String>,
-        onSuccess: (Observable<ArrayList<PhotoVO>>) -> Unit,
-        onFailure: (String) -> Unit
+            path: ArrayList<String>,
+            geoPointsList : ArrayList<String>,
+            mContext : Context,
+            onSuccess : (Observable<ArrayList<PhotoVO>>) -> Unit
     )
 
-    fun uploadPhotoUrl(
-        path: String,
-        userId: String,
-        itemId: String,
-        itemType: String,
-        geoPoints: String
-    )
+    fun uploadPhotoUrl(path: String, userId: String,itemId: String,itemType : String,geoPoints : String)
 
 }

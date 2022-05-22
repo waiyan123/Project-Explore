@@ -2,6 +2,7 @@ package com.itachi.explore.framework
 
 import android.annotation.SuppressLint
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.tasks.Continuation
 import com.google.android.gms.tasks.Task
@@ -95,6 +96,7 @@ abstract class FirebaseDataSourceImpl(
                         if (count == byteArrayList.size) {
 
                             onSuccess(photoVOList)
+                            Log.d("test---","Successfully uploaded!")
                             successMsg.postValue("SuccessFully uploaded")
                         }
                     }
