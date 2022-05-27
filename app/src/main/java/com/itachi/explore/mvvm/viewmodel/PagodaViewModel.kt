@@ -64,7 +64,9 @@ class PagodaViewModel(interactors: Interactors) : AppViewmodel(interactors) {
     }
 
     fun clickPagodaItem(index : Int) {
-        pagodaItemOb.postValue(pagodaList[index])
+        if(pagodaList.isNotEmpty()) {
+            pagodaItemOb.postValue(pagodaList[index])
+        }
     }
 
     fun checkLanguage() : MutableLiveData<String>{

@@ -125,7 +125,7 @@ class MainActivity : BaseActivity(),View.OnClickListener{
         InterstitialAd.load(this,"ca-app-pub-3232751636100261/1858326901", adRequest, object : InterstitialAdLoadCallback() {
             override fun onAdFailedToLoad(adError: LoadAdError) {
                 Log.d("test---", adError?.message)
-                showToast(adError?.message)
+//                showToast(adError?.message)
                 mInterstitialAd = null
             }
 
@@ -305,7 +305,7 @@ class MainActivity : BaseActivity(),View.OnClickListener{
                 // Code to be executed when an ad request fails.
 //                Log.d("test---","Ads is failed on loading")
 //                Log.d("test---",adError.message)
-                showToast(adError.toString())
+//                showToast(adError.toString())
             }
 
             override fun onAdOpened() {

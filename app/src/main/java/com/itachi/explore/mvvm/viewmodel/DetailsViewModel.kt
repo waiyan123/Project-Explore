@@ -31,6 +31,31 @@ class DetailsViewModel(interactors: Interactors) : AppViewmodel(interactors),Koi
         }
     }
 
+    fun refreshDetails() {
+        mItemVO.observeForever {
+            when(it.item_type){
+                PAGODA_TYPE -> {
+                    GlobalScope.launch {
+                        interactors.getPagoda.fromFirebase(it.item_id,
+                            {pagodaVO->
+                                mItemVO.postValue(pagodaVO as ItemVO)
+                            },
+                            {
+
+                            })
+                    }
+                }
+                VIEW_TYPE -> {
+
+                }
+                ANCIENT_TYPE -> {
+
+                }
+
+            }
+        }
+    }
+
 
     fun setupItemVO(itemVO: ItemVO) {
         mItemVO.postValue(itemVO)

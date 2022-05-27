@@ -49,21 +49,18 @@ class ActivityDetail : BaseActivity(),View.OnClickListener{
         val intent = FormActivity.newIntent(this)
         intent.putExtra(FormActivity.EXTRA_EVENT_ID_PAGODA,pagodaVO)
         startActivity(intent)
-        finish()
     }
 
     private fun editView(viewVO: ViewVO?) {
         val intent = FormActivity.newIntent(this)
         intent.putExtra(FormActivity.EXTRA_EVENT_ID_VIEW,viewVO)
         startActivity(intent)
-        finish()
     }
 
     private fun editAncient(ancientVO: AncientVO?) {
         val intent = FormActivity.newIntent(this)
         intent.putExtra(FormActivity.EXTRA_EVENT_ID_ANCIENT,ancientVO)
         startActivity(intent)
-        finish()
     }
 
     @SuppressLint("SetTextI18n")
@@ -217,6 +214,7 @@ class ActivityDetail : BaseActivity(),View.OnClickListener{
         mViewModel.language.observe(this){
             changeLanguage(it)
         }
+
     }
 
 
@@ -241,7 +239,9 @@ class ActivityDetail : BaseActivity(),View.OnClickListener{
             }
 
             R.id.tv_edit -> {
+                alertDialog?.dismiss()
                 mViewModel.mItemVO.observe(this) {
+
                     when(it.item_type){
                         PAGODA_TYPE->{
                             editPagoda(it as PagodaVO)

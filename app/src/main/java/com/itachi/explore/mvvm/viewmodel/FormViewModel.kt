@@ -47,6 +47,8 @@ class FormViewModel(interactors: Interactors) : AppViewmodel(interactors), KoinC
     val pickupImageError = MutableLiveData<Boolean>()
     var formType = "Add"
     val language = MutableLiveData<String>()
+    val mItemVO = MutableLiveData<ItemVO>()
+
     init {
         GlobalScope.launch {
             interactors.getUser.fromRoom(
@@ -61,6 +63,15 @@ class FormViewModel(interactors: Interactors) : AppViewmodel(interactors), KoinC
         languageModel.getLanguage {
             language.postValue(it)
         }
+    }
+    fun onEditItemVO(itemVO : ItemVO) {
+        mItemVO.postValue(itemVO)
+
+        val uri = itemVO.photos.map {
+            Uri.parse(it.url)
+        }
+
+        images.postValue(ArrayList(uri))
     }
 
     fun checkValidate(et: EditText): Boolean {

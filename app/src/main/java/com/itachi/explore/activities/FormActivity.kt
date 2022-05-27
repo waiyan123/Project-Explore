@@ -21,6 +21,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.itachi.core.domain.AncientVO
+import com.itachi.core.domain.ItemVO
 import com.itachi.core.domain.PagodaVO
 import com.itachi.core.domain.ViewVO
 import com.itachi.explore.R
@@ -118,7 +119,7 @@ class FormActivity : BaseActivity(), View.OnClickListener {
         alertDialog!!.window!!.attributes = lp
     }
 
-    private fun showPhotoError(error: String) {
+    private fun showError(error: String) {
         showToast(error)
         hideLoading()
     }
@@ -302,12 +303,18 @@ class FormActivity : BaseActivity(), View.OnClickListener {
         val ancientItem = intent.getSerializableExtra(EXTRA_EVENT_ID_ANCIENT) as AncientVO?
 
         when {
-//            pagodaItem!=null -> mPresenter.onEditPagodaDetails(pagodaItem)
-//            viewItem!=null -> mPresenter.onEditViewDetails(viewItem)
-//            ancientItem!=null -> mPresenter.onEditAncientDetails(ancientItem)
+            pagodaItem!=null -> mViewModel.onEditItemVO(pagodaItem as ItemVO)
+            viewItem!=null -> mViewModel.onEditItemVO(viewItem as ItemVO)
+            ancientItem!=null -> mViewModel.onEditItemVO(ancientItem as ItemVO)
         }
         mViewModel.images.observe(this) {
             showPickUpImages(it)
+        }
+        mViewModel.language.observe(this){
+            changeLanguage(it)
+        }
+        mViewModel.mItemVO.observe(this) {itemVO->
+            showEditDetails(itemVO.title,itemVO.created_date,itemVO.festival_date,itemVO.about,itemVO.item_type)
         }
 
     }
@@ -321,7 +328,7 @@ class FormActivity : BaseActivity(), View.OnClickListener {
             successAddingItem(it)
         }
         mViewModel.errorMsg.observe(this){
-            showToast(it)
+            showError(it)
         }
         mViewModel.pickupImageError.observe(this){pickupError->
             if(pickupError) {
