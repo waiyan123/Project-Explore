@@ -1,5 +1,6 @@
 package com.itachi.explore.framework
 
+import android.annotation.SuppressLint
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.google.firebase.auth.FirebaseAuth
@@ -15,6 +16,8 @@ import com.itachi.explore.framework.mappers.PagodaMapper
 import com.itachi.explore.persistence.entities.PagodaEntity
 import com.itachi.explore.utils.*
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -125,6 +128,7 @@ class PagodaFirebaseDataSourceImpl(
         TODO("Not yet implemented")
     }
 
+    @SuppressLint("CheckResult")
     override suspend fun addPagoda(
         byteArrayList: ArrayList<ByteArray>,
         geoPointsList: ArrayList<String>,
@@ -145,25 +149,25 @@ class PagodaFirebaseDataSourceImpl(
                         geoPointsList[index]
                     )
                 }
+                val firestorePagoda = pagodaMapper.voToFirebaseHashmap(pagodaVO)
+
+                firestoreRef.collection(PAGODAS)
+                    .document(pagodaVO.item_id)
+                    .set(firestorePagoda)
+                    .addOnSuccessListener {
+                        onSuccess("Successfully added Pagoda")
+                    }
+                    .addOnFailureListener {
+                        onFailure("Failed to add Pagoda")
+                    }
             },
             {
                 onFailure(it)
-            }).observeForever {
-            val firestorePagoda = pagodaMapper.voToFirebaseHashmap(pagodaVO)
-
-            firestoreRef.collection(PAGODAS)
-                .document(pagodaVO.item_id)
-                .set(firestorePagoda)
-                .addOnSuccessListener {
-                    onSuccess("Successfully added Pagoda")
-                }
-                .addOnFailureListener {
-                    onFailure("Failed to add Pagoda")
-                }
-        }
+            })
 
     }
 
+    @SuppressLint("CheckResult")
     override suspend fun updatePagoda(
         photoVOList: List<PhotoVO>,
         byteArrayList: ArrayList<ByteArray>,
@@ -179,20 +183,19 @@ class PagodaFirebaseDataSourceImpl(
                 photoVOList.forEachIndexed { index, photoVO ->
                     uploadPhotoUrl(photoVO.path,pagodaVO.uploader_id,pagodaVO.item_id,pagodaVO.item_type,geoPointsList[index])
                 }
+                val firestorePagoda = pagodaMapper.voToFirebaseHashmap(pagodaVO)
+                firestoreRef.collection(PAGODAS)
+                    .document(pagodaVO.item_id)
+                    .update(firestorePagoda as Map<String, Any>)
+                    .addOnSuccessListener {
+                        onSuccess("Successfully updated Pagoda")
+                    }
+                    .addOnFailureListener {
+                        onFailure("Failed to update Pagoda")
+                    }
             },
             {
                 onFailure(it)
-            }).observeForever {
-            val firestorePagoda = pagodaMapper.voToFirebaseHashmap(pagodaVO)
-            firestoreRef.collection(PAGODAS)
-                .document(pagodaVO.item_id)
-                .update(firestorePagoda as Map<String, Any>)
-                .addOnSuccessListener {
-                    onSuccess("Successfully updated Pagoda")
-                }
-                .addOnFailureListener {
-                    onFailure("Failed to update Pagoda")
-                }
-        }
+            })
     }
 }

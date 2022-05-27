@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
+import android.util.Log
 import android.widget.EditText
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -43,6 +44,7 @@ class FormViewModel(interactors: Interactors) : AppViewmodel(interactors), KoinC
     val progressLoading = MutableLiveData<Boolean>()
     val successMsg = MutableLiveData<String>()
     val errorMsg = MutableLiveData<String>()
+    val pickupImageError = MutableLiveData<Boolean>()
     var formType = "Add"
     val language = MutableLiveData<String>()
     init {
@@ -89,11 +91,14 @@ class FormViewModel(interactors: Interactors) : AppViewmodel(interactors), KoinC
                 if (resultCode == Activity.RESULT_OK) {
                     val path = data?.getParcelableArrayListExtra<Uri>(Define.INTENT_PATH)
                     if (path != null) {
+                        mPickupImages.clear()
+                        uris.clear()
                         for (image in path) {
                             mPickupImages.add(image.toString())
                             uris.add(image)
                         }
                         images.postValue(uris)
+                        pickupImageError.postValue(false)
                     }
                 }
             }
@@ -193,6 +198,7 @@ class FormViewModel(interactors: Interactors) : AppViewmodel(interactors), KoinC
         }
 
         if (mPickupImages.size > 0) {
+            pickupImageError.postValue(false)
             progressLoading.postValue(true)
                 Util.getGeoPointsFromImageList(context, mPickupImages)
                     .subscribeOn(Schedulers.io())
@@ -208,6 +214,7 @@ class FormViewModel(interactors: Interactors) : AppViewmodel(interactors), KoinC
                                         geoPointsList,
                                         { success ->
                                             successMsg.postValue(success)
+                                            Log.d("test---",success)
                                         },
                                         { error ->
                                             errorMsg.postValue(error)
@@ -218,7 +225,8 @@ class FormViewModel(interactors: Interactors) : AppViewmodel(interactors), KoinC
                     }
 
         } else {
-//            errorMsg.postValue("Pick up photo")
+            pickupImageError.postValue(true)
+            Log.d("test---","pick up photo")
         }
     }
 
@@ -256,6 +264,7 @@ class FormViewModel(interactors: Interactors) : AppViewmodel(interactors), KoinC
         }
 
         if (mPickupImages.size > 0) {
+            pickupImageError.postValue(false)
             progressLoading.postValue(true)
             uploadPhotos(type, context)
             mPhotoVOList.observeForever { photoVOList ->
@@ -272,7 +281,7 @@ class FormViewModel(interactors: Interactors) : AppViewmodel(interactors), KoinC
             }
 
         } else {
-            errorMsg.postValue("Pick up photo")
+            pickupImageError.postValue(true)
         }
     }
 
@@ -310,6 +319,7 @@ class FormViewModel(interactors: Interactors) : AppViewmodel(interactors), KoinC
         }
 
         if (mPickupImages.size > 0) {
+            pickupImageError.postValue(false)
             progressLoading.postValue(true)
             uploadPhotos(type, context)
             mPhotoVOList.observeForever { photoVOList ->
@@ -326,7 +336,7 @@ class FormViewModel(interactors: Interactors) : AppViewmodel(interactors), KoinC
             }
 
         } else {
-            errorMsg.postValue("Pick up photo")
+            pickupImageError.postValue(true)
         }
     }
 }

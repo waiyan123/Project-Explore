@@ -142,6 +142,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <HorizontalScrollView
+            android:id="@+id/hr_scroll_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -192,6 +193,17 @@
                     android:contentDescription="TODO" />
             </LinearLayout>
         </HorizontalScrollView>
+        <TextView
+            android:id="@+id/tv_pick_up_error"
+            android:textColor="#920"
+            android:layout_gravity="right"
+            android:layout_marginRight="30dp"
+            android:visibility="gone"
+            android:text="Pick up photos !"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+        </TextView>
 
         <RelativeLayout
             android:layout_width="match_parent"

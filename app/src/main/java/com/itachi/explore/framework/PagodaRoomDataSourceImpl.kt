@@ -1,5 +1,6 @@
 package com.itachi.explore.framework
 
+import android.util.Log
 import com.itachi.core.data.db.PagodaRoomDataSource
 import com.itachi.core.domain.PagodaVO
 import com.itachi.explore.framework.mappers.PagodaMapper
@@ -19,6 +20,7 @@ class PagodaRoomDataSourceImpl(
 
     override suspend fun delete(pagodaVO: PagodaVO) {
         database.pagodaDao().deletePagodaById(pagodaVO.item_id)
+        Log.d("test---","deleted pagoda item")
     }
 
     override suspend fun get(id: String) = pagodaMapper.entityToVO(database.pagodaDao().getPagodaById(id))

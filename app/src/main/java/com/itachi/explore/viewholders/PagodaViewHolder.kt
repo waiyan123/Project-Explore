@@ -19,7 +19,7 @@ class PagodaViewHolder(itemView: View, val adapterOnClick : (Int) -> Unit) : Bas
         }
         itemView.tv_pagoda_item.text = title
         Glide.with(itemView.context.applicationContext)
-            .load(data.photos?.get(0)?.url)
+            .load(data.photos[0].url)
             .into(itemView.img_pagoda_item)
 
         itemView.setOnClickListener {

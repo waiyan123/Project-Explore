@@ -323,6 +323,12 @@ class FormActivity : BaseActivity(), View.OnClickListener {
         mViewModel.errorMsg.observe(this){
             showToast(it)
         }
+        mViewModel.pickupImageError.observe(this){pickupError->
+            if(pickupError) {
+                tv_pick_up_error.visibility = View.VISIBLE
+            } else tv_pick_up_error.visibility = View.GONE
+
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

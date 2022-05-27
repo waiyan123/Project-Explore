@@ -72,7 +72,7 @@ class PagodasActivity : BaseActivity(),View.OnClickListener{
 
         img_back.setOnClickListener(this)
 
-        mViewModel.getBannerPhotos().observe(this){photoList->
+        mViewModel.bannerPhotos.observe(this){photoList->
             showAnim(shimmer_banner,false)
             app_bar_layout.visibility = View.VISIBLE
             setUpBanner(photoList)
@@ -81,12 +81,8 @@ class PagodasActivity : BaseActivity(),View.OnClickListener{
         mViewModel.errorGettingBanner.observe(this) {
             Toast.makeText(this,it,Toast.LENGTH_SHORT).show()
         }
-    }
 
-    override fun onResume() {
-        super.onResume()
-
-        mViewModel.getPagodaList().observe(this, androidx.lifecycle.Observer {
+        mViewModel.pagodaListOb.observe(this, androidx.lifecycle.Observer {
             tv_no_items.visibility = View.GONE
             rv_pagodas.visibility = View.VISIBLE
 
@@ -103,6 +99,16 @@ class PagodasActivity : BaseActivity(),View.OnClickListener{
             showAnim(shimmer_banner,false)
             showAnim(shimmer_showall,false)
         })
+        mViewModel.pagodaItemOb.observe(this){pagodaVO->
+            val intent = ActivityDetail.newIntent(this)
+            intent.putExtra(ActivityDetail.EXTRA_EVENT_ID_PAGODA,pagodaVO)
+            startActivity(intent)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mViewModel.getPagodaList()
     }
 
     override fun onDestroy() {
@@ -131,11 +137,7 @@ class PagodasActivity : BaseActivity(),View.OnClickListener{
 
     private fun setUpPagodaRecyclerView () {
         rvAdapter = PagodasRecyclerAdapter{
-            mViewModel.clickPagodaItem(it).observe(this, androidx.lifecycle.Observer { pagodaVO->
-                val intent = ActivityDetail.newIntent(this)
-                intent.putExtra(ActivityDetail.EXTRA_EVENT_ID_PAGODA,pagodaVO)
-                startActivity(intent)
-            })
+            mViewModel.clickPagodaItem(it)
         }
 
         with(rv_pagodas) {

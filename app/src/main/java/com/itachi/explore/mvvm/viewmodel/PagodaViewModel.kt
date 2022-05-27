@@ -1,5 +1,6 @@
 package com.itachi.explore.mvvm.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.itachi.core.domain.AncientVO
 import com.itachi.core.domain.PagodaVO
@@ -10,14 +11,21 @@ import kotlinx.coroutines.launch
 
 class PagodaViewModel(interactors: Interactors) : AppViewmodel(interactors) {
 
-    private val bannerPhotos = MutableLiveData<ArrayList<String>>()
+    val bannerPhotos = MutableLiveData<ArrayList<String>>()
     val errorGettingBanner = MutableLiveData<String>()
     val errorGettingPagodaList = MutableLiveData<String>()
-    private val pagodaList = MutableLiveData<ArrayList<PagodaVO>>()
-    private val pagodaItem = MutableLiveData<PagodaVO>()
-    private val checkLanguage = MutableLiveData<String>()
+    val pagodaListOb = MutableLiveData<ArrayList<PagodaVO>>()
+    val pagodaList = ArrayList<PagodaVO>()
 
-    fun getBannerPhotos() : MutableLiveData<ArrayList<String>>{
+    val pagodaItemOb = MutableLiveData<PagodaVO>()
+    val checkLanguage = MutableLiveData<String>()
+
+    init {
+        getBannerPhotos()
+        getPagodaList()
+    }
+
+    private fun getBannerPhotos(){
         GlobalScope.launch {
             interactors.getPagoda.getBanners(
                 {
@@ -30,16 +38,19 @@ class PagodaViewModel(interactors: Interactors) : AppViewmodel(interactors) {
                 }
             )
         }
-        return bannerPhotos
     }
 
-    fun getPagodaList() : MutableLiveData<ArrayList<PagodaVO>> {
+    fun getPagodaList()  {
 
         GlobalScope.launch {
-            pagodaList.postValue(ArrayList(interactors.getAllPagodas.fromRoom()))
+            Log.d("test---","pagoda list from room "+interactors.getAllPagodas.fromRoom().size)
+            pagodaListOb.postValue(ArrayList(interactors.getAllPagodas.fromRoom()))
             interactors.getAllPagodas.fromFirebase(
                 {list->
-                    pagodaList.postValue(ArrayList(list))
+                    pagodaListOb.postValue(ArrayList(list))
+                    pagodaList.clear()
+                    pagodaList.addAll(list)
+                    Log.d("test---","list "+list.size)
                     GlobalScope.launch {
                         interactors.addAllPagodas.toRoom(list)
                     }
@@ -49,14 +60,11 @@ class PagodaViewModel(interactors: Interactors) : AppViewmodel(interactors) {
                 }
             )
         }
-        return pagodaList
+
     }
 
-    fun clickPagodaItem(index : Int) : MutableLiveData<PagodaVO>{
-        pagodaList.observeForever { list->
-            pagodaItem.postValue(list[index])
-        }
-        return pagodaItem
+    fun clickPagodaItem(index : Int) {
+        pagodaItemOb.postValue(pagodaList[index])
     }
 
     fun checkLanguage() : MutableLiveData<String>{

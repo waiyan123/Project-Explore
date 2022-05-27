@@ -64,10 +64,10 @@ abstract class FirebaseDataSourceImpl(
         geoPointsList: ArrayList<String>,
         onSuccess: (ArrayList<PhotoVO>) -> Unit,
         onFailure: (String) -> Unit
-    ) : MutableLiveData<String>{
+    ) {
 
         var count = 0
-        var successMsg = MutableLiveData<String>()
+        var successMsg = ""
 
         var photoVOList = ArrayList<PhotoVO>()
         byteArrayList.forEachIndexed { index, data ->
@@ -97,7 +97,7 @@ abstract class FirebaseDataSourceImpl(
 
                             onSuccess(photoVOList)
                             Log.d("test---","Successfully uploaded!")
-                            successMsg.postValue("SuccessFully uploaded")
+                            successMsg = "SuccessFully uploaded"
                         }
                     }
                 }.addOnFailureListener {
@@ -105,7 +105,7 @@ abstract class FirebaseDataSourceImpl(
                 }
             }
         }
-    return successMsg
+
     }
 
      fun uploadPhotoUrl(
