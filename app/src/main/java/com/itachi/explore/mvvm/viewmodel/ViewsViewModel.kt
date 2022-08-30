@@ -1,19 +1,21 @@
 package com.itachi.explore.mvvm.viewmodel
 
 import android.content.SharedPreferences
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import com.itachi.core.data.ViewRepository
 import com.itachi.core.domain.UploadedPhotoVO
-import com.itachi.core.domain.ViewVO
-import com.itachi.explore.framework.Interactors
 import com.itachi.explore.utils.LANGUAGE
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import me.myatminsoe.mdetect.MDetect
 import org.koin.core.KoinComponent
 import org.koin.core.inject
+import javax.inject.Inject
 
-class ViewsViewModel(interactors : Interactors) : AppViewmodel(interactors),KoinComponent {
+@HiltViewModel
+class ViewsViewModel @Inject constructor(private val viewRepository: ViewRepository) : ViewModel(),KoinComponent {
 
     private val uploadedPhotoVOList = MutableLiveData<ArrayList<UploadedPhotoVO>>()
     private val photoVoItem = MutableLiveData<UploadedPhotoVO>()
@@ -43,7 +45,15 @@ class ViewsViewModel(interactors : Interactors) : AppViewmodel(interactors),Koin
 
     fun showPhotoList() : MutableLiveData<ArrayList<UploadedPhotoVO>>{
         GlobalScope.launch {
-            interactors.getAllPhotoViews.fromFirebase(
+//            interactors.getAllPhotoViews.fromFirebase(
+//                {
+//                    uploadedPhotoVOList.postValue(ArrayList(it))
+//                },
+//                {
+//                    errorMsg.postValue(it)
+//                }
+//            )
+            viewRepository.getAllPhotoViewsFromFirebase(
                 {
                     uploadedPhotoVOList.postValue(ArrayList(it))
                 },

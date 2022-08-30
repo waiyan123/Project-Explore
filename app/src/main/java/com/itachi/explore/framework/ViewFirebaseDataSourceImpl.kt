@@ -14,8 +14,9 @@ import com.itachi.explore.persistence.entities.PagodaEntity
 import com.itachi.explore.persistence.entities.UploadedPhotoEntity
 import com.itachi.explore.utils.*
 import io.reactivex.Observable
+import javax.inject.Inject
 
-class ViewFirebaseDataSourceImpl(private val viewMapper: ViewMapper,
+class ViewFirebaseDataSourceImpl @Inject constructor(private val viewMapper: ViewMapper,
                                  firestoreRef : FirebaseFirestore,
                                  firebaseStorage : FirebaseStorage,
                                  auth : FirebaseAuth

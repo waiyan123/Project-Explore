@@ -1,6 +1,8 @@
 package com.itachi.explore.framework.mappers
 
-class ListMapperImpl<I, O>(
+import javax.inject.Inject
+
+class ListMapperImpl<I, O> @Inject constructor(
     private val mapper: Mapper<I, O>
 ) : ListMapper<I, O> {
     override fun map(input: List<I>?): List<O> {

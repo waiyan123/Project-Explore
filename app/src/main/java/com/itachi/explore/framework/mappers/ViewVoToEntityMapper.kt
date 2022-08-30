@@ -5,6 +5,7 @@ import com.itachi.core.domain.ViewVO
 import com.itachi.explore.persistence.entities.PagodaEntity
 import com.itachi.explore.persistence.entities.PhotoEntity
 import com.itachi.explore.persistence.entities.ViewEntity
+import javax.inject.Inject
 
 class ViewVoToEntityMapper : Mapper<ViewVO, ViewEntity>{
 

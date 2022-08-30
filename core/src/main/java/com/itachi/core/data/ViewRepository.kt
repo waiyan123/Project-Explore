@@ -5,8 +5,9 @@ import com.itachi.core.data.network.ViewFirebaseDataSource
 import com.itachi.core.domain.PagodaVO
 import com.itachi.core.domain.UploadedPhotoVO
 import com.itachi.core.domain.ViewVO
+import javax.inject.Inject
 
-class ViewRepository(
+class ViewRepository @Inject constructor(
     private val viewFirebaseDataSource: ViewFirebaseDataSource,
     private val viewRoomDataSource: ViewRoomDataSource
 ) {

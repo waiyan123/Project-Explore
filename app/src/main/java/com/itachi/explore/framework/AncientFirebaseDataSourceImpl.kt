@@ -63,7 +63,7 @@ class AncientFirebaseDataSourceImpl(
             .get()
             .addOnSuccessListener {
 
-                offer(FirestoreResult.Success(ancientMapper.entityListToVOList(it.toObjects(AncientEntity::class.java))))
+                trySend(FirestoreResult.Success(ancientMapper.entityListToVOList(it.toObjects(AncientEntity::class.java)))).isSuccess
 
                 TODO("Something")
             }

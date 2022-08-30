@@ -6,8 +6,9 @@ import com.itachi.explore.framework.mappers.ViewMapper
 import com.itachi.explore.persistence.MyDatabase
 import org.koin.core.KoinComponent
 import org.koin.core.inject
+import javax.inject.Inject
 
-class ViewRoomDataSourceImpl(private val viewMapper: ViewMapper) : ViewRoomDataSource,KoinComponent{
+class ViewRoomDataSourceImpl @Inject constructor(private val viewMapper: ViewMapper) : ViewRoomDataSource,KoinComponent{
 
     private val database: MyDatabase by inject()
 

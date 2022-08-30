@@ -15,12 +15,14 @@ import com.itachi.explore.framework.*
 import com.itachi.explore.framework.mappers.*
 import com.itachi.explore.mvvm.viewmodel.MyViewModelProviderFactory
 import com.itachi.explore.third_parties.GlideLoadingService
+import dagger.hilt.android.HiltAndroidApp
 import me.myatminsoe.mdetect.MDetect
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import ss.com.bannerslider.Slider
 
+@HiltAndroidApp
 class MyApplication : Application() {
 
     private val imageLoadingService: GlideLoadingService by inject()
@@ -78,12 +80,7 @@ class MyApplication : Application() {
         val viewVoToEntityMapper = ViewVoToEntityMapper()
         val viewVoToFirebaseMapper = ViewVoToFirebaseMapper()
         val photoEntityToVoMapper = UploadedPhotoEntityToVoMapper()
-        val viewMapper = ViewMapper(
-            ListMapperImpl(photoEntityToVoMapper),
-            viewEntityToVoMapper,viewVoToEntityMapper,
-            viewVoToFirebaseMapper,ListMapperImpl(viewEntityToVoMapper),
-            ListMapperImpl(viewVoToEntityMapper)
-        )
+        val viewMapper = ViewMapper()
         val viewFirebaseDataSource = ViewFirebaseDataSourceImpl(viewMapper,firestoreRef,firebaseStorageRef,firebaseAuthRef)
         val viewRoomDataSource = ViewRoomDataSourceImpl(viewMapper)
 

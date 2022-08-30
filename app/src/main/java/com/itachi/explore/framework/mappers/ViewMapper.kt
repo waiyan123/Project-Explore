@@ -6,15 +6,20 @@ import com.itachi.core.domain.ViewVO
 import com.itachi.explore.persistence.entities.PagodaEntity
 import com.itachi.explore.persistence.entities.UploadedPhotoEntity
 import com.itachi.explore.persistence.entities.ViewEntity
+import javax.inject.Inject
 
-class ViewMapper(
-    private val photoEntityListToVoMapper: ListMapperImpl<UploadedPhotoEntity, UploadedPhotoVO>,
-    private val viewEntityToVoMapper: ViewEntityToVoMapper,
-    private val viewVoToEntityMapper: ViewVoToEntityMapper,
-    private val viewVoToFirebaseMapper: ViewVoToFirebaseMapper,
-    private val viewEntityListToVOListMapper: ListMapperImpl<ViewEntity, ViewVO>,
-    private val viewVoListToEntityListMapper: ListMapperImpl<ViewVO, ViewEntity>
-) {
+class ViewMapper {
+    private val viewEntityToVoMapper = ViewEntityToVoMapper()
+    private val viewVoToEntityMapper = ViewVoToEntityMapper()
+    private val viewVoToFirebaseMapper = ViewVoToFirebaseMapper()
+    private val uploadedPhotoEntityToVoMapper = UploadedPhotoEntityToVoMapper()
+    private val viewEntityListToVOListMapper =
+        ListMapperImpl<ViewEntity, ViewVO>(viewEntityToVoMapper)
+    private val viewVoListToEntityListMapper =
+        ListMapperImpl<ViewVO, ViewEntity>(viewVoToEntityMapper)
+    private val photoEntityListToVoMapper =
+        ListMapperImpl<UploadedPhotoEntity, UploadedPhotoVO>(uploadedPhotoEntityToVoMapper)
+
     fun uploadedPhotoEntityToVoList(uploadedPhotoEntities: List<UploadedPhotoEntity>) =
         photoEntityListToVoMapper.map(uploadedPhotoEntities)
 

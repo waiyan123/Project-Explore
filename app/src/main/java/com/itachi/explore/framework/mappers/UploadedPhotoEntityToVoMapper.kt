@@ -5,8 +5,9 @@ import com.itachi.core.domain.UploadedPhotoVO
 import com.itachi.core.domain.ViewVO
 import com.itachi.explore.persistence.entities.UploadedPhotoEntity
 import com.itachi.explore.persistence.entities.ViewEntity
+import javax.inject.Inject
 
-class UploadedPhotoEntityToVoMapper: Mapper<UploadedPhotoEntity, UploadedPhotoVO> {
+class UploadedPhotoEntityToVoMapper @Inject constructor(): Mapper<UploadedPhotoEntity, UploadedPhotoVO> {
 
     override fun map(input: UploadedPhotoEntity?): UploadedPhotoVO {
         if(input!=null) {
