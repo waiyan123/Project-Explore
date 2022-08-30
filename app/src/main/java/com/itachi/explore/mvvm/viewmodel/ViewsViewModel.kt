@@ -1,6 +1,7 @@
 package com.itachi.explore.mvvm.viewmodel
 
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.itachi.core.data.ViewRepository
@@ -15,14 +16,15 @@ import org.koin.core.inject
 import javax.inject.Inject
 
 @HiltViewModel
-class ViewsViewModel @Inject constructor(private val viewRepository: ViewRepository) : ViewModel(),KoinComponent {
+class ViewsViewModel @Inject constructor(private val viewRepository: ViewRepository,
+private val sharPreferences : SharedPreferences) : ViewModel(),KoinComponent {
 
     private val uploadedPhotoVOList = MutableLiveData<ArrayList<UploadedPhotoVO>>()
     private val photoVoItem = MutableLiveData<UploadedPhotoVO>()
     private val errorMsg = MutableLiveData<String>()
     private val checkLanguage = MutableLiveData<String>()
 
-    private val sharPreferences : SharedPreferences by inject()
+//    private val sharPreferences : SharedPreferences by inject()
 
     init {
         when(sharPreferences.getString(LANGUAGE,"en")) {
@@ -30,9 +32,11 @@ class ViewsViewModel @Inject constructor(private val viewRepository: ViewReposit
             "en" -> checkLanguage.postValue("en")
             "mm" -> {
                 if(MDetect.isUnicode()){
+                    Log.d("test---","mm unicode")
                     checkLanguage.postValue("mm_unicode")
                 }
                 else {
+                    Log.d("test---","mm zawgyi")
                     checkLanguage.postValue("mm_zawgyi")
                 }
             }

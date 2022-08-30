@@ -1,5 +1,7 @@
 package com.itachi.explore.di
 
+import android.content.Context
+import android.content.SharedPreferences
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -13,11 +15,14 @@ import com.itachi.explore.framework.ViewRoomDataSourceImpl
 import com.itachi.explore.framework.mappers.*
 import com.itachi.explore.persistence.entities.UploadedPhotoEntity
 import com.itachi.explore.persistence.entities.ViewEntity
+import com.itachi.explore.utils.LANGUAGE
+import com.itachi.explore.utils.PRIVATE_MODE
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -80,5 +85,9 @@ object DaggerModule {
         return ViewRepository(viewFirebaseDataSource, viewRoomDataSource)
     }
 
-
+    @Provides
+    @Singleton
+    fun providesSharedPreferences(@ApplicationContext context: Context) : SharedPreferences{
+        return context.getSharedPreferences(LANGUAGE, Context.MODE_PRIVATE)
+    }
 }
