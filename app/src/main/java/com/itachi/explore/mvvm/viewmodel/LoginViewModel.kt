@@ -86,15 +86,17 @@ class LoginViewModel(interactors: Interactors) : AppViewmodel(interactors), Koin
         val credential = GoogleAuthProvider.getCredential(account.idToken,null)
         firebaseAuthRef.signInWithCredential(credential)
             .addOnCompleteListener {
-                val userId = account.id
+                val userId = firebaseAuthRef.currentUser!!.uid
                 GlobalScope.launch {
                     interactors.addUser.toFirebase(UserVO("",""+userId,"",
                         "",account.email!!,account.displayName!!, PhotoVO("",account.photoUrl.toString(),""),
                         PhotoVO("","",""),"",false),
                         {
+                            Log.d("test---","add user to firebase")
                             GlobalScope.launch {
                                 interactors.addUser.toRoom(it,
                                     {
+                                        Log.d("test---","add user to room")
                                         loginSuccess.postValue(true)
                                     },
                                     {errorMsgFromRoom->

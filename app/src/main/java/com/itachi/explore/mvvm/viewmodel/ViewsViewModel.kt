@@ -12,7 +12,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import me.myatminsoe.mdetect.MDetect
 import org.koin.core.KoinComponent
-import org.koin.core.inject
 import javax.inject.Inject
 
 @HiltViewModel

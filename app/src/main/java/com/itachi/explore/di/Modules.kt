@@ -1,5 +1,6 @@
 package com.itachi.explore.di
 
+import android.content.Context
 import android.content.SharedPreferences
 import androidx.room.Room
 import com.google.android.gms.auth.api.identity.Identity
@@ -30,7 +31,7 @@ val applicationModule = module(override = true) {
     }
 
     single<SharedPreferences> {
-        androidContext().getSharedPreferences(LANGUAGE, PRIVATE_MODE)
+        androidContext().getSharedPreferences(LANGUAGE, Context.MODE_PRIVATE)
     }
 
     single {

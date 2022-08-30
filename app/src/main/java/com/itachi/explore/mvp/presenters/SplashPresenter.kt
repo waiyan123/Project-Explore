@@ -17,7 +17,6 @@ class SplashPresenter : BasePresenter<SplashView>(),KoinComponent{
     private val sharPreferences : SharedPreferences by inject()
 
     fun checkAlreadyLogin() {
-        mView.navigateToMain()
         if(firebaseAuthRef.currentUser!=null){
             if(sharPreferences.getBoolean(DONT_SHOW_INTRO,false)) {
                 mView.navigateToMain()

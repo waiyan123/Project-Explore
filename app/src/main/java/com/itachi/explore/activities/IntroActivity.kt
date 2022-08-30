@@ -38,13 +38,13 @@ class IntroActivity : BaseActivity(),IntroView,RadioGroup.OnCheckedChangeListene
 
     override fun showIntro(intro: String) {
                                                                 // changed to hard coded string
-//        var mIntro = intro
-//        if(!MDetect.isUnicode()) {
-//            mIntro = Rabbit.uni2zg(mIntro)
-//        }
-//
-//        tv_intro_body.visibility = View.VISIBLE
-//        tv_intro_body.text = mIntro
+        var mIntro = intro
+        if(!MDetect.isUnicode()) {
+            mIntro = Rabbit.uni2zg(mIntro)
+        }
+
+        tv_intro_body.visibility = View.VISIBLE
+        tv_intro_body.text = mIntro
     }
 
     override fun showError(error: String) {

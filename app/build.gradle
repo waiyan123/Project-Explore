@@ -17,7 +17,7 @@ android {
         applicationId "com.itachi.explore"
         minSdkVersion 24
         targetSdkVersion 32
-        versionCode 11
+        versionCode 12
         versionName "1.0.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

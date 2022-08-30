@@ -7,19 +7,23 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
+import com.itachi.core.domain.UserVO
 import com.itachi.explore.R
 import com.itachi.explore.mvvm.viewmodel.MainViewModel
 import com.itachi.explore.mvvm.viewmodel.MyViewModelProviderFactory
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.dialog_profile.*
 
-
+@AndroidEntryPoint
 class MainActivity : BaseActivity(),View.OnClickListener{
 
     private fun dismissUpdate() {
@@ -32,18 +36,18 @@ class MainActivity : BaseActivity(),View.OnClickListener{
         showForceUpdateDialog()
     }
 
-//    override fun isUploader(uploader: Boolean) {
-//
-//        if(uploader) {
-//
-//            fab_add.visibility = View.VISIBLE
-//        }
-//        else {
-//            fab_add.visibility = View.GONE
-//        }
-//    }
+    private fun isUploader(uploader: Boolean) {
 
-    private fun checkLanguage(lang: String) {
+        if(uploader) {
+
+            fab_add.visibility = View.VISIBLE
+        }
+        else {
+            fab_add.visibility = View.GONE
+        }
+    }
+
+    private fun showLanguage(lang: String) {
         when(lang) {
             "en" -> {
                 toggle_btn_en.isChecked = true
@@ -86,23 +90,19 @@ class MainActivity : BaseActivity(),View.OnClickListener{
         }
     }
 
-    private fun isUserLogout() {
+    private fun logoutUser() {
         startActivity(LoginActivity.newIntent(this))
         hideLoading()
         finish()
     }
 
-//    override fun showUserInfo(userVO: UserVO) {
-//        tv_user_name.text = userVO.name
-//        Glide.with(applicationContext)
-//            .load(userVO.profile_pic!!.url)
-//            .placeholder(R.drawable.ic_account_circle_black_24dp)
-//            .into(btn_user_profile)
-//    }
-
-//    override fun failedUserInfo(msg: String?) {
-//        showToast(msg!!)
-//    }
+    private fun showUserInfo(userVO: UserVO) {
+        tv_user_name.text = userVO.name
+        Glide.with(applicationContext)
+            .load(userVO.profile_pic!!.url)
+            .placeholder(R.drawable.ic_account_circle_black_24dp)
+            .into(btn_user_profile)
+    }
 
     companion object {
 //        const val EXTRA_EVENT_ID = "Extra_to_extra"
@@ -112,8 +112,7 @@ class MainActivity : BaseActivity(),View.OnClickListener{
         }
     }
 
-//    private lateinit var mPresenter : MainPresenter
-    private lateinit var mViewModel : MainViewModel
+    private val mViewModel : MainViewModel by viewModels()
     private var mInterstitialAd: InterstitialAd? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -156,17 +155,10 @@ class MainActivity : BaseActivity(),View.OnClickListener{
             Log.d("test---", "The interstitial ad wasn't ready yet.")
         }
 
-//        mPresenter = ViewModelProviders.of(this).get(MainPresenter::class.java)
-//        mPresenter.initPresenter(this)
-
-        mViewModel = ViewModelProvider(this, MyViewModelProviderFactory)
-            .get(MainViewModel::class.java)
-
         mViewModel.language.observe(this, Observer {
-            checkLanguage(it)
+            showLanguage(it)
         })
 
-//        mPresenter.checkLanguage()
         setUpForceUpdateDialog()
         showAd()
 
@@ -203,16 +195,33 @@ class MainActivity : BaseActivity(),View.OnClickListener{
             }
         }
 
+        mViewModel.checkLanguage()
+        mViewModel.onCheckUpdate()
     }
 
     override fun onResume() {
         super.onResume()
-        mViewModel.update.observe(this, Observer {
-            if(it==true) {
+        mViewModel.update.observe(this) {
+            if (it) {
                 forceUpdate()
-            }else dismissUpdate()
-        })
-//        mPresenter.getUserInfo()
+            } else dismissUpdate()
+        }
+        mViewModel.mUserVO.observe(this) {
+            showUserInfo(it)
+        }
+        mViewModel.userLogin.observe(this) {isLogin->
+            if(!isLogin) {
+                logoutUser()
+            }
+        }
+        mViewModel.errorMsg.observe(this){
+            showToast(it)
+        }
+
+        mViewModel.isUploader.observe(this){
+            isUploader(it)
+        }
+
     }
 
     override fun onClick(p0: View?) {
@@ -252,7 +261,7 @@ class MainActivity : BaseActivity(),View.OnClickListener{
                 lp.height = 300
                 alertDialog!!.window!!.attributes = lp
                 mViewModel.onClickedLogout()
-                isUserLogout()
+
             }
 
             R.id.tv_view_profile -> {

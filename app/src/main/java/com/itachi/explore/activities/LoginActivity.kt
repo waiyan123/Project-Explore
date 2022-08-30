@@ -3,6 +3,7 @@ package com.itachi.explore.activities
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.WindowManager
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -79,13 +80,9 @@ class LoginActivity : BaseActivity() {
             .load(getDrawable(R.drawable.login_background))
             .into(img_login_background)
 
-//        getKeyHashForFacebook()
-    }
-
-    override fun onResume() {
-        super.onResume()
         mViewModel.isAlreadyLogin.observe(this) { success ->
             if (success) {
+                Log.d("test---","is already login")
                 navigateToIntroActivity()
             }
         }
@@ -95,6 +92,7 @@ class LoginActivity : BaseActivity() {
         mViewModel.loginSuccess.observe(this) { success ->
             if (success) {
                 showToast("Login successful")
+                Log.d("test---","login successful")
                 navigateToIntroActivity()
             }
         }
@@ -106,6 +104,13 @@ class LoginActivity : BaseActivity() {
         mViewModel.language.observe(this) { language->
             changeLanguage(language)
         }
+
+//        getKeyHashForFacebook()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
     }
 
 
