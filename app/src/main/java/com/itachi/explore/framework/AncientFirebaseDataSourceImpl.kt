@@ -1,29 +1,19 @@
 package com.itachi.explore.framework
 
-import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.itachi.core.data.FirestoreResult
-import com.itachi.core.data.db.AncientRoomDataSource
 import com.itachi.core.data.network.AncientFirebaseDataSource
 import com.itachi.core.domain.AncientVO
-import com.itachi.core.domain.ItemVO
 import com.itachi.explore.framework.mappers.AncientMapper
-import com.itachi.explore.framework.mappers.Mapper
 import com.itachi.explore.persistence.entities.AncientEntity
-import com.itachi.explore.persistence.entities.ItemEntity
 import com.itachi.explore.utils.*
-import io.reactivex.Observable
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
-import org.koin.core.KoinComponent
-import kotlin.system.measureTimeMillis
 
 class AncientFirebaseDataSourceImpl(
     private val ancientMapper: AncientMapper,
@@ -51,13 +41,19 @@ class AncientFirebaseDataSourceImpl(
         onFailure: (String) -> Unit
     ): Flow<FirestoreResult<List<AncientVO>>> = callbackFlow {
 
-//        firestoreRef.collection(ANCIENTS)
-//            .get().addOnSuccessListener {
-//                onSuccess(ancientMapper.entityListToVOList(it.toObjects(AncientEntity::class.java)))
-//            }
-//            .addOnFailureListener {
-//
-//            }
+        firestoreRef.collection(ANCIENTS)
+            .get().addOnSuccessListener {
+                val ancientList = it.toObjects(AncientEntity::class.java)
+                val strList = ancientList.map { ancientEntity ->
+                    ancientEntity.title
+                }
+                var str = ""
+                str = strList[0]!!
+                onSuccess(ancientMapper.entityListToVOList(it.toObjects(AncientEntity::class.java)))
+            }
+            .addOnFailureListener {
+
+            }
 
         firestoreRef.collection(ANCIENTS)
             .get()

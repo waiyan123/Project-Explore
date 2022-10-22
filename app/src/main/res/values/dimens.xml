@@ -3,6 +3,8 @@
     <dimen name="card_width_percent_main">0.4</dimen>
     <dimen name="card_height_percent_main">0.2</dimen>
 
+    <dimen name="banner_image_percent_main">0.3</dimen>
+
     <dimen name="main_icon_size">50dp</dimen>
 
     <dimen name="action_bar_size" tools:ignore="PrivateResource">70dp</dimen>

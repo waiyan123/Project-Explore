@@ -2,11 +2,11 @@ package com.itachi.explore.activities
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
 import android.view.Gravity
 import android.view.WindowManager
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.custom_toast.*
@@ -18,6 +18,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.util.Base64
 import android.util.Log
+import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import com.itachi.explore.R
 import com.itachi.explore.utils.PERMISSION_STORAGE
@@ -43,12 +44,12 @@ abstract class BaseActivity : AppCompatActivity(){
         myToast.show()
     }
 
-    @SuppressLint("InflateParams")
     protected fun showLoading() {
         val dialogBuilder = AlertDialog.Builder(this)
         val view = layoutInflater.inflate(R.layout.dialog_loading,null)
         dialogBuilder.setView(view)
         alertDialog = dialogBuilder.create()
+
         alertDialog!!.window!!.attributes.windowAnimations = R.style.DialogLoading
         alertDialog!!.setCancelable(false)
         alertDialog!!.show()
@@ -56,6 +57,12 @@ abstract class BaseActivity : AppCompatActivity(){
         alertDialog!!.lottie_view.playAnimation()
         alertDialog!!.lottie_view.loop(true)
 
+        val lp = WindowManager.LayoutParams()
+
+        lp.copyFrom(alertDialog!!.window!!.attributes)
+        lp.width = 250
+        lp.height = 200
+        alertDialog!!.window!!.attributes = lp
     }
 
     protected fun hideLoading() {
@@ -71,8 +78,6 @@ abstract class BaseActivity : AppCompatActivity(){
             for(signature in info.signatures) {
                 val md = MessageDigest.getInstance("SHA")
                 md.update(signature.toByteArray())
-                Log.d("test---", Base64.encodeToString(md.digest(),
-                    Base64.DEFAULT))
             }
         } catch (e: PackageManager.NameNotFoundException) {
 
@@ -82,7 +87,7 @@ abstract class BaseActivity : AppCompatActivity(){
     }
 
     fun setUpForceUpdateDialog() {
-        val dialogBuilder = MaterialAlertDialogBuilder(this,R.style.MyRounded_MaterialComponents_MaterialAlertDialog)
+        val dialogBuilder = AlertDialog.Builder(this)
         val view = layoutInflater.inflate(R.layout.dialog_force_update, null)
         dialogBuilder.setView(view)
         alertDialog = dialogBuilder.create()
@@ -96,12 +101,6 @@ abstract class BaseActivity : AppCompatActivity(){
             alertDialog!!.show()
         }
 
-        val lp = WindowManager.LayoutParams()
-
-        lp.copyFrom(alertDialog!!.window!!.attributes)
-        lp.width = 900
-        lp.height = 800
-        alertDialog!!.window!!.attributes = lp
         alertDialog!!.tv_update.setOnClickListener {
             alertDialog!!.dismiss()
             navigateToPlayStore()

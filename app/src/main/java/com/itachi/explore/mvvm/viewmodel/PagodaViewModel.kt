@@ -43,14 +43,13 @@ class PagodaViewModel(interactors: Interactors) : AppViewmodel(interactors) {
     fun getPagodaList()  {
 
         GlobalScope.launch {
-            Log.d("test---","pagoda list from room "+interactors.getAllPagodas.fromRoom().size)
+
             pagodaListOb.postValue(ArrayList(interactors.getAllPagodas.fromRoom()))
             interactors.getAllPagodas.fromFirebase(
                 {list->
                     pagodaListOb.postValue(ArrayList(list))
                     pagodaList.clear()
                     pagodaList.addAll(list)
-                    Log.d("test---","list "+list.size)
                     GlobalScope.launch {
                         interactors.addAllPagodas.toRoom(list)
                     }

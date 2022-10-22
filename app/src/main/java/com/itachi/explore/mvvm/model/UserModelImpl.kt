@@ -80,12 +80,12 @@ class UserModelImpl : BaseModel(),UserModel,KoinComponent{
         onSuccess : (UserVO)-> Unit,
         onFailure : (String?)-> Unit) {
         if(database.userDao().userInDbExist()) {
-            database.userDao().getUser()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
+//            database.userDao().getUser()
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe {
 //                    onSuccess(it)
-                }
+//                }
         }
         else onFailure("User is not existed.")
 
@@ -110,12 +110,12 @@ class UserModelImpl : BaseModel(),UserModel,KoinComponent{
     @SuppressLint("CheckResult")
     override fun getUserFromDb(onSuccess: (UserVO) -> Unit, onFailure: (String?) -> Unit) {
         if(database.userDao().userInDbExist()) {
-            database.userDao().getUser()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe {
+//            database.userDao().getUser()
+//                    .subscribeOn(Schedulers.io())
+//                    .observeOn(AndroidSchedulers.mainThread())
+//                    .subscribe {
 //                        onSuccess(it)
-                    }
+//                    }
         }
         else onFailure("User is not existed.")
     }

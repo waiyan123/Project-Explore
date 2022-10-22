@@ -3,55 +3,70 @@ package com.itachi.core.data
 import com.itachi.core.data.db.UserRoomDataSource
 import com.itachi.core.data.network.UserFirebaseDataSource
 import com.itachi.core.domain.UserVO
+import com.itachi.core.common.Resource
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.*
 
 class UserRepository(
-    private val userRoomDataSource: UserRoomDataSource,
-    private val userFirebaseDataSource: UserFirebaseDataSource
-) {
+    private val userFirebaseDataSource: UserFirebaseDataSource,
+    private val userRoomDataSource: UserRoomDataSource
+) : UserDataSource {
 
-    //Firebase
-    suspend fun addUserToFirebase(
-        userVO: UserVO,
-        onSuccess: (UserVO) -> Unit,
-        onFailure: (String) -> Unit
-    ) = userFirebaseDataSource.addUser(userVO, onSuccess, onFailure)
+    override fun addUser(userVO: UserVO): Flow<Resource<UserVO>> = flow {
+        userFirebaseDataSource.addUser(userVO).collect { resource ->
+            resource.data?.let {
+                userRoomDataSource.addUser(it)
+                emit(resource)
+            }
+        }
+    }
 
-    suspend fun getUserFromFirebase(
-        onSuccess: (UserVO) -> Unit,
-        onFailure: (String) -> Unit
-    ) = userFirebaseDataSource.getUser(onSuccess, onFailure)
+    @OptIn(FlowPreview::class)
+    override fun getUserById(userId: String?): Flow<Resource<UserVO>>{
 
-    suspend fun deleteUserFromFirebase(
-        userVO: UserVO,
-        onSuccess: (UserVO) -> Unit,
-        onFailure: (String) -> Unit
-    ) = userFirebaseDataSource.delete(userVO, onSuccess, onFailure)
+        return userRoomDataSource.getUser()
+            .flatMapConcat {resourceFromRoom->
+                flow {
+                    emit(resourceFromRoom)
+                    userFirebaseDataSource.getUserById(userId)
+                        .collect {resourceFromFirebase->
+                            resourceFromFirebase.data?.let { userVO->
+                                userRoomDataSource.addUser(userVO)
+                            }
+                            emit(resourceFromFirebase)
+                        }
+                }
+            }
 
-    suspend fun updateUserToFirebase(
-        userVO: UserVO,
-        onSuccess: (UserVO) -> Unit,
-        onFailure: (String) -> Unit
-    ) = userFirebaseDataSource.update(userVO, onSuccess, onFailure)
+    }
 
+    override fun deleteUser(
+        userVO: UserVO
+    ): Flow<Resource<String>> = flow {
+        userFirebaseDataSource.delete(userVO).collect { resource ->
+            resource.data?.let {
+                userRoomDataSource.deleteUser()
+            }
+            emit(resource)
+        }
+    }
 
-    //Room
-    suspend fun addUserToRoom(
-        userVO: UserVO,
-        onSuccess: (UserVO) -> Unit,
-        onFailure: (String) -> Unit
-    ) = userRoomDataSource.add(userVO,onSuccess,onFailure)
+    override fun updateUser(userVO: UserVO): Flow<Resource<UserVO>> = flow {
+        userFirebaseDataSource.update(userVO).collect { resource ->
+            resource.data?.let {
+                userRoomDataSource.updateUser(it)
+            }
+            emit(resource)
+        }
+    }
 
-    suspend fun getUserFromRoom(
-        onSuccess: (UserVO) -> Unit,
-        onFailure: (String) -> Unit
-    ) = userRoomDataSource.get(onSuccess,onFailure)
-
-    suspend fun deleteUserFromRoom() = userRoomDataSource.delete()
-
-    suspend fun updateUserToRoom(
-        userVO: UserVO,
-        onSuccess: (UserVO) -> Unit,
-        onFailure: (String) -> Unit
-    ) = userRoomDataSource.update(userVO,onSuccess,onFailure)
+    override fun signOut(): Flow<Resource<String>> = flow {
+        userFirebaseDataSource.signOut().collect { resource ->
+            resource.data?.let {
+                userRoomDataSource.deleteUser()
+            }
+            emit(resource)
+        }
+    }
 
 }

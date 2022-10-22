@@ -1,5 +1,6 @@
 package com.itachi.explore.activities
 
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -8,7 +9,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 import androidx.activity.viewModels
-import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
@@ -88,7 +88,6 @@ class UserProfileActivity : BaseActivity(), UserProfileView, ViewPager.OnPageCha
 
     override fun goToEditMode(userVO: UserVO) {
         mPresenter.setUpMode("edit")
-        Log.d("test---","edit mode")
         tv_user_name.visibility = View.GONE
         img_edit_user_profile.visibility = View.GONE
 
@@ -105,7 +104,6 @@ class UserProfileActivity : BaseActivity(), UserProfileView, ViewPager.OnPageCha
 
     override fun goToNormalMode() {
         mPresenter.setUpMode("normal")
-        Log.d("test---","normal mode")
         tv_user_name.visibility = View.VISIBLE
         et_user_name.visibility = View.GONE
         img_edit_user_profile.visibility = View.VISIBLE
@@ -132,7 +130,6 @@ class UserProfileActivity : BaseActivity(), UserProfileView, ViewPager.OnPageCha
             .placeholder(R.drawable.ic_placeholder)
             .into(img_user_profile)
         tv_user_name.text = userVO.name
-        Log.d("test---","show user profile")
 
         userProfileViewModel.addItem(userVO)
     }

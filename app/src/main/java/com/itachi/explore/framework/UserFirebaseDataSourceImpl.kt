@@ -6,94 +6,105 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.itachi.core.data.network.UserFirebaseDataSource
 import com.itachi.core.domain.UserVO
+import com.itachi.core.common.Resource
 import com.itachi.explore.framework.mappers.UserMapper
-import com.itachi.explore.persistence.entities.UserEntity
-import com.itachi.explore.utils.FACEBOOK_ID
 import com.itachi.explore.utils.USER
 import com.itachi.explore.utils.USER_ID
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
 
-class UserFirebaseDataSourceImpl(private val userMapper: UserMapper,
-                                 firestoreRef: FirebaseFirestore,
-                                 firebaseStorage: FirebaseStorage,
-                                 auth: FirebaseAuth
-) : UserFirebaseDataSource,FirebaseDataSourceImpl(firestoreRef, firebaseStorage, auth){
+class UserFirebaseDataSourceImpl(
+    private val userMapper: UserMapper,
+    firestoreRef: FirebaseFirestore,
+    firebaseStorage: FirebaseStorage,
+    auth: FirebaseAuth
+) : UserFirebaseDataSource, FirebaseDataSourceImpl(firestoreRef, firebaseStorage, auth) {
 
-    override suspend fun addUser(userVO: UserVO,
-                             onSuccess: (UserVO) -> Unit,
-                             onFailure: (String) -> Unit) {
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun addUser(userVO: UserVO): Flow<Resource<UserVO>> = callbackFlow {
+
         firestoreRef.collection(USER)
-            .document(userVO.user_id)
-            .set(userMapper.voToFirebaseHashmap(userVO))
-            .addOnSuccessListener {
-                onSuccess(userVO)
-            }
-            .addOnFailureListener { exception ->
-                onFailure(exception.localizedMessage)
-            }
-    }
-
-    override suspend fun getUser(
-        onSuccess: (UserVO) -> Unit,
-        onFailure: (String) -> Unit
-    ) {
-        firestoreRef.collection(USER)
-            .whereEqualTo(USER_ID,auth.currentUser!!.uid)
+            .whereEqualTo(USER_ID, userVO.user_id)
             .get()
-            .addOnSuccessListener {snap->
-                val userVO = snap.documents[0].toObject(UserVO::class.java)
-                if (userVO != null) {
-                    onSuccess(userVO)
+            .addOnSuccessListener { snap ->
+                if (snap.documents.isNotEmpty()) {
+                    Log.d("test---", "user already exists ${userVO.user_id}")
+                    val mUserVO = snap.documents[0].toObject(UserVO::class.java)
+                    mUserVO?.let {
+                        trySend(Resource.Success(it))
+                    }
+                } else {
+                    firestoreRef.collection(USER)
+                        .document(userVO.user_id)
+                        .set(userMapper.voToFirebaseHashmap(userVO))
+                        .addOnSuccessListener {
+                            Log.d("test---", "added success ${userVO.name}")
+                            trySend(Resource.Success(userVO))
+                        }
+                        .addOnFailureListener { exception ->
+                            trySend(Resource.Error(exception.localizedMessage?: "Unexpected error"))
+                        }
                 }
             }
             .addOnFailureListener {
-                onFailure(it.localizedMessage)
+                firestoreRef.collection(USER)
+                    .document(userVO.user_id)
+                    .set(userMapper.voToFirebaseHashmap(userVO))
+                    .addOnSuccessListener {
+                        Log.d("test---", "added success ${userVO.name}")
+                        trySend(Resource.Success(userVO))
+                    }
+                    .addOnFailureListener { exception ->
+
+                    }
             }
+        awaitClose { channel.close() }
     }
 
-    override suspend fun getUploader(
-        userId: String,
-        onSuccess: (UserVO) -> Unit,
-        onFailure: (String) -> Unit
-    ) {
-        firestoreRef.collection(USER).whereEqualTo(USER_ID, userId)
-
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun getUserById(userId: String?): Flow<Resource<UserVO>> = callbackFlow {
+        firestoreRef.collection(USER)
+            .whereEqualTo(USER_ID, userId ?: auth.currentUser!!.uid)
             .get()
-            .addOnSuccessListener {
-                if (it.documents.isNotEmpty()) {
-                    val userEntity = it.documents[0].toObject(UserEntity::class.java)
-                    onSuccess(userMapper.entityToVO(userEntity!!))
-                }
+            .addOnSuccessListener { snap ->
+                if(snap.documents.isNotEmpty()){
+                    val userVO = snap.documents[0].toObject(UserVO::class.java)
+                    userVO?.let {
+                        trySend(Resource.Success(it))
+                    }
+                }else trySend(Resource.Error("User doesn't exist"))
+
             }
             .addOnFailureListener {
+                trySend(Resource.Error(it.localizedMessage ?: "Unexpected error"))
             }
+        awaitClose { channel.close() }
     }
 
-    override suspend fun delete(
-        userVO: UserVO,
-        onSuccess: (UserVO) -> Unit,
-        onFailure: (String) -> Unit
-    ) {
+    override fun delete(userVO: UserVO): Flow<Resource<String>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun update(
-        userVO: UserVO,
-        onSuccess: (UserVO) -> Unit,
-        onFailure: (String) -> Unit
-    ) {
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun update(userVO: UserVO): Flow<Resource<UserVO>> = callbackFlow {
         firestoreRef.collection(USER)
-            .document(userVO.user_id!!)
+            .document(userVO.user_id)
             .update(userMapper.voToFirebaseHashmap(userVO))
             .addOnSuccessListener {
-                onSuccess(userVO)
+                trySend(Resource.Success(userVO))
             }
             .addOnFailureListener {
-                onFailure(it.localizedMessage)
+                trySend(Resource.Error(it.localizedMessage ?: "Unexpected error"))
             }
     }
 
+    override fun signOut(): Flow<Resource<String>> = flow {
+        auth.signOut()
+        emit(Resource.Success("Sign out"))
+    }
 
 }

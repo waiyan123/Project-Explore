@@ -1,37 +1,19 @@
 package com.itachi.core.data.network
 
-import com.itachi.core.domain.AncientVO
 import com.itachi.core.domain.UserVO
+import com.itachi.core.common.Resource
+import kotlinx.coroutines.flow.Flow
 
 interface UserFirebaseDataSource {
 
-    suspend fun addUser(
-        userVO: UserVO,
-        onSuccess: (UserVO) -> Unit,
-        onFailure: (String) -> Unit
-    )
+    fun addUser(userVO: UserVO) : Flow<Resource<UserVO>>
 
-    suspend fun getUser(
-        onSuccess: (UserVO) -> Unit,
-        onFailure: (String) -> Unit
-    )
+    fun getUserById(userId : String? = null) : Flow<Resource<UserVO>>
 
-    suspend fun getUploader(
-        userId : String,
-        onSuccess: (UserVO) -> Unit,
-        onFailure: (String) -> Unit
-    )
+    fun delete(userVO: UserVO) : Flow<Resource<String>>
 
-    suspend fun delete(
-        userVO: UserVO,
-        onSuccess: (UserVO) -> Unit,
-        onFailure: (String) -> Unit
-    )
+    fun update(userVO: UserVO) : Flow<Resource<UserVO>>
 
-    suspend fun update(
-        userVO: UserVO,
-        onSuccess: (UserVO) -> Unit,
-        onFailure: (String) -> Unit
-    )
+    fun signOut() : Flow<Resource<String>>
 
 }

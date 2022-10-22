@@ -37,7 +37,6 @@ class Util {
                 bmp.compress(Bitmap.CompressFormat.JPEG, quality, baos)
                 list.add(baos.toByteArray())
             }
-            Log.d("test---",""+list.size)
             return Observable.just(list)
         }
 
@@ -64,7 +63,6 @@ class Util {
             imageList.forEach {
                 geoPointsList.add(getGeoPointFromImage(getRealPathFromUrl(context,it)!!))
             }
-            Log.d("test---","geo points "+geoPointsList.size)
             return Observable.just(geoPointsList)
         }
 

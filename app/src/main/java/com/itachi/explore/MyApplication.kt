@@ -2,6 +2,7 @@ package com.itachi.explore
 
 import com.itachi.core.data.AncientRepository
 import android.app.Application
+import androidx.room.Room
 import com.facebook.FacebookSdk
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -14,6 +15,7 @@ import com.itachi.explore.di.applicationModule
 import com.itachi.explore.framework.*
 import com.itachi.explore.framework.mappers.*
 import com.itachi.explore.mvvm.viewmodel.MyViewModelProviderFactory
+import com.itachi.explore.persistence.MyDatabase
 import com.itachi.explore.third_parties.GlideLoadingService
 import dagger.hilt.android.HiltAndroidApp
 import me.myatminsoe.mdetect.MDetect
@@ -92,8 +94,14 @@ class MyApplication : Application() {
         val userVoToFirebaseMapper = UserVoToFirebaseMapper()
         val userMapper = UserMapper(userEntityToVoMapper,userVoToEntityMapper,userVoToFirebaseMapper)
         val userFirebaseDataSource = UserFirebaseDataSourceImpl(userMapper,firestoreRef,firebaseStorageRef,firebaseAuthRef)
-        val userRoomDataSource = UserRoomDataSourceImpl(userMapper)
-        val userRepository = UserRepository(userRoomDataSource,userFirebaseDataSource)
+
+        val roomDatabase = Room.databaseBuilder(this, MyDatabase::class.java, "My Database")
+            .allowMainThreadQueries()
+            .fallbackToDestructiveMigration()
+            .build()
+
+        val userRoomDataSource = UserRoomDataSourceImpl(userMapper,roomDatabase)
+        val userRepository = UserRepository(userFirebaseDataSource,userRoomDataSource)
 
         MyViewModelProviderFactory.inject(
             Interactors(

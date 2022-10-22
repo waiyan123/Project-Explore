@@ -1,46 +1,42 @@
 package com.itachi.explore.framework
 
+import android.util.Log
 import com.itachi.core.data.db.UserRoomDataSource
 import com.itachi.core.domain.UserVO
+import com.itachi.core.common.Resource
 import com.itachi.explore.framework.mappers.UserMapper
 import com.itachi.explore.persistence.MyDatabase
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
 import org.koin.core.KoinComponent
-import org.koin.core.inject
 
-class UserRoomDataSourceImpl(private val userMapper: UserMapper) : UserRoomDataSource,
+class UserRoomDataSourceImpl(
+    private val userMapper: UserMapper,
+    private val database: MyDatabase
+) : UserRoomDataSource,
     KoinComponent {
 
-    private val database: MyDatabase by inject()
-    override suspend fun add(
-        userVO: UserVO,
-        onSuccess: (UserVO) -> Unit,
-        onFailure: (String) -> Unit
-    ) {
+    override suspend fun addUser(userVO: UserVO) {
         database.userDao().insertUser(userMapper.voToEntity(userVO))
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
-                onSuccess(userVO)
+        Log.d("test---","insert user to Room ${userVO.name}")
+    }
+
+    override fun getUser(): Flow<Resource<UserVO>> = flow {
+
+        database.userDao().getUser()
+            .collect {userEntity->
+                Log.d("test---","get user from Room ${userEntity.name}")
+                emit(Resource.Success(userMapper.entityToVO(userEntity)))
             }
 
     }
 
-    override suspend fun get(onSuccess: (UserVO) -> Unit, onFailure: (String) -> Unit) {
-        if(database.userDao().userInDbExist()){
-            database.userDao().getUser().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    onSuccess(userMapper.entityToVO(it))
-                }
-        }else onFailure("Something wrong in db")
-    }
-
-    override suspend fun delete() {
+    override suspend fun deleteUser() {
         database.userDao().deleteUser()
     }
 
-    override suspend fun update(userVO: UserVO, onSuccess: (UserVO) -> Unit, onFailure: (String) -> Unit) {
+    override suspend fun updateUser(userVO: UserVO) {
         TODO("Not yet implemented")
     }
 }

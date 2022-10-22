@@ -16,8 +16,8 @@
     <string name="views_mm_unicode">မြင်ကွင်းလှများ</string>
 
     <string name="ancients_en">Ancients</string>
-    <string name="ancients_mm_zawgyi">ေရွးေဟာင္း/ေရွးက်ေသာ</string>
-    <string name="ancients_mm_unicode">ရှေးဟောင်း/ရှေးကျသော</string>
+    <string name="ancients_mm_zawgyi">ေရွးေဟာင္းေနရာမ်ား</string>
+    <string name="ancients_mm_unicode">ရှေးဟောင်းနေရာများ</string>
 
     <string name="foods_en">Foods &amp; Drinks</string>
     <string name="foods_mm_zawgyi">အစားအေသာက္</string>
@@ -265,4 +265,5 @@ Ref - ေရႊဘုိနိဒါန္း ႏွင့္ Wikipedia ။</str
         <item>public_profile</item>
         <item>email</item>
     </string-array>
+
 </resources>

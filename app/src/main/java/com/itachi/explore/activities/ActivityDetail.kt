@@ -1,12 +1,14 @@
 package com.itachi.explore.activities
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import android.view.WindowManager
-import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.itachi.core.domain.*
@@ -259,26 +261,19 @@ class ActivityDetail : BaseActivity(),View.OnClickListener{
             R.id.tv_delete -> {
                 alertDialog!!.dismiss()
                 showLoading()
-                val lp = WindowManager.LayoutParams()
-
-                lp.copyFrom(alertDialog!!.window!!.attributes)
-                lp.width = 350
-                lp.height = 300
-                alertDialog!!.window!!.attributes = lp
                 mViewModel.deleteItem()
             }
         }
     }
 
-    @SuppressLint("InflateParams")
     private fun showSettingDialog() {
         val dialogBuilder = AlertDialog.Builder(this)
         val view = layoutInflater.inflate(R.layout.dialog_post_detail,null)
         dialogBuilder.setView(view)
         alertDialog = dialogBuilder.create()
         alertDialog!!.window!!.attributes.windowAnimations = R.style.DialogChosing
+        alertDialog!!.window!!.setLayout(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT)
         alertDialog!!.show()
-        alertDialog!!.window!!.setLayout(500, 400)
 
         alertDialog!!.tv_edit.setOnClickListener(this)
         alertDialog!!.tv_delete.setOnClickListener (this)

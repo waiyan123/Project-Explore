@@ -1,5 +1,6 @@
 package com.itachi.explore.activities
 
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -24,7 +25,7 @@ import me.myatminsoe.mdetect.Rabbit
 class PreviewActivity : BaseActivity(),PreviewView{
 
     override fun showZoomageDialog(url: String) {
-        val dialogBuilder = MaterialAlertDialogBuilder(this,android.R.style.Theme_NoTitleBar_Fullscreen)
+        val dialogBuilder = AlertDialog.Builder(this)
         val view = layoutInflater.inflate(R.layout.dialog_zoomage_view, null)
         dialogBuilder.setView(view)
         alertDialog = dialogBuilder.create()

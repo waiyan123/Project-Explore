@@ -1,14 +1,15 @@
 package com.itachi.explore.activities
 
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.Gravity
 import android.view.View
-import android.view.WindowManager
-import android.widget.CompoundButton
+import android.view.ViewGroup
+import android.view.Window
 import android.widget.RadioGroup
 import androidx.lifecycle.ViewModelProviders
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.itachi.explore.R
 import com.itachi.explore.mvp.presenters.IntroPresenter
 import com.itachi.explore.mvp.views.IntroView
@@ -100,20 +101,17 @@ class IntroActivity : BaseActivity(),IntroView,RadioGroup.OnCheckedChangeListene
     }
 
     private fun showIntroDialog() {
-        val dialogBuilder = MaterialAlertDialogBuilder(this,R.style.MyRounded_MaterialComponents_MaterialAlertDialog)
+        val dialogBuilder = AlertDialog.Builder(this)
         val view = layoutInflater.inflate(R.layout.dialog_intro, null)
         dialogBuilder.setView(view)
         alertDialog = dialogBuilder.create()
+        val window: Window = alertDialog!!.window!!
+        window.setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        window.setGravity(Gravity.CENTER)
         alertDialog!!.window!!.attributes.windowAnimations = R.style.DialogChosing
         alertDialog!!.setCancelable(true)
         alertDialog!!.show()
 
-        val lp = WindowManager.LayoutParams()
-
-        lp.copyFrom(alertDialog!!.window!!.attributes)
-        lp.width = 900
-        lp.height = 800
-        alertDialog!!.window!!.attributes = lp
         alertDialog!!.tv_got_it.setOnClickListener {
             alertDialog!!.dismiss()
         }

@@ -1,16 +1,16 @@
 package com.itachi.explore.mvvm.viewmodel
 
 import androidx.lifecycle.MutableLiveData
-import com.itachi.core.domain.AncientVO
 import com.itachi.core.domain.ItemVO
 import com.itachi.core.domain.PagodaVO
-import com.itachi.core.domain.ViewVO
+import com.itachi.core.common.Resource
 import com.itachi.explore.framework.Interactors
 import com.itachi.explore.mvvm.model.LanguageModelImpl
 import com.itachi.explore.utils.ANCIENT_TYPE
 import com.itachi.explore.utils.PAGODA_TYPE
 import com.itachi.explore.utils.VIEW_TYPE
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.koin.core.KoinComponent
 import org.koin.core.inject
@@ -60,24 +60,23 @@ class DetailsViewModel(interactors: Interactors) : AppViewmodel(interactors),Koi
     fun setupItemVO(itemVO: ItemVO) {
         mItemVO.postValue(itemVO)
         GlobalScope.launch {
-            interactors.getUser.fromRoom(
-                {userVO->
-                    isUploader.postValue(itemVO.uploader_id==userVO.user_id)
-                },
-                {roomError->
-                    errorMsg.postValue(roomError)
-                    GlobalScope.launch {
-                        interactors.getUser.fromFirebase(
-                            {userVO->
-                                isUploader.postValue(itemVO.uploader_id==userVO.user_id)
-                            },
-                            {firebaseError->
-                                errorMsg.postValue(firebaseError)
-                            }
-                        )
+            interactors.getUser().collect {resource->
+                when(resource) {
+                    is Resource.Success -> {
+                        resource.data?.let {
+                            isUploader.postValue(itemVO.uploader_id==it.user_id)
+                        }
+                    }
+                    is Resource.Error -> {
+                        resource.message?.let {
+                            errorMsg.postValue(it)
+                        }
+                    }
+                    is Resource.Loading -> {
+
                     }
                 }
-            )
+            }
         }
     }
     fun deleteItem() {

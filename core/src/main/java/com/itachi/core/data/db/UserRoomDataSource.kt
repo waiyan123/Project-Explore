@@ -1,26 +1,17 @@
 package com.itachi.core.data.db
 
 import com.itachi.core.domain.UserVO
+import com.itachi.core.common.Resource
+import kotlinx.coroutines.flow.Flow
 
 interface UserRoomDataSource {
 
-    suspend fun add(
-        userVO: UserVO,
-        onSuccess: (UserVO) -> Unit,
-        onFailure: (String) -> Unit
-    )
+    suspend fun addUser(userVO: UserVO)
 
-    suspend fun get(
-        onSuccess: (UserVO) -> Unit,
-        onFailure: (String) -> Unit
-    )
+    fun getUser() : Flow<Resource<UserVO>>
 
-    suspend fun delete()
+    suspend fun deleteUser()
 
-    suspend fun update(
-        userVO: UserVO,
-        onSuccess: (UserVO) -> Unit,
-        onFailure: (String) -> Unit
-    )
+    suspend fun updateUser(userVO: UserVO)
 
 }

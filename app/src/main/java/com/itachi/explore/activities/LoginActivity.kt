@@ -3,17 +3,20 @@ package com.itachi.explore.activities
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.WindowManager
+import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.itachi.explore.R
 import com.itachi.explore.mvvm.viewmodel.LoginViewModel
 import com.itachi.explore.mvvm.viewmodel.MyViewModelProviderFactory
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_login.*
 
-
+@AndroidEntryPoint
 class LoginActivity : BaseActivity() {
 
     private fun changeLanguage(lang: String) {
@@ -34,12 +37,7 @@ class LoginActivity : BaseActivity() {
 
     private fun displayLoading() {
         showLoading()
-        val lp = WindowManager.LayoutParams()
 
-        lp.copyFrom(alertDialog!!.window!!.attributes)
-        lp.width = 350
-        lp.height = 300
-        alertDialog!!.window!!.attributes = lp
     }
 
     private fun loginFailed(message: String) {
@@ -63,14 +61,12 @@ class LoginActivity : BaseActivity() {
         }
     }
 
-    lateinit var mViewModel: LoginViewModel
+    private val mViewModel: LoginViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        mViewModel =
-            ViewModelProvider(this, MyViewModelProviderFactory).get(LoginViewModel::class.java)
 
         btn_login_with_google.setOnClickListener {
             mViewModel.signInWithGoogle(this)
@@ -82,7 +78,6 @@ class LoginActivity : BaseActivity() {
 
         mViewModel.isAlreadyLogin.observe(this) { success ->
             if (success) {
-                Log.d("test---","is already login")
                 navigateToIntroActivity()
             }
         }
@@ -92,7 +87,6 @@ class LoginActivity : BaseActivity() {
         mViewModel.loginSuccess.observe(this) { success ->
             if (success) {
                 showToast("Login successful")
-                Log.d("test---","login successful")
                 navigateToIntroActivity()
             }
         }

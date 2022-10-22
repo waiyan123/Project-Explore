@@ -96,7 +96,6 @@ abstract class FirebaseDataSourceImpl(
                         if (count == byteArrayList.size) {
 
                             onSuccess(photoVOList)
-                            Log.d("test---","Successfully uploaded!")
                             successMsg = "SuccessFully uploaded"
                         }
                     }

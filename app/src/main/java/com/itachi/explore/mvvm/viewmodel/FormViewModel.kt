@@ -8,12 +8,12 @@ import android.graphics.Color
 import android.net.Uri
 import android.util.Log
 import android.widget.EditText
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.itachi.core.domain.*
+import com.itachi.core.common.Resource
 import com.itachi.explore.framework.Interactors
 import com.itachi.explore.mvvm.model.LanguageModelImpl
-import com.itachi.explore.mvvm.model.UploadModelImpl
 import com.itachi.explore.utils.*
 import com.sangcomz.fishbun.FishBun
 import com.sangcomz.fishbun.MimeType
@@ -22,6 +22,7 @@ import com.sangcomz.fishbun.define.Define
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import me.myatminsoe.mdetect.MDetect
 import me.myatminsoe.mdetect.Rabbit
@@ -50,15 +51,25 @@ class FormViewModel(interactors: Interactors) : AppViewmodel(interactors), KoinC
     val mItemVO = MutableLiveData<ItemVO>()
 
     init {
-        GlobalScope.launch {
-            interactors.getUser.fromRoom(
-                {
-                    mUserVO = it
-                },
-                {
-                    errorMsg.postValue(it)
+        viewModelScope.launch {
+            interactors.getUser().collect { resource->
+                when(resource) {
+                    is Resource.Success -> {
+                        resource.data?.let {
+                            mUserVO = it
+                        }
+                    }
+                    is Resource.Error -> {
+                        resource.message?.let {
+                            errorMsg.postValue(it)
+                        }
+                    }
+                    is Resource.Loading -> {
+
+                    }
                 }
-            )
+            }
+
         }
         languageModel.getLanguage {
             language.postValue(it)
@@ -225,7 +236,6 @@ class FormViewModel(interactors: Interactors) : AppViewmodel(interactors), KoinC
                                         geoPointsList,
                                         { success ->
                                             successMsg.postValue(success)
-                                            Log.d("test---",success)
                                         },
                                         { error ->
                                             errorMsg.postValue(error)
@@ -237,7 +247,6 @@ class FormViewModel(interactors: Interactors) : AppViewmodel(interactors), KoinC
 
         } else {
             pickupImageError.postValue(true)
-            Log.d("test---","pick up photo")
         }
     }
 

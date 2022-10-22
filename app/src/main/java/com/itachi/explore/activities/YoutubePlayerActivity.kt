@@ -172,28 +172,22 @@ class YoutubePlayerActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitialized
         adView.adListener = object: AdListener() {
             override fun onAdLoaded() {
                 // Code to be executed when an ad finishes loading.
-                Log.d("test---","Ads is on loading")
             }
 
             override fun onAdFailedToLoad(adError : LoadAdError) {
                 // Code to be executed when an ad request fails.
-                Log.d("test---","Ads is failed on loading")
-                Log.d("test---",adError.message)
             }
 
             override fun onAdOpened() {
-                Log.d("test---","Ads is opening now")
                 // Code to be executed when an ad opens an overlay that
                 // covers the screen.
             }
 
             override fun onAdClicked() {
-                Log.d("test---","Ads on clicked")
                 // Code to be executed when the user clicks on an ad.
             }
 
             override fun onAdClosed() {
-                Log.d("test---","Ads on closed")
                 // Code to be executed when the user is about to return
                 // to the app after tapping on an ad.
             }

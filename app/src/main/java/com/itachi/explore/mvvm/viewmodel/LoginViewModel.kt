@@ -3,7 +3,8 @@ package com.itachi.explore.mvvm.viewmodel
 import android.content.Intent
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.google.android.gms.auth.api.identity.SignInClient
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -13,25 +14,24 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.itachi.core.domain.PhotoVO
 import com.itachi.core.domain.UserVO
+import com.itachi.core.interactors.AddUser
+import com.itachi.core.interactors.GetLanguage
 import com.itachi.explore.R
 import com.itachi.explore.activities.LoginActivity
-import com.itachi.explore.framework.Interactors
-import com.itachi.explore.mvvm.model.LanguageModelImpl
-import com.itachi.explore.persistence.MyDatabase
-import com.itachi.explore.persistence.entities.PhotoEntity
-import com.itachi.explore.persistence.entities.UserEntity
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
-import kotlinx.coroutines.GlobalScope
+import com.itachi.core.common.Resource
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.koin.core.KoinComponent
-import org.koin.core.inject
+import javax.inject.Inject
 
+@HiltViewModel
+class LoginViewModel @Inject constructor(
+    private val addUser : AddUser,
+    private val auth : FirebaseAuth,
+    private val getLanguage : GetLanguage
+) : ViewModel(), KoinComponent {
 
-class LoginViewModel(interactors: Interactors) : AppViewmodel(interactors), KoinComponent {
-
-    private val firebaseAuthRef = FirebaseAuth.getInstance()
-    private val languageModel : LanguageModelImpl by inject()
     val loginSuccess = MutableLiveData<Boolean>()
     val isAlreadyLogin = MutableLiveData<Boolean>()
     val errorMessage = MutableLiveData<String>()
@@ -41,9 +41,11 @@ class LoginViewModel(interactors: Interactors) : AppViewmodel(interactors), Koin
     private val REQ_ONE_TAP = 1
 
     init {
-        isAlreadyLogin.postValue(firebaseAuthRef.currentUser!=null)
-        languageModel.getLanguage {
-            language.postValue(it)
+        isAlreadyLogin.postValue(auth.currentUser!=null)
+        viewModelScope.launch {
+            getLanguage().collect {
+                language.postValue(it)
+            }
         }
     }
 
@@ -62,12 +64,10 @@ class LoginViewModel(interactors: Interactors) : AppViewmodel(interactors), Koin
         try {
             val account: GoogleSignInAccount = completedTask.getResult(ApiException::class.java)
 
-            Log.d("test---", "Signed in successfully ${account.id}")
-            Log.d("test---","id token "+account.idToken)
             loginToFirebase(account)
 
         } catch (e: ApiException) {
-            Log.d("test---", "signInResult:failed code=" + e.localizedMessage)
+
         }
     }
 
@@ -83,35 +83,96 @@ class LoginViewModel(interactors: Interactors) : AppViewmodel(interactors), Koin
     }
 
     private fun loginToFirebase(account : GoogleSignInAccount) {
-        val credential = GoogleAuthProvider.getCredential(account.idToken,null)
-        firebaseAuthRef.signInWithCredential(credential)
+        val credential = GoogleAuthProvider.getCredential(account.idToken, null)
+        auth.signInWithCredential(credential)
             .addOnCompleteListener {
-                val userId = firebaseAuthRef.currentUser!!.uid
-                GlobalScope.launch {
-                    interactors.addUser.toFirebase(UserVO("",""+userId,"",
-                        "",account.email!!,account.displayName!!, PhotoVO("",account.photoUrl.toString(),""),
-                        PhotoVO("","",""),"",false),
-                        {
-                            Log.d("test---","add user to firebase")
-                            GlobalScope.launch {
-                                interactors.addUser.toRoom(it,
-                                    {
-                                        Log.d("test---","add user to room")
-                                        loginSuccess.postValue(true)
-                                    },
-                                    {errorMsgFromRoom->
-                                        errorMessage.postValue(errorMsgFromRoom)
-                                    })
+                val userId = auth.currentUser!!.uid
+                viewModelScope.launch {
+                    addUser(
+                        UserVO(
+                            "",
+                            "" + userId,
+                            "",
+                            "",
+                            account.email!!,
+                            account.displayName!!,
+                            PhotoVO("", account.photoUrl.toString(), ""),
+                            PhotoVO("", "", ""),
+                            "",
+                            false
+                        )
+                    ).collect {
+                        when (it) {
+                            is Resource.Success -> {
+
+                                it.data?.let {
+                                    loginSuccess.postValue(true)
+                                    displayLoading.postValue(false)
+                                }
                             }
-                        },
-                        {errorMsgFromFirebase->
-                            errorMessage.postValue(errorMsgFromFirebase)
-                        })
-            }
-            }
-            .addOnFailureListener { exception->
-                errorMessage.postValue(exception.localizedMessage)
+                            is Resource.Error -> {
+                                it.message?.let {errorMsg->
+                                    errorMessage.postValue(errorMsg)
+                                    displayLoading.postValue(false)
+                                }
+                            }
+                            is Resource.Loading -> {
+                                displayLoading.postValue(true)
+                            }
+                            else -> {}
+                        }
+                    }
+                }
+
+//                firestoreRef.collection(USER)
+//                    .whereEqualTo(USER_ID,userId)
+//                    .get()
+//                    .addOnSuccessListener { snapshot->
+//                        val userVO = snapshot.documents[0].toObject(UserVO::class.java)!!
+//                        viewModelScope.launch {
+//                            addUser(userVO).collect { resource->
+//                                when(resource) {
+//                                    is Resource.Success -> {
+//                                        loginSuccess.postValue(true)
+//                                    }
+//                                    is Resource.Error -> {
+//                                        resource.message?.let {
+//                                            errorMessage.postValue(it)
+//                                        }
+//                                    }
+//                                    is Resource.Loading -> {
+//
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+//                    .addOnFailureListener{
+//                        viewModelScope.launch {
+//                            addUser(UserVO("",""+userId,"",
+//                                "",account.email!!,account.displayName!!, PhotoVO("",account.photoUrl.toString(),""),
+//                                PhotoVO("","",""),"",false))
+//                                .collect {resource->
+//                                    when(resource) {
+//                                        is Resource.Success -> {
+//                                            loginSuccess.postValue(true)
+//                                        }
+//                                        is Resource.Error -> {
+//                                            resource.message?.let {
+//                                                errorMessage.postValue(it)
+//                                            }
+//                                        }
+//                                        is Resource.Loading -> {
+//
+//                                        }
+//                                    }
+//                                }
+//                        }
+//                    }
+//            }
+//            .addOnFailureListener { exception->
+//                errorMessage.postValue(exception.localizedMessage)
+//            }
             }
     }
-
 }

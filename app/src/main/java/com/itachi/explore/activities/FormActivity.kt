@@ -1,6 +1,7 @@
 package com.itachi.explore.activities
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -17,7 +18,6 @@ import kotlin.collections.ArrayList
 import android.view.MotionEvent
 import android.view.View.OnTouchListener
 import android.view.WindowManager
-import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.itachi.core.domain.AncientVO
@@ -111,12 +111,6 @@ class FormActivity : BaseActivity(), View.OnClickListener {
 
     private fun showProgressLoading() {
         showLoading()
-        val lp = WindowManager.LayoutParams()
-
-        lp.copyFrom(alertDialog!!.window!!.attributes)
-        lp.width = 350
-        lp.height = 300
-        alertDialog!!.window!!.attributes = lp
     }
 
     private fun showError(error: String) {
@@ -317,12 +311,8 @@ class FormActivity : BaseActivity(), View.OnClickListener {
             showEditDetails(itemVO.title,itemVO.created_date,itemVO.festival_date,itemVO.about,itemVO.item_type)
         }
 
-    }
-
-    override fun onResume() {
-        super.onResume()
-        mViewModel.progressLoading.observe(this){
-            showProgressLoading()
+        mViewModel.progressLoading.observe(this){loading->
+            if(loading) showProgressLoading()
         }
         mViewModel.successMsg.observe(this){
             successAddingItem(it)
@@ -336,6 +326,12 @@ class FormActivity : BaseActivity(), View.OnClickListener {
             } else tv_pick_up_error.visibility = View.GONE
 
         }
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

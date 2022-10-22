@@ -8,16 +8,17 @@ import com.itachi.explore.persistence.entities.UserEntity
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Observable
+import kotlinx.coroutines.flow.Flow
 
 
 @Dao
 abstract class UserDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertUser(user: UserEntity) : Completable
+    abstract fun insertUser(user: UserEntity)
 
     @Query("SELECT * FROM user_table")
-    abstract fun getUser(): Observable<UserEntity>
+    abstract fun getUser(): Flow<UserEntity>
 
     @Query("DELETE FROM user_table")
     abstract fun deleteUser()

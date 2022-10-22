@@ -1,31 +1,25 @@
 package com.itachi.explore.mvvm.viewmodel
 
-import android.content.SharedPreferences
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
-import com.itachi.core.data.UserRepository
+import androidx.lifecycle.viewModelScope
 import com.itachi.core.domain.UserVO
-import com.itachi.explore.BuildConfig
-import com.itachi.explore.utils.LANGUAGE
-import com.itachi.explore.utils.VERSION_CODE_KEY
+import com.itachi.core.common.Resource
+import com.itachi.core.interactors.*
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import org.koin.core.KoinComponent
-import java.util.HashMap
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val userRepository: UserRepository,
-    private val sharedPreferences: SharedPreferences,
-    private val auth: FirebaseAuth,
-    private val remoteConfig: FirebaseRemoteConfig
-) : ViewModel(), KoinComponent {
+    private val getUser : GetUser,
+    private val signOut : SignOut,
+    private val getLanguage: GetLanguage,
+    private val setLanguage: SetLanguage,
+    private val checkAppVersionUpdate: CheckAppVersionUpdate
+) : ViewModel(){
 
     val update = MutableLiveData<Boolean>()
     val language = MutableLiveData<String>()
@@ -35,81 +29,63 @@ class MainViewModel @Inject constructor(
     val isUploader = MutableLiveData<Boolean>()
 
     init {
-        GlobalScope.launch {
-            userRepository.getUserFromRoom(
-                {
-                    mUserVO.postValue(it)
-                },
-                {
-                    errorMsg.postValue(it)
-                }
-            )
-            userRepository.getUserFromFirebase(
-                {
-                    mUserVO.postValue(it)
-                    isUploader.postValue(it.get_is_uploader)
-                    GlobalScope.launch {
-                        userRepository.addUserToRoom(it,
-                            {
-
-                            },
-                            {
-
-                            }
-                        )
+        viewModelScope.launch {
+            getUser().collect{resource->
+                Log.d("test---","collect in main view model")
+                when(resource) {
+                    is Resource.Success -> {
+                        resource.data?.let {
+                            mUserVO.postValue(it)
+                        }
                     }
-                },
-                {
-                    errorMsg.postValue(it)
+                    is Resource.Error -> {
+                        resource.message?.let {
+                            errorMsg.postValue(it)
+                            Log.d("test---","error $it")
+                        }
+                    }
+                    is Resource.Loading -> {
+                        errorMsg.postValue("Loading")
+                        Log.d("test---","Loading")
+                    }
+                    else -> {
+
+                    }
                 }
-            )
+            }
         }
-//        userModel.getUserProfile(
-//            {
-//                mView.showUserInfo(it)
-//                mView.isUploader(it.get_is_uploader!!)
-//            },
-//            {
-//                mView.failedUserInfo(it)
-//            }
-//        )
+        checkLanguage()
+        checkUpdate()
     }
 
     fun onClickedLogout() {
-        GlobalScope.launch {
-            userRepository.deleteUserFromRoom()
+        viewModelScope.launch {
+            signOut().collect {
+                it.data?.let {
+                    userLogin.postValue(false)
+                }
+            }
         }
-        auth.signOut()
-        userLogin.postValue(false)
+
     }
 
-    fun checkLanguage() {
-        language.postValue(sharedPreferences.getString(LANGUAGE, "en"))
+    private fun checkLanguage() {
+        viewModelScope.launch {
+            getLanguage().collect {
+                language.postValue(it)
+            }
+        }
     }
 
-    fun setLanguage(lang: String) {
-        sharedPreferences.edit().putString(LANGUAGE, lang)
-        language.postValue(lang)
+    fun setUpLanguage(lang: String) {
+        setLanguage(lang)
+        checkLanguage()
     }
 
-    fun onCheckUpdate() {
-        val firebaseDefaultMap = HashMap<String, Any>()
-        firebaseDefaultMap.put(VERSION_CODE_KEY, BuildConfig.VERSION_CODE)
-        remoteConfig.setDefaultsAsync(firebaseDefaultMap)
-
-        remoteConfig.setConfigSettingsAsync(
-            FirebaseRemoteConfigSettings.Builder()
-                .build()
-        )
-
-        remoteConfig.fetch().addOnCompleteListener {
-            if (it.isSuccessful()) {
-                remoteConfig.activate()
-                Log.d("test---","remote config "+remoteConfig.getDouble(VERSION_CODE_KEY))
-                Log.d("test---","App version code "+ BuildConfig.VERSION_CODE)
-                if (remoteConfig.getDouble(VERSION_CODE_KEY) > BuildConfig.VERSION_CODE) {
-                    update.postValue(true)
-                } else update.postValue(false)
+    private fun checkUpdate() {
+        viewModelScope.launch {
+            checkAppVersionUpdate().collect {
+                update.postValue(it)
             }
         }
     }

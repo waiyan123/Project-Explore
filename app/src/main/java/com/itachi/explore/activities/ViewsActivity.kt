@@ -63,7 +63,6 @@ class ViewsActivity : BaseActivity(),View.OnClickListener{
             super.onResume()
 //        mPresenter.showPhotoList()
             mViewModel.showPhotoList().observe(this, Observer { viewPhotoList->
-                Log.d("test---","photo list size "+viewPhotoList.size)
                 mAdapter.setNewData(viewPhotoList)
             })
             mViewModel.checkLanguage().observe(this, Observer { lang->

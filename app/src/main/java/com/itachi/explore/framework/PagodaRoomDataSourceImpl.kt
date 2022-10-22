@@ -20,7 +20,6 @@ class PagodaRoomDataSourceImpl(
 
     override suspend fun delete(pagodaVO: PagodaVO) {
         database.pagodaDao().deletePagodaById(pagodaVO.item_id)
-        Log.d("test---","deleted pagoda item")
     }
 
     override suspend fun get(id: String) = pagodaMapper.entityToVO(database.pagodaDao().getPagodaById(id))

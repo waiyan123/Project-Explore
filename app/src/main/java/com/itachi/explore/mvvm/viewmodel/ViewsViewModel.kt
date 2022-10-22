@@ -31,11 +31,9 @@ private val sharPreferences : SharedPreferences) : ViewModel(),KoinComponent {
             "en" -> checkLanguage.postValue("en")
             "mm" -> {
                 if(MDetect.isUnicode()){
-                    Log.d("test---","mm unicode")
                     checkLanguage.postValue("mm_unicode")
                 }
                 else {
-                    Log.d("test---","mm zawgyi")
                     checkLanguage.postValue("mm_zawgyi")
                 }
             }

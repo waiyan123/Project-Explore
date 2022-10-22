@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,71 +9,64 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout_editor_absoluteX="5dp"
-        tools:layout_editor_absoluteY="5dp">
+        android:layout_height="match_parent">
 
-        <FrameLayout
-            android:id="@+id/layout_banner"
+        <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="0dp"
             android:background="@color/banner_background"
+            app:layout_constraintHeight_percent="@dimen/banner_image_percent_main"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/tv_user_name"
+            style="@style/TitleAppearance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="30dp"
+            android:text="User Name"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/tv_user_name"
-                    style="@style/TitleAppearance"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_margin="20dp"
-                    />
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/img_user_profile_main"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="20dp"
+            android:elevation="10dp"
+            android:src="@drawable/ic_account_circle_black_24dp"
+            app:civ_border_color="#FF000000"
+            app:civ_border_width="1dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/btn_user_profile"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_margin="15dp"
-                    android:elevation="10dp"
-                    android:src="@drawable/ic_account_circle_black_24dp"
-                    app:civ_border_color="#FF000000"
-                    app:civ_border_width="1dp" />
-            </RelativeLayout>
-            <com.google.android.gms.ads.AdView
-                xmlns:ads="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/adView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_centerHorizontal="true"
-                android:layout_alignParentBottom="true"
-                ads:adSize="BANNER"
-                ads:adUnitId="ca-app-pub-3232751636100261/3937695331">
-            </com.google.android.gms.ads.AdView>
-        </FrameLayout>
+        <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/adView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            ads:adSize="BANNER"
+            ads:adUnitId="ca-app-pub-3232751636100261/3937695331"
+            ads:layout_constraintLeft_toLeftOf="parent"
+            ads:layout_constraintRight_toRightOf="parent"
+            ads:layout_constraintTop_toBottomOf="@id/tv_user_name" />
+
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/card1"
+            android:id="@+id/card_pagoda"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="10dp"
+            android:layout_marginTop="30dp"
             android:backgroundTint="@color/light_grey"
-            android:translationY="-50dp"
             app:cardCornerRadius="5dp"
             app:cardElevation="10dp"
             app:layout_constraintHeight_percent="@dimen/card_height_percent_main"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/card2"
-            app:layout_constraintTop_toBottomOf="@id/layout_banner"
+            app:layout_constraintRight_toLeftOf="@id/card_view"
+            app:layout_constraintTop_toBottomOf="@id/adView"
             app:layout_constraintWidth_percent="@dimen/card_width_percent_main">
 
             <LinearLayout
@@ -85,31 +78,30 @@
                 <ImageView
                     android:layout_width="@dimen/main_icon_size"
                     android:layout_height="@dimen/main_icon_size"
-                    android:src="@drawable/ic_pagoda"
-                    android:contentDescription="TODO" />
+                    android:contentDescription="TODO"
+                    android:src="@drawable/ic_pagoda" />
 
                 <TextView
                     android:id="@+id/tv_pagoda"
                     style="@style/MainTextAppearance"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                     />
+                    android:layout_height="wrap_content" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/card2"
+            android:id="@+id/card_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginTop="30dp"
             android:layout_marginEnd="10dp"
             android:backgroundTint="@color/light_grey"
-            android:translationY="-50dp"
             app:cardCornerRadius="5dp"
             app:cardElevation="10dp"
             app:layout_constraintHeight_percent="@dimen/card_height_percent_main"
-            app:layout_constraintLeft_toRightOf="@id/card1"
+            app:layout_constraintLeft_toRightOf="@id/card_pagoda"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layout_banner"
+            app:layout_constraintTop_toBottomOf="@id/adView"
             app:layout_constraintWidth_percent="@dimen/card_width_percent_main">
 
             <LinearLayout
@@ -121,15 +113,14 @@
                 <ImageView
                     android:layout_width="@dimen/main_icon_size"
                     android:layout_height="@dimen/main_icon_size"
-                    android:src="@drawable/ic_views"
-                    android:contentDescription="TODO" />
+                    android:contentDescription="TODO"
+                    android:src="@drawable/ic_views" />
 
                 <TextView
                     android:id="@+id/tv_views"
                     style="@style/MainTextAppearance"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                     />
+                    android:layout_height="wrap_content" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -140,14 +131,13 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="20dp"
             android:backgroundTint="@color/light_grey"
-            android:translationY="-50dp"
             app:cardCornerRadius="5dp"
             app:cardElevation="10dp"
             app:layout_constraintEnd_toStartOf="@+id/card4"
             app:layout_constraintHeight_percent="@dimen/card_height_percent_main"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/card1"
+            app:layout_constraintTop_toBottomOf="@id/card_pagoda"
             app:layout_constraintWidth_percent="@dimen/card_width_percent_main">
 
             <LinearLayout
@@ -159,15 +149,14 @@
                 <ImageView
                     android:layout_width="@dimen/main_icon_size"
                     android:layout_height="@dimen/main_icon_size"
-                    android:src="@drawable/ic_ancient"
-                    android:contentDescription="TODO" />
+                    android:contentDescription="TODO"
+                    android:src="@drawable/ic_ancient" />
 
                 <TextView
                     android:id="@+id/tv_ancients"
                     style="@style/MainTextAppearance"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                     />
+                    android:layout_height="wrap_content" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -178,14 +167,13 @@
             android:layout_marginTop="20dp"
             android:layout_marginEnd="10dp"
             android:backgroundTint="@color/light_grey"
-            android:translationY="-50dp"
             app:cardCornerRadius="5dp"
             app:cardElevation="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHeight_percent="@dimen/card_height_percent_main"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/card3"
-            app:layout_constraintTop_toBottomOf="@id/card2"
+            app:layout_constraintTop_toBottomOf="@id/card_view"
             app:layout_constraintWidth_percent="@dimen/card_width_percent_main">
 
             <LinearLayout
@@ -197,15 +185,14 @@
                 <ImageView
                     android:layout_width="@dimen/main_icon_size"
                     android:layout_height="@dimen/main_icon_size"
-                    android:src="@drawable/ic_food_drink"
-                    android:contentDescription="TODO" />
+                    android:contentDescription="TODO"
+                    android:src="@drawable/ic_food_drink" />
 
                 <TextView
                     android:id="@+id/tv_foods"
                     style="@style/MainTextAppearance"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
+                    android:layout_height="wrap_content" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -214,8 +201,8 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
             android:backgroundTint="@color/light_grey"
-            android:translationY="-30dp"
             app:cardCornerRadius="5dp"
             app:cardElevation="10dp"
             app:layout_constraintEnd_toStartOf="@+id/card6"
@@ -223,7 +210,6 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/card3"
-            app:layout_constraintBottom_toTopOf="@id/toggle_group_language"
             app:layout_constraintWidth_percent="@dimen/card_width_percent_main">
 
             <LinearLayout
@@ -235,15 +221,14 @@
                 <ImageView
                     android:layout_width="@dimen/main_icon_size"
                     android:layout_height="@dimen/main_icon_size"
-                    android:src="@drawable/ic_accessories"
-                    android:contentDescription="TODO" />
+                    android:contentDescription="TODO"
+                    android:src="@drawable/ic_accessories" />
 
                 <TextView
                     android:id="@+id/tv_accessories"
                     style="@style/MainTextAppearance"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
+                    android:layout_height="wrap_content" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -251,9 +236,9 @@
             android:id="@+id/card6"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginTop="20dp"
             android:layout_marginEnd="10dp"
             android:backgroundTint="@color/light_grey"
-            android:translationY="-30dp"
             app:cardCornerRadius="5dp"
             app:cardElevation="10dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -272,63 +257,104 @@
                 <ImageView
                     android:layout_width="@dimen/main_icon_size"
                     android:layout_height="@dimen/main_icon_size"
-                    android:src="@drawable/ic_supports"
-                    android:contentDescription="TODO" />
+                    android:contentDescription="TODO"
+                    android:src="@drawable/ic_supports" />
 
                 <TextView
                     android:id="@+id/tv_supports"
                     style="@style/MainTextAppearance"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                     />
+                    android:layout_height="wrap_content" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <com.google.android.material.button.MaterialButtonToggleGroup
-            android:id="@+id/toggle_group_language"
-            android:layout_width="100dp"
-            android:layout_height="40dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:singleSelection="true"
-            app:checkedButton="@id/toggle_btn_en"
-            android:translationY="-20dp"
-            android:translationX="40dp"
-            style="?attr/materialButtonToggleGroupStyle"
-            >
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/toggle_btn_en"
-                style="?attr/materialButtonOutlinedStyle"
-                android:textAllCaps="false"
-                android:textSize="8sp"
-                android:layout_width="50dp"
-                android:layout_height="40dp"
-                android:text="@string/en" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/toggle_btn_mm"
-                style="?attr/materialButtonOutlinedStyle"
-                android:textAllCaps="false"
-                android:textSize="8sp"
-                android:layout_width="50dp"
-                android:layout_height="40dp"
-                android:text="@string/mm" />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_language"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="30dp"
+        android:backgroundTint="@color/white_full"
+        android:src="@drawable/ic_baseline_language_24"
+        app:fabSize="mini"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent" />
 
-        </com.google.android.material.button.MaterialButtonToggleGroup>
+    <LinearLayout
+        android:id="@+id/layout_language_chooser"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/white_full"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/fab_language"
+        android:layout_marginLeft="30dp"
+        android:layout_marginBottom="5dp"
+        android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/fab_add"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            android:src="@drawable/ic_add_sign"
-            android:background="@drawable/circle_rounded_background"
-            android:scaleType="centerCrop"
+        <LinearLayout
+            android:id="@+id/menu_item_english"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:elevation="10dp"
-            android:layout_marginEnd="30dp"
-            android:layout_marginBottom="20dp"
-            android:contentDescription="TODO" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.core.widget.NestedScrollView>
+            android:gravity="center"
+            android:orientation="horizontal">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="10dp"
+                android:src="@drawable/english"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+            <androidx.appcompat.widget.AppCompatTextView
+                android:text="English"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/menu_item_myanmar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="10dp"
+                android:src="@drawable/myanmar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+            <androidx.appcompat.widget.AppCompatTextView
+                android:text="Myanmar"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="30dp"
+        android:backgroundTint="@color/white_full"
+        android:elevation="10dp"
+        android:src="@drawable/ic_post_add_24"
+        app:fabSize="mini"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
