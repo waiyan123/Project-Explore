@@ -9,7 +9,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 import androidx.activity.viewModels
-import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -18,17 +17,18 @@ import com.itachi.explore.R
 import com.itachi.explore.adapters.pager.UserProfilePagerAdapter
 import com.itachi.explore.fragments.UserItemsFragment
 import com.itachi.explore.fragments.UserTimelineFragment
-import com.itachi.explore.mvp.presenters.UserProfilePresenter
 import com.itachi.explore.mvp.views.UserProfileView
 import com.itachi.explore.utils.REQUEST_BACKGROUND_PIC
 import com.itachi.explore.utils.REQUEST_PROFILE_PIC
 import com.itachi.explore.mvvm.viewmodel.UserProfileViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_user_profile.*
 import kotlinx.android.synthetic.main.dialog_change_user_image.*
 
-
+@AndroidEntryPoint
 class UserProfileActivity : BaseActivity(), UserProfileView, ViewPager.OnPageChangeListener,
     BottomNavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+
     override fun displayLoading() {
         showLoading()
         val lp = WindowManager.LayoutParams()
@@ -67,17 +67,17 @@ class UserProfileActivity : BaseActivity(), UserProfileView, ViewPager.OnPageCha
     override fun onClick(p0: View?) {
         when (p0!!.id) {
             R.id.img_edit_user_profile -> {
-                mPresenter.onClickedEditButton()
+//                mPresenter.onClickedEditButton()
             }
             R.id.tv_done_user_profile -> {
-                mPresenter.onClickedDone(this, et_user_name.text.toString())
+//                mPresenter.onClickedDone(this, et_user_name.text.toString())
             }
             R.id.img_user_background -> {
-                mPresenter.onClickedBackgroundPic(this)
+//                mPresenter.onClickedBackgroundPic(this)
             }
 
             R.id.img_user_profile -> {
-                mPresenter.onClickedProfilePic(this)
+//                mPresenter.onClickedProfilePic(this)
             }
 
             R.id.img_back -> {
@@ -87,7 +87,7 @@ class UserProfileActivity : BaseActivity(), UserProfileView, ViewPager.OnPageCha
     }
 
     override fun goToEditMode(userVO: UserVO) {
-        mPresenter.setUpMode("edit")
+//        mPresenter.setUpMode("edit")
         tv_user_name.visibility = View.GONE
         img_edit_user_profile.visibility = View.GONE
 
@@ -103,7 +103,7 @@ class UserProfileActivity : BaseActivity(), UserProfileView, ViewPager.OnPageCha
     }
 
     override fun goToNormalMode() {
-        mPresenter.setUpMode("normal")
+//        mPresenter.setUpMode("normal")
         tv_user_name.visibility = View.VISIBLE
         et_user_name.visibility = View.GONE
         img_edit_user_profile.visibility = View.VISIBLE
@@ -131,7 +131,7 @@ class UserProfileActivity : BaseActivity(), UserProfileView, ViewPager.OnPageCha
             .into(img_user_profile)
         tv_user_name.text = userVO.name
 
-        userProfileViewModel.addItem(userVO)
+        mViewModel.addItem(userVO)
     }
 
 
@@ -178,25 +178,29 @@ class UserProfileActivity : BaseActivity(), UserProfileView, ViewPager.OnPageCha
     }
 
     private lateinit var pagerAdapter: UserProfilePagerAdapter
-    private lateinit var mPresenter: UserProfilePresenter
 
-    private val userProfileViewModel: UserProfileViewModel by viewModels()
+    private val mViewModel: UserProfileViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_profile)
 
-        setUpViewPager()
-
         val userVoItem = intent.getSerializableExtra(EXTRA_EVENT_ID_USER_PROFILE) as UserVO?
+        mViewModel.getUser(userVoItem)
 
-        mPresenter = ViewModelProviders.of(this).get(UserProfilePresenter::class.java)
-        mPresenter.initPresenter(this)
-        mPresenter.onUiReady(userVoItem)
+        setUpViewPager()
 
         img_edit_user_profile.setOnClickListener(this)
         tv_done_user_profile.setOnClickListener(this)
         img_back.setOnClickListener(this)
+
+        mViewModel.userVO.observe(this){
+            showUserProfile(it)
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
     }
 
     private fun setUpViewPager() {
@@ -214,7 +218,7 @@ class UserProfileActivity : BaseActivity(), UserProfileView, ViewPager.OnPageCha
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        mPresenter.onActivityResult(requestCode, resultCode, data)
+//        mPresenter.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun onRequestPermissionsResult(
@@ -224,9 +228,9 @@ class UserProfileActivity : BaseActivity(), UserProfileView, ViewPager.OnPageCha
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_PROFILE_PIC) {
-            mPresenter.onClickedProfilePic(this)
+//            mPresenter.onClickedProfilePic(this)
         } else if (requestCode == REQUEST_BACKGROUND_PIC) {
-            mPresenter.onClickedBackgroundPic(this)
+//            mPresenter.onClickedBackgroundPic(this)
         }
     }
 
@@ -248,14 +252,14 @@ class UserProfileActivity : BaseActivity(), UserProfileView, ViewPager.OnPageCha
         alertDialog!!.btn_change.setOnClickListener {
             if (btnText == "Pick up") {
                 alertDialog!!.dismiss()
-                mPresenter.chooseSinglePhoto(this)
+//                mPresenter.chooseSinglePhoto(this)
             } else if (btnText == "Change") {
                 alertDialog!!.dismiss()
-                mPresenter.onClickedChangeBtn(this)
+//                mPresenter.onClickedChangeBtn(this)
             }
         }
         alertDialog!!.tv_cancel.setOnClickListener {
-            mPresenter.onClickedCancel()
+//            mPresenter.onClickedCancel()
         }
     }
 }

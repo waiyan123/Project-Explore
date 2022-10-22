@@ -32,7 +32,6 @@ class UserFirebaseDataSourceImpl(
             .get()
             .addOnSuccessListener { snap ->
                 if (snap.documents.isNotEmpty()) {
-                    Log.d("test---", "user already exists ${userVO.user_id}")
                     val mUserVO = snap.documents[0].toObject(UserVO::class.java)
                     mUserVO?.let {
                         trySend(Resource.Success(it))
@@ -42,7 +41,6 @@ class UserFirebaseDataSourceImpl(
                         .document(userVO.user_id)
                         .set(userMapper.voToFirebaseHashmap(userVO))
                         .addOnSuccessListener {
-                            Log.d("test---", "added success ${userVO.name}")
                             trySend(Resource.Success(userVO))
                         }
                         .addOnFailureListener { exception ->
@@ -55,7 +53,6 @@ class UserFirebaseDataSourceImpl(
                     .document(userVO.user_id)
                     .set(userMapper.voToFirebaseHashmap(userVO))
                     .addOnSuccessListener {
-                        Log.d("test---", "added success ${userVO.name}")
                         trySend(Resource.Success(userVO))
                     }
                     .addOnFailureListener { exception ->

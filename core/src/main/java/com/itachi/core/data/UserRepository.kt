@@ -24,7 +24,7 @@ class UserRepository(
     @OptIn(FlowPreview::class)
     override fun getUserById(userId: String?): Flow<Resource<UserVO>>{
 
-        return userRoomDataSource.getUser()
+        return userRoomDataSource.getUser(userId)
             .flatMapConcat {resourceFromRoom->
                 flow {
                     emit(resourceFromRoom)

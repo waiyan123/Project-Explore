@@ -86,7 +86,6 @@ class MainActivity : BaseActivity(), View.OnClickListener{
     }
 
     private fun showUserInfo(userVO: UserVO) {
-        Log.d("test---","show user ${userVO.name}")
         tv_user_name.text = userVO.name
         Glide.with(applicationContext)
             .load(userVO.profile_pic!!.url)

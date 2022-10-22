@@ -17,13 +17,13 @@ abstract class UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertUser(user: UserEntity)
 
+    @Query("SELECT * FROM user_table WHERE :userId")
+    abstract fun getUser(userId : String): Flow<UserEntity>
+
     @Query("SELECT * FROM user_table")
-    abstract fun getUser(): Flow<UserEntity>
+    abstract fun getAllUsers() : List<UserEntity>
 
     @Query("DELETE FROM user_table")
     abstract fun deleteUser()
 
-    fun userInDbExist(): Boolean {
-        return getUser() != null
-    }
 }

@@ -100,7 +100,8 @@ class MyApplication : Application() {
             .fallbackToDestructiveMigration()
             .build()
 
-        val userRoomDataSource = UserRoomDataSourceImpl(userMapper,roomDatabase)
+        val firebaseAuth = FirebaseAuth.getInstance()
+        val userRoomDataSource = UserRoomDataSourceImpl(firebaseAuth,userMapper,roomDatabase)
         val userRepository = UserRepository(userFirebaseDataSource,userRoomDataSource)
 
         MyViewModelProviderFactory.inject(

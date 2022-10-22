@@ -9,11 +9,11 @@ import java.io.Serializable
 data class UserEntity(
 
     @PrimaryKey
-    @ColumnInfo(name="facebook_id")
-    var facebook_id: String= "",
-
     @ColumnInfo(name="user_id")
     var user_id: String = "",
+
+    @ColumnInfo(name="facebook_id")
+    var facebook_id: String= "",
 
     @ColumnInfo(name="phone_number")
     var phone_number : String?= "",

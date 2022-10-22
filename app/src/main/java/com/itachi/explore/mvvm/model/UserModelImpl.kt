@@ -79,15 +79,15 @@ class UserModelImpl : BaseModel(),UserModel,KoinComponent{
     override fun getUserProfile(
         onSuccess : (UserVO)-> Unit,
         onFailure : (String?)-> Unit) {
-        if(database.userDao().userInDbExist()) {
+//        if(database.userDao().userInDbExist()) {
 //            database.userDao().getUser()
 //                .subscribeOn(Schedulers.io())
 //                .observeOn(AndroidSchedulers.mainThread())
 //                .subscribe {
 //                    onSuccess(it)
 //                }
-        }
-        else onFailure("User is not existed.")
+//        }
+//        else onFailure("User is not existed.")
 
 //        firestoreRef.collection(USER)
 //            .whereEqualTo(USER_ID,auth.currentUser!!.uid)
@@ -109,15 +109,15 @@ class UserModelImpl : BaseModel(),UserModel,KoinComponent{
     }
     @SuppressLint("CheckResult")
     override fun getUserFromDb(onSuccess: (UserVO) -> Unit, onFailure: (String?) -> Unit) {
-        if(database.userDao().userInDbExist()) {
+//        if(database.userDao().userInDbExist()) {
 //            database.userDao().getUser()
 //                    .subscribeOn(Schedulers.io())
 //                    .observeOn(AndroidSchedulers.mainThread())
 //                    .subscribe {
 //                        onSuccess(it)
 //                    }
-        }
-        else onFailure("User is not existed.")
+//        }
+//        else onFailure("User is not existed.")
     }
 
     override fun logOut() {

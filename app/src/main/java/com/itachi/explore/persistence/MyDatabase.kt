@@ -19,7 +19,7 @@ import com.itachi.explore.persistence.typeconverters.PhotoVOTypeConverter
 import org.koin.core.KoinComponent
 
 @Database (entities = [UserEntity::class, PagodaEntity::class,AncientEntity::class, ViewEntity::class],
-    version = 12,exportSchema = false)
+    version = 14,exportSchema = false)
 @TypeConverters(CommentTypeConverter::class, PhotoVOListTypeConverter::class,PhotoVOTypeConverter::class)
 abstract class MyDatabase : RoomDatabase(),KoinComponent{
 

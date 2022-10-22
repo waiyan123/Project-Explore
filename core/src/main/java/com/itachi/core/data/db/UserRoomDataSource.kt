@@ -8,7 +8,7 @@ interface UserRoomDataSource {
 
     suspend fun addUser(userVO: UserVO)
 
-    fun getUser() : Flow<Resource<UserVO>>
+    fun getUser(userId : String?) : Flow<Resource<UserVO>>
 
     suspend fun deleteUser()
 

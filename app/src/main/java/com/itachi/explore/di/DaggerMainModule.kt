@@ -67,10 +67,11 @@ object DaggerMainModule {
     @Provides
     @Singleton
     fun providesUserRoomDataSource(
+        auth : FirebaseAuth,
         userMapper: UserMapper,
         database : MyDatabase
     ) : UserRoomDataSource {
-        return UserRoomDataSourceImpl(userMapper,database)
+        return UserRoomDataSourceImpl(auth,userMapper,database)
     }
 
     @Provides

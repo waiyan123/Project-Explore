@@ -31,7 +31,6 @@ class MainViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             getUser().collect{resource->
-                Log.d("test---","collect in main view model")
                 when(resource) {
                     is Resource.Success -> {
                         resource.data?.let {
@@ -41,12 +40,10 @@ class MainViewModel @Inject constructor(
                     is Resource.Error -> {
                         resource.message?.let {
                             errorMsg.postValue(it)
-                            Log.d("test---","error $it")
                         }
                     }
                     is Resource.Loading -> {
                         errorMsg.postValue("Loading")
-                        Log.d("test---","Loading")
                     }
                     else -> {
 
