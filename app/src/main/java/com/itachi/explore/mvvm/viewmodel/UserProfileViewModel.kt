@@ -27,7 +27,7 @@ class UserProfileViewModel @Inject constructor(
 
     fun getUser(userVO : UserVO?){
         viewModelScope.launch {
-            getUser("7e3JjyqvBAQLcs6Y6J5JkcHOq8y2").collect {resource->
+            getUser(userVO?.user_id).collect {resource->
                 when(resource) {
                     is Resource.Success -> {
                         resource.data?.let {

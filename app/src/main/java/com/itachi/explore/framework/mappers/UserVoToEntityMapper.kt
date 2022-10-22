@@ -13,16 +13,16 @@ class UserVoToEntityMapper : Mapper<UserVO, UserEntity>{
             val profileEntity = PhotoEntity(input.profile_pic.path,input.profile_pic.url,input.profile_pic.geo_points)
             val bgEntity = PhotoEntity(input.background_pic.path,input.background_pic.url,input.background_pic.geo_points)
             return UserEntity(
-                input.facebook_id,
-                input.user_id,
-                input.phone_number,
-                input.facebook_profile_url,
-                input.email,
-                input.name,
-                profileEntity,
-                bgEntity,
-                input.brief_bio,
-                input.get_is_uploader
+                user_id = input.user_id,
+                facebook_id = input.facebook_id,
+                phone_number = input.phone_number,
+                facebook_profile_url = input.facebook_profile_url,
+                email = input.email,
+                name = input.name,
+                profile_pic = profileEntity,
+                background_pic = bgEntity,
+                brief_bio = input.brief_bio,
+                get_is_uploader = input.get_is_uploader
             )
         }
         else return UserEntity()

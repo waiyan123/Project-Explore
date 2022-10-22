@@ -22,6 +22,7 @@ class UserRoomDataSourceImpl(
 
     override suspend fun addUser(userVO: UserVO) {
         database.userDao().insertUser(userMapper.voToEntity(userVO))
+        Log.d("test---","add user to Room ${userVO.user_id} --- ${userVO.name}")
     }
 
     override fun getUser(userId : String?): Flow<Resource<UserVO>> = flow {
@@ -29,8 +30,7 @@ class UserRoomDataSourceImpl(
         database.userDao().getUser(userId ?: auth.currentUser!!.uid)
             .collect {userEntity->
                 Log.d("test---","$userId")
-                Log.d("test---","${userEntity.user_id}")
-                Log.d("test---","get user from Room ${userEntity.name}")
+                Log.d("test---","get user from Room ${userEntity.user_id} --- ${userEntity.name}")
                 emit(Resource.Success(userMapper.entityToVO(userEntity)))
             }
 
