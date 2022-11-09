@@ -7,10 +7,7 @@ import com.itachi.core.domain.UserVO
 import com.itachi.core.common.Resource
 import com.itachi.explore.framework.mappers.UserMapper
 import com.itachi.explore.persistence.MyDatabase
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.*
 import org.koin.core.KoinComponent
 
 class UserRoomDataSourceImpl(
@@ -21,17 +18,18 @@ class UserRoomDataSourceImpl(
     KoinComponent {
 
     override suspend fun addUser(userVO: UserVO) {
+        Log.d("test---","add user to Room ${userVO.name}")
         database.userDao().insertUser(userMapper.voToEntity(userVO))
-        Log.d("test---","add user to Room ${userVO.user_id} --- ${userVO.name}")
     }
 
     override fun getUser(userId : String?): Flow<Resource<UserVO>> = flow {
 
         database.userDao().getUser(userId ?: auth.currentUser!!.uid)
             .collect {userEntity->
-                Log.d("test---","$userId")
-                Log.d("test---","get user from Room ${userEntity.user_id} --- ${userEntity.name}")
-                emit(Resource.Success(userMapper.entityToVO(userEntity)))
+                userEntity?.let {
+                    Log.d("test---","get user from Room ${it.name}")
+                    emit(Resource.Success(userMapper.entityToVO(userEntity)))
+                }
             }
 
     }
@@ -41,6 +39,13 @@ class UserRoomDataSourceImpl(
     }
 
     override suspend fun updateUser(userVO: UserVO) {
-        TODO("Not yet implemented")
+
+    }
+
+    private suspend fun getAllUsers() : List<UserVO> {
+        val userVoList = database.userDao().getAllUsers().map {
+            userMapper.entityToVO(it)
+        }
+        return userVoList
     }
 }

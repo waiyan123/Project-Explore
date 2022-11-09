@@ -1,13 +1,20 @@
 package com.itachi.explore.activities
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
+import androidx.activity.result.contract.ActivityResultContract
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
@@ -17,19 +24,24 @@ import com.itachi.explore.R
 import com.itachi.explore.adapters.pager.UserProfilePagerAdapter
 import com.itachi.explore.fragments.UserItemsFragment
 import com.itachi.explore.fragments.UserTimelineFragment
-import com.itachi.explore.mvp.views.UserProfileView
+import com.itachi.explore.mvvm.model.UserProfileUploadDialogModel
 import com.itachi.explore.utils.REQUEST_BACKGROUND_PIC
 import com.itachi.explore.utils.REQUEST_PROFILE_PIC
 import com.itachi.explore.mvvm.viewmodel.UserProfileViewModel
+import com.itachi.explore.utils.REQUEST_EXTERNAL_STORAGE
+import com.sangcomz.fishbun.FishBun
+import com.sangcomz.fishbun.MimeType
+import com.sangcomz.fishbun.adapter.image.impl.GlideAdapter
+import com.sangcomz.fishbun.define.Define
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_user_profile.*
 import kotlinx.android.synthetic.main.dialog_change_user_image.*
 
 @AndroidEntryPoint
-class UserProfileActivity : BaseActivity(), UserProfileView, ViewPager.OnPageChangeListener,
+class UserProfileActivity : BaseActivity(), ViewPager.OnPageChangeListener,
     BottomNavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
-    override fun displayLoading() {
+    fun displayLoading() {
         showLoading()
         val lp = WindowManager.LayoutParams()
 
@@ -39,7 +51,7 @@ class UserProfileActivity : BaseActivity(), UserProfileView, ViewPager.OnPageCha
         alertDialog!!.window!!.attributes = lp
     }
 
-    override fun showUserBackgroundPic(url: String) {
+    fun showUserBackgroundPic(url: String) {
         hideLoading()
         Glide.with(applicationContext)
             .load(url)
@@ -47,7 +59,7 @@ class UserProfileActivity : BaseActivity(), UserProfileView, ViewPager.OnPageCha
             .into(img_user_background)
     }
 
-    override fun showUserProfilePic(url: String) {
+    fun showUserProfilePic(url: String) {
         hideLoading()
         Glide.with(applicationContext)
             .load(url)
@@ -55,11 +67,7 @@ class UserProfileActivity : BaseActivity(), UserProfileView, ViewPager.OnPageCha
             .into(img_user_profile)
     }
 
-    override fun showProfileDialog(image: String, btnText: String) {
-        showDialogChangePic(image, btnText)
-    }
-
-    override fun showUploadSuccessFul(str: String) {
+    fun showUploadSuccessFul(str: String) {
         hideLoading()
         showToast(str)
     }
@@ -73,11 +81,16 @@ class UserProfileActivity : BaseActivity(), UserProfileView, ViewPager.OnPageCha
 //                mPresenter.onClickedDone(this, et_user_name.text.toString())
             }
             R.id.img_user_background -> {
-//                mPresenter.onClickedBackgroundPic(this)
+                checkPermission(this, REQUEST_BACKGROUND_PIC) {
+
+                    mViewModel.onClickedUserBackgroundPic()
+                }
             }
 
             R.id.img_user_profile -> {
-//                mPresenter.onClickedProfilePic(this)
+                checkPermission(this, REQUEST_PROFILE_PIC) {
+                    mViewModel.onClickedUserProfilePic()
+                }
             }
 
             R.id.img_back -> {
@@ -86,23 +99,25 @@ class UserProfileActivity : BaseActivity(), UserProfileView, ViewPager.OnPageCha
         }
     }
 
-    override fun goToEditMode(userVO: UserVO) {
+    private fun onEditProfile() {
 //        mPresenter.setUpMode("edit")
         tv_user_name.visibility = View.GONE
         img_edit_user_profile.visibility = View.GONE
 
         tv_done_user_profile.visibility = View.VISIBLE
         et_user_name.visibility = View.VISIBLE
-        et_user_name.setText(userVO.name)
+        et_user_name.setText(tv_user_name.text)
 
         img_user_background.isEnabled = true
         img_user_profile.isEnabled = true
         img_user_background.setOnClickListener(this)
         img_user_profile.setOnClickListener(this)
-        tv_done_user_profile.setOnClickListener(this)
+        tv_done_user_profile.setOnClickListener {
+            mViewModel.onClickedDoneButton()
+        }
     }
 
-    override fun goToNormalMode() {
+    private fun showProfileEditableMode() {
 //        mPresenter.setUpMode("normal")
         tv_user_name.visibility = View.VISIBLE
         et_user_name.visibility = View.GONE
@@ -110,13 +125,16 @@ class UserProfileActivity : BaseActivity(), UserProfileView, ViewPager.OnPageCha
         img_user_profile.isEnabled = false
         img_user_background.isEnabled = false
         tv_done_user_profile.visibility = View.GONE
+        img_edit_user_profile.setOnClickListener {
+            mViewModel.onClickedEditButton()
+        }
     }
 
-    override fun dismissDialog() {
+    fun dismissDialog() {
         if (alertDialog!!.isShowing) alertDialog!!.dismiss()
     }
 
-    override fun showUserProfile(userVO: UserVO) {
+    private fun showProfileReadingMode(userVO: UserVO) {
 
         if (userVO.get_is_uploader == true) {
             img_check_user_profile.visibility = View.VISIBLE
@@ -135,12 +153,12 @@ class UserProfileActivity : BaseActivity(), UserProfileView, ViewPager.OnPageCha
     }
 
 
-    override fun showError(error: String) {
+    fun showError(error: String) {
         showToast(error)
         hideLoading()
     }
 
-    override fun checkLanguage(lang: String) {
+    fun checkLanguage(lang: String) {
 
     }
 
@@ -170,7 +188,7 @@ class UserProfileActivity : BaseActivity(), UserProfileView, ViewPager.OnPageCha
     }
 
     companion object {
-                const val EXTRA_EVENT_ID_USER_PROFILE = "Extra_event_id_user_profile"
+        const val EXTRA_EVENT_ID_USER_PROFILE = "Extra_event_id_user_profile"
         fun newIntent(context: Context): Intent {
             return Intent(context, UserProfileActivity::class.java).apply {
             }
@@ -186,7 +204,10 @@ class UserProfileActivity : BaseActivity(), UserProfileView, ViewPager.OnPageCha
         setContentView(R.layout.activity_user_profile)
 
         val userVoItem = intent.getSerializableExtra(EXTRA_EVENT_ID_USER_PROFILE) as UserVO?
-        mViewModel.getUser(userVoItem)
+
+        mViewModel.getUser(userVoItem).observe(this){
+            showProfileReadingMode(it)
+        }
 
         setUpViewPager()
 
@@ -194,9 +215,24 @@ class UserProfileActivity : BaseActivity(), UserProfileView, ViewPager.OnPageCha
         tv_done_user_profile.setOnClickListener(this)
         img_back.setOnClickListener(this)
 
-        mViewModel.userVO.observe(this){
-            showUserProfile(it)
+        mViewModel.editable.observe(this) { editable ->
+            if (editable) {
+                showProfileEditableMode()
+            }
         }
+
+        mViewModel.onEdit.observe(this) { onEdit ->
+            if (onEdit) {
+                onEditProfile()
+            } else {
+                showProfileEditableMode()
+            }
+        }
+
+        mViewModel.mutableUploadProfileModel.observe(this){
+            showPickupImageDialog(it)
+        }
+
     }
 
     override fun onDestroy() {
@@ -216,9 +252,10 @@ class UserProfileActivity : BaseActivity(), UserProfileView, ViewPager.OnPageCha
         vp_profile.currentItem = 1
     }
 
+    //incoming with pickup image urls
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-//        mPresenter.onActivityResult(requestCode, resultCode, data)
+        mViewModel.onActivityResult(requestCode,resultCode,data)
     }
 
     override fun onRequestPermissionsResult(
@@ -227,39 +264,58 @@ class UserProfileActivity : BaseActivity(), UserProfileView, ViewPager.OnPageCha
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == REQUEST_PROFILE_PIC) {
-//            mPresenter.onClickedProfilePic(this)
-        } else if (requestCode == REQUEST_BACKGROUND_PIC) {
-//            mPresenter.onClickedBackgroundPic(this)
+        if (requestCode == REQUEST_PROFILE_PIC && grantResults.isNotEmpty()
+            && grantResults[0] == PackageManager.PERMISSION_GRANTED
+        ) {
+            Log.d("test---","Permission granted profile")
+            mViewModel.onClickedUserProfilePic()
+        }
+        else if (requestCode == REQUEST_BACKGROUND_PIC && grantResults.isNotEmpty()
+            && grantResults[0] == PackageManager.PERMISSION_GRANTED
+        ) {
+            Log.d("test---","Permission granted background")
+            mViewModel.onClickedUserBackgroundPic()
         }
     }
 
-    private fun showDialogChangePic(image: String, btnText: String) {
+    private fun showPickupImageDialog(uploadProfileModel : UserProfileUploadDialogModel
+                                      = UserProfileUploadDialogModel()
+    ) {
         val dialogBuilder = AlertDialog.Builder(this)
         val view = layoutInflater.inflate(R.layout.dialog_change_user_image, null)
+
         dialogBuilder.setView(view)
         alertDialog = dialogBuilder.create()
         alertDialog!!.window!!.attributes.windowAnimations = R.style.DialogChosing
         alertDialog!!.show()
 
-        alertDialog!!.btn_change.text = btnText
+        alertDialog!!.btn_change.text = uploadProfileModel.clickAction
+        alertDialog!!.tv_dialog_user_image_title.text = uploadProfileModel.title
+        alertDialog!!.tv_dialog_user_image_title.visibility = View.VISIBLE
 
         Glide.with(applicationContext)
-            .load(image)
+            .load(uploadProfileModel.imagePath)
             .placeholder(R.drawable.ic_placeholder)
             .into(alertDialog!!.img_dialog_user_profile)
 
         alertDialog!!.btn_change.setOnClickListener {
-            if (btnText == "Pick up") {
+            if (uploadProfileModel.clickAction == "Pick up") {
                 alertDialog!!.dismiss()
-//                mPresenter.chooseSinglePhoto(this)
-            } else if (btnText == "Change") {
+                if(uploadProfileModel.title == "Profile") {
+                    startActivityForResult(Intent(Intent.ACTION_PICK), REQUEST_PROFILE_PIC)
+                }
+                else {
+                    startActivityForResult(Intent(Intent.ACTION_PICK), REQUEST_BACKGROUND_PIC)
+                }
+
+            } else if (uploadProfileModel.clickAction == "Change") {
                 alertDialog!!.dismiss()
-//                mPresenter.onClickedChangeBtn(this)
+                mViewModel.onClickedChangeButton(uploadProfileModel)
             }
         }
         alertDialog!!.tv_cancel.setOnClickListener {
-//            mPresenter.onClickedCancel()
+            alertDialog?.dismiss()
         }
     }
+
 }

@@ -12,18 +12,18 @@ import kotlinx.coroutines.flow.Flow
 
 
 @Dao
-abstract class UserDao {
+interface UserDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertUser(user: UserEntity)
+    suspend fun insertUser(user: UserEntity)
 
-    @Query("SELECT * FROM user_table WHERE :userId")
-    abstract fun getUser(userId : String): Flow<UserEntity>
+    @Query("SELECT * FROM user_table WHERE user_id = :user_id")
+    fun getUser(user_id : String): Flow<UserEntity?>
 
     @Query("SELECT * FROM user_table")
-    abstract fun getAllUsers() : List<UserEntity>
+    fun getAllUsers() : List<UserEntity>
 
     @Query("DELETE FROM user_table")
-    abstract fun deleteUser()
+    fun deleteUser()
 
 }

@@ -22,19 +22,19 @@ class UserRepository(
     }
 
     @OptIn(FlowPreview::class)
-    override fun getUserById(userId: String?): Flow<Resource<UserVO>>{
+    override fun getUserById(userId: String?): Flow<Resource<UserVO>> = flow {
 
-        return userRoomDataSource.getUser(userId)
-            .flatMapConcat {resourceFromRoom->
-                flow {
-                    emit(resourceFromRoom)
-                    userFirebaseDataSource.getUserById(userId)
-                        .collect {resourceFromFirebase->
-                            resourceFromFirebase.data?.let { userVO->
-                                userRoomDataSource.addUser(userVO)
-                            }
-                            emit(resourceFromFirebase)
-                        }
+        userRoomDataSource.getUser(userId)
+            .onEach {
+                emit(it)
+            }
+            .flatMapConcat {
+                userFirebaseDataSource.getUserById(userId)
+            }
+            .collect { resourceFirebase->
+                resourceFirebase.data?.let { userVO->
+                    userRoomDataSource.addUser(userVO)
+                    emit(resourceFirebase)
                 }
             }
 

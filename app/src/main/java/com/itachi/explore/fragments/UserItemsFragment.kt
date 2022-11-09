@@ -109,9 +109,11 @@ class UserItemsFragment : Fragment(),UserItemsView{
         mPresenter = ViewModelProviders.of(this).get(UserItemsPresenter::class.java)
         mPresenter.initPresenter(this)
 
-        userViewModel.userVO.observe(viewLifecycleOwner, Observer {
-            mPresenter.onUiReady(it)
-        })
+        mPresenter.onUiReady(userViewModel.mUserVO)
+
+//        userViewModel.userVO.observe(viewLifecycleOwner, Observer {
+//            mPresenter.onUiReady(it)
+//        })
     }
 
     private fun setUpPagodaRecyclerView (context : Context) {
