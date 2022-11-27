@@ -2,8 +2,9 @@ package com.itachi.explore.framework.mappers
 
 import com.itachi.core.domain.PagodaVO
 import com.itachi.explore.utils.*
+import javax.inject.Inject
 
-class PagodaVoToFirebaseMapper : Mapper<PagodaVO,HashMap<String,Any>> {
+class PagodaVoToFirebaseMapper @Inject constructor() : Mapper<PagodaVO,HashMap<String,Any>> {
     override fun map(input: PagodaVO?): HashMap<String,Any> {
         return if(input!=null) {
             hashMapOf(

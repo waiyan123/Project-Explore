@@ -1,31 +1,10 @@
 package com.itachi.explore.di
 
-import android.content.Context
-import android.content.SharedPreferences
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
-import com.itachi.core.data.LanguageDataSource
-import com.itachi.core.data.LanguageRepository
-import com.itachi.core.data.UserDataSource
 import com.itachi.core.data.UserRepository
-import com.itachi.core.data.db.UserRoomDataSource
-import com.itachi.core.data.network.UserFirebaseDataSource
-import com.itachi.core.data.sharedpreferences.LanguageSharedPreferencesDataSource
 import com.itachi.core.interactors.AddUser
-import com.itachi.core.interactors.GetLanguage
-import com.itachi.explore.framework.LanguageSharedPreferencesDataSourceImpl
-import com.itachi.explore.framework.UserFirebaseDataSourceImpl
-import com.itachi.explore.framework.UserRoomDataSourceImpl
-import com.itachi.explore.framework.mappers.UserEntityToVoMapper
-import com.itachi.explore.framework.mappers.UserMapper
-import com.itachi.explore.framework.mappers.UserVoToEntityMapper
-import com.itachi.explore.framework.mappers.UserVoToFirebaseMapper
-import com.itachi.explore.utils.LANGUAGE
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -36,9 +15,9 @@ object DaggerLoginModule {
     @Provides
     @Singleton
     fun providesAddUser(
-        userDataSource : UserDataSource
+        userRepository : UserRepository
     ) : AddUser {
-        return AddUser(userDataSource)
+        return AddUser(userRepository)
     }
 
 //    @Provides

@@ -9,8 +9,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import com.bumptech.glide.Glide
-import com.itachi.explore.mvp.presenters.FormPresenter
-import com.itachi.explore.mvp.views.FormView
 import com.itachi.explore.utils.*
 import kotlinx.android.synthetic.main.activity_form.*
 import kotlinx.android.synthetic.main.dialog_choose_type.*
@@ -210,17 +208,19 @@ class FormActivity : BaseActivity(), View.OnClickListener {
             }
 
             R.id.tv_view_type -> {
-                tv_choose_type.text = VIEW_TYPE
-                tv_choose_type.setTextColor(Color.BLUE)
-                tv_choose_type.error = null
-                alertDialog!!.dismiss()
+                showToast("Coming soon")
+//                tv_choose_type.text = VIEW_TYPE
+//                tv_choose_type.setTextColor(Color.BLUE)
+//                tv_choose_type.error = null
+//                alertDialog!!.dismiss()
             }
 
             R.id.tv_ancient_type -> {
-                tv_choose_type.text = ANCIENT_TYPE
-                tv_choose_type.setTextColor(Color.BLUE)
-                tv_choose_type.error = null
-                alertDialog!!.dismiss()
+                showToast("Coming soon")
+//                tv_choose_type.text = ANCIENT_TYPE
+//                tv_choose_type.setTextColor(Color.BLUE)
+//                tv_choose_type.error = null
+//                alertDialog!!.dismiss()
             }
 
             R.id.tv_food_type -> {
@@ -357,18 +357,18 @@ class FormActivity : BaseActivity(), View.OnClickListener {
         ll_festival_date.error = null
         ll_about.error = null
 
-        if (!mViewModel.checkValidate(et_name)) {
+        if (!mViewModel.checkValidate(et_name.text.toString())) {
             ll_name.error = "Invalid text"
             ll_name.requestFocus()
         } else if (tv_choose_type.text.toString() == "Choose Type") {
             tv_choose_type.error = "Type required !"
-        } else if (!mViewModel.checkValidate(et_created_date)) {
+        } else if (!mViewModel.checkValidate(et_created_date.text.toString())) {
             ll_created_date.error = "Invalid text"
             ll_created_date.requestFocus()
-        } else if (!mViewModel.checkValidate(et_festival_date)) {
+        } else if (!mViewModel.checkValidate(et_festival_date.text.toString())) {
             ll_festival_date.error = "Invalid text"
             ll_festival_date.requestFocus()
-        } else if (!mViewModel.checkValidate(et_about)) {
+        } else if (!mViewModel.checkValidate(et_about.text.toString())) {
             ll_about.error = "Invalid text"
             ll_about.requestFocus()
         } else {

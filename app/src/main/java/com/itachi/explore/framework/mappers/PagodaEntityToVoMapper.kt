@@ -3,8 +3,9 @@ package com.itachi.explore.framework.mappers
 import com.itachi.core.domain.PagodaVO
 import com.itachi.core.domain.PhotoVO
 import com.itachi.explore.persistence.entities.PagodaEntity
+import javax.inject.Inject
 
-class PagodaEntityToVoMapper : Mapper<PagodaEntity, PagodaVO> {
+class PagodaEntityToVoMapper @Inject constructor() : Mapper<PagodaEntity, PagodaVO> {
 
     override fun map(input: PagodaEntity?): PagodaVO {
         if(input!=null) {

@@ -16,10 +16,7 @@ class AncientRepository(
         onFailure: (String) -> Unit
     ) = ancientFirebaseDataSource.getAncientBackground(bgUrl, onFailure)
 
-    suspend fun getAllAncientsFromFirebase(
-        onSuccess: (List<AncientVO>) -> Unit,
-        onFailure: (String) -> Unit
-    ) = ancientFirebaseDataSource.getAncientList(onSuccess, onFailure)
+    suspend fun getAllAncientsFromFirebase() = ancientFirebaseDataSource.getAncientList()
 
     suspend fun getAncientByIdFromFirebase(
         id: String,

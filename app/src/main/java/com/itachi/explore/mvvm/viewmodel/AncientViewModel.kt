@@ -2,8 +2,9 @@ package com.itachi.explore.mvvm.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
+import com.itachi.core.common.Resource
 import com.itachi.core.data.AncientRepository
-import com.itachi.core.data.FirestoreResult
 import com.itachi.core.domain.AncientVO
 import com.itachi.explore.framework.Interactors
 import kotlinx.coroutines.GlobalScope
@@ -14,14 +15,14 @@ import org.koin.core.KoinComponent
 
 class AncientViewModel(interactors: Interactors) : AppViewmodel(interactors),KoinComponent {
 
-    private val ancientList  = MutableLiveData<ArrayList<AncientVO>>()
+    private val ancientList  = MutableLiveData<List<AncientVO>>()
     val errorStr = MutableLiveData<String>()
     private val ancientBgImage = MutableLiveData<String>()
     private val ancientItem = MutableLiveData<AncientVO>()
     private val checkLanguage = MutableLiveData<String>()
 
     fun getAncientBackground() : MutableLiveData<String>{
-        GlobalScope.launch {
+        viewModelScope.launch {
             interactors.getAncient.getBackground(
                 {
                     ancientBgImage.postValue(it)
@@ -34,25 +35,25 @@ class AncientViewModel(interactors: Interactors) : AppViewmodel(interactors),Koi
         return ancientBgImage
     }
 
-    fun getAncients() : MutableLiveData<ArrayList<AncientVO>>{
-        GlobalScope.async {
+    fun getAncients() : MutableLiveData<List<AncientVO>>{
+        viewModelScope.launch {
             ancientList.postValue(ArrayList(interactors.getAllAncient.fromRoom()))
-            interactors.getAllAncient.fromFirebase(
-                {
-//                    ancientList.postValue(ArrayList(it))
-//                    GlobalScope.launch {
-//                        interactors.addAllAncients.toRoom(it)
-//                    }
-                    ancientList.postValue(ArrayList(it))
-                Log.d("list---","list from onSuccess ${it.size}")
-                },
-                {
-//                    errorStr.postValue(it)
+            interactors.getAllAncient.fromFirebase().collect {resource->
+                when(resource) {
+                    is Resource.Success-> {
+                        resource.data?.let {
+                            ancientList.postValue(it)
+                        }
+                    }
+                    is Resource.Error -> {
+                        errorStr.postValue(resource.message)
+                    }
+                    is Resource.Loading -> {
+
+                    }
                 }
-            ).collect {
-                ancientList.postValue(ArrayList(it.data))
-                Log.d("list---","List from Result ${it.data?.size}")
-                errorStr.postValue(it.errorMessage)
+
+
             }
 
         }

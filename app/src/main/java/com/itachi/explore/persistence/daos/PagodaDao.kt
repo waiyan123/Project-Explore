@@ -9,6 +9,7 @@ import com.itachi.core.domain.PagodaVO
 import com.itachi.explore.persistence.entities.AncientEntity
 import com.itachi.explore.persistence.entities.PagodaEntity
 import io.reactivex.Completable
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PagodaDao {
@@ -20,10 +21,10 @@ interface PagodaDao {
     suspend fun addPagoda(pagodaEntity : PagodaEntity)
 
     @Query("SELECT * FROM pagoda_table")
-    suspend fun getPagodaList() : List<PagodaEntity>
+    fun getPagodaList() : Flow<List<PagodaEntity>>
 
     @Query("SELECT * FROM pagoda_table WHERE item_id = :itemId")
-    suspend fun getPagodaById(itemId: String) : PagodaEntity
+    fun getPagodaById(itemId: String) : Flow<PagodaEntity>
 
     @Query("DELETE FROM pagoda_table")
     suspend fun deletePagodaList()

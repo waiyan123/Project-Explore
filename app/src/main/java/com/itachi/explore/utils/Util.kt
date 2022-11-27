@@ -12,24 +12,23 @@ import io.reactivex.Observable
 import org.koin.core.KoinComponent
 import java.io.ByteArrayOutputStream
 
-
 class Util {
 
     companion object : KoinComponent {
 
-        fun checkEditTextValidattion(et: EditText): Boolean {
+        suspend fun checkEditTextValidattion(text: String?): Boolean {
             var valid = true
-            if (et.text.toString() == "" || et.text.toString() == null) {
+            if (text == "" || text == null) {
                 valid = false
             }
             return valid
         }
 
-        fun compressImage(
-            filePath: ArrayList<String>,
+        suspend fun compressImage(
+            filePath: List<String>,
             context: Context,
-            quality: Int
-        ): Observable<ArrayList<ByteArray>> {
+            quality: Int = 30
+        ): ArrayList<ByteArray> {
             val list = ArrayList<ByteArray>()
             filePath.forEach {
                 val bmp = MediaStore.Images.Media.getBitmap(context.contentResolver, Uri.parse(it))
@@ -37,10 +36,10 @@ class Util {
                 bmp.compress(Bitmap.CompressFormat.JPEG, quality, baos)
                 list.add(baos.toByteArray())
             }
-            return Observable.just(list)
+            return list
         }
 
-        fun getRealPathFromUrl(
+        suspend fun getRealPathFromUrl(
             context: Context,
             url: String?
         ): String? {
@@ -58,15 +57,15 @@ class Util {
             }
         }
 
-        fun getGeoPointsFromImageList(context: Context,imageList : ArrayList<String>) : Observable<ArrayList<String>>{
+        suspend fun getGeoPointsFromImageList(context: Context,imageList : List<String>) : ArrayList<String>{
             var geoPointsList = ArrayList<String>()
             imageList.forEach {
                 geoPointsList.add(getGeoPointFromImage(getRealPathFromUrl(context,it)!!))
             }
-            return Observable.just(geoPointsList)
+            return geoPointsList
         }
 
-        fun getGeoPointFromImage(filePath: String) : String{
+        suspend fun getGeoPointFromImage(filePath: String) : String{
             val exif = ExifInterface(filePath)
 
             val LATITUDE =
@@ -102,7 +101,7 @@ class Util {
             return "$latitude,$longitude"
         }
 
-        private fun convertToDegree(stringDMS: String): Float? {
+        private suspend fun convertToDegree(stringDMS: String): Float? {
             var result: Float? = null
             val DMS = stringDMS.split(",".toRegex(), 3).toTypedArray()
             val stringD =

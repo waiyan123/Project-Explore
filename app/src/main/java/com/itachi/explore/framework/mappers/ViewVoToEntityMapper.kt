@@ -1,18 +1,15 @@
 package com.itachi.explore.framework.mappers
 
-import com.itachi.core.domain.PagodaVO
 import com.itachi.core.domain.ViewVO
-import com.itachi.explore.persistence.entities.PagodaEntity
 import com.itachi.explore.persistence.entities.PhotoEntity
 import com.itachi.explore.persistence.entities.ViewEntity
-import javax.inject.Inject
 
 class ViewVoToEntityMapper : Mapper<ViewVO, ViewEntity>{
 
     override fun map(input: ViewVO?) : ViewEntity {
         if(input!=null) {
             val photoEntity = input.photos.map {
-                PhotoEntity(it.path,it.url,it.geo_points)
+                PhotoEntity(it.id,it.url,it.geo_points)
             }
             return ViewEntity(
                 input.about,

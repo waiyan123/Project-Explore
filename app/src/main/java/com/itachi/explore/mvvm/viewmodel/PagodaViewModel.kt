@@ -2,19 +2,33 @@ package com.itachi.explore.mvvm.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.itachi.core.common.Resource
 import com.itachi.core.domain.AncientVO
 import com.itachi.core.domain.PagodaVO
+import com.itachi.core.interactors.GetAllPagodas
+import com.itachi.core.interactors.GetLanguage
+import com.itachi.core.interactors.GetPagodaBanner
 import com.itachi.explore.activities.PagodasActivity
 import com.itachi.explore.framework.Interactors
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class PagodaViewModel(interactors: Interactors) : AppViewmodel(interactors) {
+@HiltViewModel
+class PagodaViewModel @Inject constructor(
+    private val getPagodaBanner: GetPagodaBanner,
+    private val getAllPagodas: GetAllPagodas,
+    private val getLanguage: GetLanguage
+) : ViewModel() {
 
     val bannerPhotos = MutableLiveData<ArrayList<String>>()
     val errorGettingBanner = MutableLiveData<String>()
     val errorGettingPagodaList = MutableLiveData<String>()
-    val pagodaListOb = MutableLiveData<ArrayList<PagodaVO>>()
+    val pagodaListLiveData = MutableLiveData<List<PagodaVO>>()
     val pagodaList = ArrayList<PagodaVO>()
 
     val pagodaItemOb = MutableLiveData<PagodaVO>()
@@ -26,38 +40,48 @@ class PagodaViewModel(interactors: Interactors) : AppViewmodel(interactors) {
     }
 
     private fun getBannerPhotos(){
-        GlobalScope.launch {
-            interactors.getPagoda.getBanners(
-                {
-                    if(it.size>2) {
-                        bannerPhotos.postValue(ArrayList(it))
-                    } else errorGettingBanner.postValue("Banner photos are less than 2")
-                },
-                {
-                    errorGettingBanner.postValue(it)
+        viewModelScope.launch {
+            getPagodaBanner().collect {resource->
+                when(resource) {
+                    is Resource.Success -> {
+                        resource.data?.let { list->
+                            if(list.size>2) {
+                                bannerPhotos.postValue(ArrayList(list))
+                            } else errorGettingBanner.postValue("Banner photos are less than 2")
+                        }
+                    }
+                    is Resource.Error -> {
+                        errorGettingBanner.postValue(resource.message)
+                    }
+                    is Resource.Loading -> {
+
+                    }
                 }
-            )
+            }
         }
     }
 
     fun getPagodaList()  {
 
-        GlobalScope.launch {
-
-            pagodaListOb.postValue(ArrayList(interactors.getAllPagodas.fromRoom()))
-            interactors.getAllPagodas.fromFirebase(
-                {list->
-                    pagodaListOb.postValue(ArrayList(list))
-                    pagodaList.clear()
-                    pagodaList.addAll(list)
-                    GlobalScope.launch {
-                        interactors.addAllPagodas.toRoom(list)
+        viewModelScope.launch {
+            getAllPagodas().collect {resource->
+                when(resource) {
+                    is Resource.Success -> {
+                        resource.data?.let { list ->
+                            pagodaListLiveData.postValue(list)
+                            pagodaList.clear()
+                            pagodaList.addAll(list)
+                        }
                     }
-                },
-                {
-                    errorGettingPagodaList.postValue(it)
+                    is Resource.Error -> {
+                        errorGettingPagodaList.postValue(resource.message)
+                    }
+                    is Resource.Loading -> {
+
+                    }
                 }
-            )
+            }
+
         }
 
     }
@@ -69,7 +93,11 @@ class PagodaViewModel(interactors: Interactors) : AppViewmodel(interactors) {
     }
 
     fun checkLanguage() : MutableLiveData<String>{
-        checkLanguage.postValue("")
+        viewModelScope.launch {
+            getLanguage().collect {lang->
+                checkLanguage.postValue(lang)
+            }
+        }
         return checkLanguage
     }
 }

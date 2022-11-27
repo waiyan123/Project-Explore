@@ -9,8 +9,8 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.storage.FirebaseStorage
 import com.itachi.core.data.LanguageRepository
 import com.itachi.core.data.RemoteConfigRepository
-import com.itachi.core.data.UserDataSource
 import com.itachi.core.data.UserRepository
+import com.itachi.core.data.UserRepositoryImpl
 import com.itachi.core.data.db.UserRoomDataSource
 import com.itachi.core.data.network.FirebaseRemoteConfigDataSource
 import com.itachi.core.data.network.UserFirebaseDataSource
@@ -25,14 +25,11 @@ import com.itachi.explore.framework.mappers.UserMapper
 import com.itachi.explore.framework.mappers.UserVoToEntityMapper
 import com.itachi.explore.framework.mappers.UserVoToFirebaseMapper
 import com.itachi.explore.persistence.MyDatabase
-import com.itachi.explore.utils.LANGUAGE
-import com.itachi.explore.utils.PRIVATE_MODE
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import org.koin.android.ext.koin.androidContext
 import javax.inject.Singleton
 
 @Module
@@ -42,17 +39,17 @@ object DaggerMainModule {
     @Provides
     @Singleton
     fun providesGetUser(
-        userDataSource: UserDataSource
+        userRepository: UserRepository
     ) : GetUser{
-        return GetUser(userDataSource)
+        return GetUser(userRepository)
     }
 
     @Provides
     @Singleton
     fun providesSignOut(
-        userDataSource: UserDataSource
+        userRepository: UserRepository
     ) : SignOut {
-        return SignOut(userDataSource)
+        return SignOut(userRepository)
     }
 
     @Provides
@@ -60,8 +57,8 @@ object DaggerMainModule {
     fun providesUserDataSource(
         userRoomDataSource: UserRoomDataSource,
         userFirebaseDataSource: UserFirebaseDataSource
-    ): UserDataSource {
-        return UserRepository(userFirebaseDataSource,userRoomDataSource)
+    ): UserRepository {
+        return UserRepositoryImpl(userFirebaseDataSource,userRoomDataSource)
     }
 
     @Provides

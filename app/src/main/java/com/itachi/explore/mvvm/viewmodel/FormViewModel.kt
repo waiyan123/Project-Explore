@@ -6,19 +6,22 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
-import android.util.Log
 import android.widget.EditText
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.itachi.core.domain.*
 import com.itachi.core.common.Resource
-import com.itachi.explore.framework.Interactors
-import com.itachi.explore.mvvm.model.LanguageModelImpl
+import com.itachi.core.interactors.AddPagodaUseCase
+import com.itachi.core.interactors.GetLanguage
+import com.itachi.core.interactors.GetUser
+import com.itachi.core.interactors.UploadPhotosUseCase
 import com.itachi.explore.utils.*
 import com.sangcomz.fishbun.FishBun
 import com.sangcomz.fishbun.MimeType
 import com.sangcomz.fishbun.adapter.image.impl.GlideAdapter
 import com.sangcomz.fishbun.define.Define
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.GlobalScope
@@ -26,14 +29,19 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import me.myatminsoe.mdetect.MDetect
 import me.myatminsoe.mdetect.Rabbit
-import org.koin.core.KoinComponent
-import org.koin.core.inject
 import java.util.*
+import javax.inject.Inject
 import kotlin.collections.ArrayList
 
-class FormViewModel(interactors: Interactors) : AppViewmodel(interactors), KoinComponent {
+@HiltViewModel
+class FormViewModel @Inject constructor(
+    private val getUser : GetUser,
+    private val getLanguage : GetLanguage,
+    private val uploadPhotosUseCase: UploadPhotosUseCase,
+    private val addPagodaUseCase: AddPagodaUseCase
+) : ViewModel(){
 
-    private val languageModel : LanguageModelImpl by inject()
+//    private val languageModel : LanguageModelImpl by inject()
 
     private val uris = ArrayList<Uri>()
     private val mPickupImages = ArrayList<String>()
@@ -52,7 +60,7 @@ class FormViewModel(interactors: Interactors) : AppViewmodel(interactors), KoinC
 
     init {
         viewModelScope.launch {
-            interactors.getUser().collect { resource->
+            getUser().collect { resource->
                 when(resource) {
                     is Resource.Success -> {
                         resource.data?.let {
@@ -69,11 +77,11 @@ class FormViewModel(interactors: Interactors) : AppViewmodel(interactors), KoinC
                     }
                 }
             }
+            getLanguage().collect {
+                language.postValue(it)
+            }
+        }
 
-        }
-        languageModel.getLanguage {
-            language.postValue(it)
-        }
     }
     fun onEditItemVO(itemVO : ItemVO) {
         mItemVO.postValue(itemVO)
@@ -85,8 +93,8 @@ class FormViewModel(interactors: Interactors) : AppViewmodel(interactors), KoinC
         images.postValue(ArrayList(uri))
     }
 
-    fun checkValidate(et: EditText): Boolean {
-        return Util.checkEditTextValidattion(et)
+    fun checkValidate(text : String = "") : Boolean{
+        return text.isNotEmpty() && text.isNotBlank()
     }
 
     fun chooseMultiplePhotos(context: Context) {
@@ -127,24 +135,24 @@ class FormViewModel(interactors: Interactors) : AppViewmodel(interactors), KoinC
         }
     }
 
-    @SuppressLint("CheckResult")
-    private fun uploadPhotos(type: String, context: Context) {
-
-        progressLoading.postValue(true)
-
-        Util.getGeoPointsFromImageList(context, mPickupImages)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { geoPointsList ->
-                Util.compressImage(mPickupImages, context, 30)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe { byteArrayList ->
-
-                    }
-
-            }
-    }
+//    @SuppressLint("CheckResult")
+//    private fun uploadPhotos(type: String, context: Context) {
+//
+//        progressLoading.postValue(true)
+//
+//        Util.getGeoPointsFromImageList(context, mPickupImages)
+//            .subscribeOn(Schedulers.io())
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .subscribe { geoPointsList ->
+//                Util.compressImage(mPickupImages, context, 30)
+//                    .subscribeOn(Schedulers.io())
+//                    .observeOn(AndroidSchedulers.mainThread())
+//                    .subscribe { byteArrayList ->
+//
+//                    }
+//
+//            }
+//    }
 
     fun addItem(
         name: String,
@@ -222,28 +230,29 @@ class FormViewModel(interactors: Interactors) : AppViewmodel(interactors), KoinC
         if (mPickupImages.size > 0) {
             pickupImageError.postValue(false)
             progressLoading.postValue(true)
-                Util.getGeoPointsFromImageList(context, mPickupImages)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe { geoPointsList ->
-                        Util.compressImage(mPickupImages, context, 30)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe { byteArrayList ->
-                                GlobalScope.launch {
-                                    interactors.addPagoda.toFirebase(pagodaVO,
-                                        byteArrayList,
-                                        geoPointsList,
-                                        { success ->
-                                            successMsg.postValue(success)
-                                        },
-                                        { error ->
-                                            errorMsg.postValue(error)
-                                        })
+            viewModelScope.launch {
+                uploadPhotosUseCase(mPickupImages).collect {
+                    it.data?.let { photoList->
+                        pagodaVO.photos = photoList
+                    }
+                    addPagodaUseCase(pagodaVO)
+                        .collect { resource->
+                            when(resource){
+                                is Resource.Success -> {
+                                    successMsg.postValue(resource.data)
+                                    progressLoading.postValue(false)
+                                }
+                                is Resource.Error -> {
+                                    errorMsg.postValue(resource.message)
+                                    progressLoading.postValue(false)
+                                }
+                                is Resource.Loading -> {
+                                    progressLoading.postValue(true)
                                 }
                             }
-
-                    }
+                        }
+                }
+            }
 
         } else {
             pickupImageError.postValue(true)
@@ -284,21 +293,21 @@ class FormViewModel(interactors: Interactors) : AppViewmodel(interactors), KoinC
         }
 
         if (mPickupImages.size > 0) {
-            pickupImageError.postValue(false)
-            progressLoading.postValue(true)
-            uploadPhotos(type, context)
-            mPhotoVOList.observeForever { photoVOList ->
-                viewVO.photos = photoVOList
-                GlobalScope.launch {
-                    interactors.addView.toFirebase(viewVO,
-                        { success ->
-                            successMsg.postValue(success)
-                        },
-                        { error ->
-                            errorMsg.postValue(error)
-                        })
-                }
-            }
+//            pickupImageError.postValue(false)
+//            progressLoading.postValue(true)
+//            uploadPhotos(type, context)
+//            mPhotoVOList.observeForever { photoVOList ->
+//                viewVO.photos = photoVOList
+//                GlobalScope.launch {
+//                    interactors.addView.toFirebase(viewVO,
+//                        { success ->
+//                            successMsg.postValue(success)
+//                        },
+//                        { error ->
+//                            errorMsg.postValue(error)
+//                        })
+//                }
+//            }
 
         } else {
             pickupImageError.postValue(true)
@@ -339,21 +348,21 @@ class FormViewModel(interactors: Interactors) : AppViewmodel(interactors), KoinC
         }
 
         if (mPickupImages.size > 0) {
-            pickupImageError.postValue(false)
-            progressLoading.postValue(true)
-            uploadPhotos(type, context)
-            mPhotoVOList.observeForever { photoVOList ->
-                ancientVO.photos = photoVOList
-                GlobalScope.launch {
-                    interactors.addAncient.toFirebase(ancientVO,
-                        { success ->
-                            successMsg.postValue(success)
-                        },
-                        { error ->
-                            errorMsg.postValue(error)
-                        })
-                }
-            }
+//            pickupImageError.postValue(false)
+//            progressLoading.postValue(true)
+//            uploadPhotos(type, context)
+//            mPhotoVOList.observeForever { photoVOList ->
+//                ancientVO.photos = photoVOList
+//                GlobalScope.launch {
+//                    interactors.addAncient.toFirebase(ancientVO,
+//                        { success ->
+//                            successMsg.postValue(success)
+//                        },
+//                        { error ->
+//                            errorMsg.postValue(error)
+//                        })
+//                }
+//            }
 
         } else {
             pickupImageError.postValue(true)

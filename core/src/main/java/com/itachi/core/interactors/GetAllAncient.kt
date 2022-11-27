@@ -9,8 +9,5 @@ class GetAllAncient(
 
     suspend fun fromRoom() = ancientRepository.getAllAncientsFromRoom()
 
-    suspend fun fromFirebase(
-        onSuccess: (List<AncientVO>) -> Unit,
-        onFailure: (String) -> Unit
-    ) = ancientRepository.getAllAncientsFromFirebase(onSuccess, onFailure)
+    suspend fun fromFirebase() = ancientRepository.getAllAncientsFromFirebase()
 }

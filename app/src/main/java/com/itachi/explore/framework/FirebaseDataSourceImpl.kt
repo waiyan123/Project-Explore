@@ -2,24 +2,14 @@ package com.itachi.explore.framework
 
 import android.annotation.SuppressLint
 import android.net.Uri
-import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.tasks.Continuation
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
 import com.itachi.core.domain.PhotoVO
 import com.itachi.explore.utils.*
-import io.reactivex.Observable
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.map
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -30,7 +20,7 @@ abstract class FirebaseDataSourceImpl(
 ) {
     suspend fun deletePhotos(photos: List<PhotoVO>?, item_id: String) {
         photos?.forEach {
-            val photoRef = firebaseStorage.getReference(PHOTO_PATH).child(it.path!!)
+            val photoRef = firebaseStorage.getReference(PHOTO_PATH).child(it.id!!)
             photoRef.delete().addOnCompleteListener {
 
             }
@@ -52,7 +42,7 @@ abstract class FirebaseDataSourceImpl(
     }
 
     suspend fun deleteUserPhoto(photo: PhotoVO?, item_id: String) {
-        val photoRef = firebaseStorage.getReference(PHOTO_PATH).child(photo!!.path!!)
+        val photoRef = firebaseStorage.getReference(PHOTO_PATH).child(photo!!.id!!)
         photoRef.delete().addOnCompleteListener {
 
         }

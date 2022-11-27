@@ -6,6 +6,7 @@ import androidx.lifecycle.Transformations
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import com.itachi.core.common.Resource
 import com.itachi.core.data.network.AncientFirebaseDataSource
 import com.itachi.core.data.network.PagodaFirebaseDataSource
 import com.itachi.core.domain.ItemVO
@@ -18,7 +19,11 @@ import com.itachi.explore.utils.*
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
 
 class PagodaFirebaseDataSourceImpl(
@@ -28,174 +33,120 @@ class PagodaFirebaseDataSourceImpl(
     auth: FirebaseAuth
 ) : PagodaFirebaseDataSource, FirebaseDataSourceImpl(firestoreRef, firebaseStorage, auth) {
 
-    override suspend fun getPagodaBanner(
-        onSuccess: (List<String>) -> Unit,
-        onFailure: (String) -> Unit
-    ) {
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun getPagodaBanner() : Flow<Resource<List<String>>> = callbackFlow{
         firestoreRef.collection(BANNERS).document(PAGODA_BANNER)
             .get()
             .addOnSuccessListener {
-                if (it.exists()) onSuccess(it.get(PAGODA_BANNER_PHOTOS) as List<String>)
+                if(it.exists()) {
+                    val bannerList = it.get(PAGODA_BANNER_PHOTOS) as List<String>?
+                    bannerList?.let {list->
+                        trySend(Resource.Success(list))
+                    }
+                }
             }
-
+            .addOnFailureListener{
+                trySend(Resource.Error(it.localizedMessage ?: "Unexpected error occur!"))
+            }
+        awaitClose { channel.close() }
     }
 
-    override suspend fun getPagodaList(
-        onSuccess: (List<PagodaVO>) -> Unit,
-        onFailure: (String) -> Unit
-    ) {
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun getAllPagodas() : Flow<Resource<List<PagodaVO>>> = callbackFlow{
         firestoreRef.collection(PAGODAS)
             .get()
             .addOnSuccessListener {
                 if (it.documents.size != 0) {
                     val pagodaList = it.toObjects(PagodaEntity::class.java)
-                    onSuccess(pagodaMapper.entityListToVOList(pagodaList))
+                    trySend(Resource.Success(pagodaMapper.entityListToVOList(pagodaList)))
 
                 } else {
-                    onFailure("There's no item yet ")
+                    trySend(Resource.Error("There's no item yet "))
                 }
             }
+        awaitClose { channel.close() }
     }
 
-    override suspend fun getPagodaById(
-        pagodaId: String,
-        onSuccess: (PagodaVO) -> Unit,
-        onFailure: (String) -> Unit
-    ) {
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun getPagodaById(pagodaId : String) : Flow<Resource<PagodaVO>> = callbackFlow{
 
         firestoreRef.collection(PAGODAS).whereEqualTo(ITEM_ID, pagodaId)
             .get()
             .addOnSuccessListener {
                 if (it.documents.isNotEmpty()) {
-                    val pagodaEntity = it.documents[0].toObject(PagodaEntity::class.java)
-                    onSuccess(pagodaMapper.entityToVO(pagodaEntity!!))
+                    it.documents[0].toObject(PagodaEntity::class.java)?.let {pagodaEntity->
+                        trySend(Resource.Success(pagodaMapper.entityToVO(pagodaEntity)))
+                    }
                 }
             }
             .addOnFailureListener {
-                onFailure(it.localizedMessage)
+                trySend(Resource.Error(it.localizedMessage ?: "Unexpected error occur!"))
             }
+        awaitClose { channel.close() }
     }
 
-    override suspend fun getPagodaListByUserId(
-        userId: String,
-        onSuccess: (List<PagodaVO>) -> Unit,
-        onFailure: (String) -> Unit
-    ) {
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun getPagodaListByUserId(userId : String) : Flow<Resource<List<PagodaVO>>> = callbackFlow{
         firestoreRef.collection(PAGODAS).whereEqualTo(UPLOADER_ID, userId)
             .get()
             .addOnSuccessListener { snapShot ->
                 if (snapShot.documents.isNotEmpty()) {
                     val pagodaList = snapShot.toObjects(PagodaEntity::class.java)
-                    onSuccess(pagodaMapper.entityListToVOList(pagodaList))
+                    trySend(Resource.Success(pagodaMapper.entityListToVOList(pagodaList)))
                 }
             }
             .addOnFailureListener {
-                onFailure(it.localizedMessage)
+                trySend(Resource.Error(it.localizedMessage ?: "Unexpected error occur!"))
             }
+        awaitClose { channel.close() }
     }
 
-    override suspend fun deletePagodaById(
-        pagodaVO: PagodaVO,
-        onSuccess: (String) -> Unit,
-        onFailure: (String) -> Unit
-    ) {
-        deletePhotos(pagodaVO.photos, pagodaVO.item_id)
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun deletePagodaById(pagodaId: String) : Flow<Resource<String>> = callbackFlow{
+//        deletePhotos(pagodaVO.photos, pagodaVO.item_id)
+
+        firestoreRef.collection(PAGODAS)
+            .document(pagodaId)
+            .delete()
+            .addOnSuccessListener {
+                trySend(Resource.Success("Successfully deleted Pagoda"))
+            }
+            .addOnFailureListener {
+                trySend(Resource.Error(it.localizedMessage ?: "Unexpected error occur!"))
+            }
+        awaitClose { channel.close() }
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun addPagoda(pagodaVO: PagodaVO) : Flow<Resource<String>> = callbackFlow{
+
+        val firestorePagoda = pagodaMapper.voToFirebaseHashmap(pagodaVO)
 
         firestoreRef.collection(PAGODAS)
             .document(pagodaVO.item_id)
-            .delete()
+            .set(firestorePagoda)
             .addOnSuccessListener {
-                onSuccess("Successfully deleted Pagoda")
+                trySend(Resource.Success("Successfully added Pagoda"))
             }
             .addOnFailureListener {
-                onFailure("Failed to delete Pagoda")
+                trySend(Resource.Error(it.localizedMessage ?: "Unexpected error occur!"))
             }
+        awaitClose { channel.close() }
     }
 
-    override suspend fun deleteAllPagodas(
-        pagodaList: List<PagodaVO>,
-        onSuccess: (String) -> Unit,
-        onFailure: (String) -> Unit
-    ) {
-        TODO("Not yet implemented")
-    }
 
-    override suspend fun addAllPagodas(
-        pagodaList: List<PagodaVO>,
-        onSuccess: (String) -> Unit,
-        onFailure: (String) -> Unit
-    ) {
-        TODO("Not yet implemented")
-    }
-
-    @SuppressLint("CheckResult")
-    override suspend fun addPagoda(
-        byteArrayList: ArrayList<ByteArray>,
-        geoPointsList: ArrayList<String>,
-        pagodaVO: PagodaVO,
-        onSuccess: (String) -> Unit,
-        onFailure: (String) -> Unit
-    ) {
-        uploadPhoto(byteArrayList, geoPointsList,
-            { photoVOList ->
-                pagodaVO.photos = photoVOList
-                photoVOList.forEachIndexed { index, photoVO ->
-
-                    uploadPhotoUrl(
-                        photoVO.path,
-                        pagodaVO.uploader_id,
-                        pagodaVO.item_id,
-                        pagodaVO.item_type,
-                        geoPointsList[index]
-                    )
-                }
-                val firestorePagoda = pagodaMapper.voToFirebaseHashmap(pagodaVO)
-
-                firestoreRef.collection(PAGODAS)
-                    .document(pagodaVO.item_id)
-                    .set(firestorePagoda)
-                    .addOnSuccessListener {
-                        onSuccess("Successfully added Pagoda")
-                    }
-                    .addOnFailureListener {
-                        onFailure("Failed to add Pagoda")
-                    }
-            },
-            {
-                onFailure(it)
-            })
-
-    }
-
-    @SuppressLint("CheckResult")
-    override suspend fun updatePagoda(
-        photoVOList: List<PhotoVO>,
-        byteArrayList: ArrayList<ByteArray>,
-        geoPointsList: ArrayList<String>,
-        pagodaVO: PagodaVO,
-        onSuccess: (String) -> Unit,
-        onFailure: (String) -> Unit
-    ) {
-        deletePhotos(photoVOList, pagodaVO.item_id)
-        uploadPhoto(byteArrayList,geoPointsList,
-            {photoVOList->
-                pagodaVO.photos= photoVOList
-                photoVOList.forEachIndexed { index, photoVO ->
-                    uploadPhotoUrl(photoVO.path,pagodaVO.uploader_id,pagodaVO.item_id,pagodaVO.item_type,geoPointsList[index])
-                }
-                val firestorePagoda = pagodaMapper.voToFirebaseHashmap(pagodaVO)
-                firestoreRef.collection(PAGODAS)
-                    .document(pagodaVO.item_id)
-                    .update(firestorePagoda as Map<String, Any>)
-                    .addOnSuccessListener {
-                        onSuccess("Successfully updated Pagoda")
-                    }
-                    .addOnFailureListener {
-                        onFailure("Failed to update Pagoda")
-                    }
-            },
-            {
-                onFailure(it)
-            })
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun updatePagoda(pagodaVO: PagodaVO) : Flow<Resource<String>> = callbackFlow{
+        val firestorePagoda = pagodaMapper.voToFirebaseHashmap(pagodaVO)
+        firestoreRef.collection(PAGODAS)
+            .document(pagodaVO.item_id)
+            .update(firestorePagoda as Map<String, Any>)
+            .addOnSuccessListener {
+                trySend(Resource.Success("Successfully updated Pagoda"))
+            }
+            .addOnFailureListener {
+                trySend(Resource.Error(it.localizedMessage ?: "Unexpected error occur!"))
+            }
+        awaitClose { channel.close() }
     }
 }

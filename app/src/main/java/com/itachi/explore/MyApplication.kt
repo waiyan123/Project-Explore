@@ -7,8 +7,8 @@ import com.facebook.FacebookSdk
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import com.itachi.core.data.PagodaRepository
-import com.itachi.core.data.UserRepository
+import com.itachi.core.data.PagodaRepositoryImpl
+import com.itachi.core.data.UserRepositoryImpl
 import com.itachi.core.data.ViewRepository
 import com.itachi.core.interactors.*
 import com.itachi.explore.di.applicationModule
@@ -75,7 +75,7 @@ class MyApplication : Application() {
         val pagodaFirebaseDataSource = PagodaFirebaseDataSourceImpl(pagodaMapper,firestoreRef,firebaseStorageRef,firebaseAuthRef)
         val pagodaRoomDataSource = PagodaRoomDataSourceImpl(pagodaMapper)
 
-        val pagodaRepository = PagodaRepository(pagodaFirebaseDataSource,pagodaRoomDataSource)
+        val pagodaRepositoryImpl = PagodaRepositoryImpl(pagodaFirebaseDataSource,pagodaRoomDataSource)
 
         //for view
         val viewEntityToVoMapper = ViewEntityToVoMapper()
@@ -102,35 +102,34 @@ class MyApplication : Application() {
 
         val firebaseAuth = FirebaseAuth.getInstance()
         val userRoomDataSource = UserRoomDataSourceImpl(firebaseAuth,userMapper,roomDatabase)
-        val userRepository = UserRepository(userFirebaseDataSource,userRoomDataSource)
+        val userRepositoryImpl = UserRepositoryImpl(userFirebaseDataSource,userRoomDataSource)
 
         MyViewModelProviderFactory.inject(
             Interactors(
-                AddUser(userRepository),
+                AddUser(userRepositoryImpl),
                 AddAncient(ancientRepository),
-                AddPagoda(pagodaRepository),
+                AddPagodaUseCase(pagodaRepositoryImpl),
                 AddView(viewRepository),
                 AddAllAncients(ancientRepository),
-                AddAllPagodas(pagodaRepository),
                 AddAllViews(viewRepository),
-                DeleteUser(userRepository),
+                DeleteUser(userRepositoryImpl),
                 DeleteAncient(ancientRepository),
-                DeletePagoda(pagodaRepository),
+                DeletePagoda(pagodaRepositoryImpl),
                 DeleteView(viewRepository),
                 DeleteAllAncients(ancientRepository),
-                DeleteAllPagodas(pagodaRepository),
+                DeleteAllPagodas(pagodaRepositoryImpl),
                 DeleteAllViews(viewRepository),
-                GetUser(userRepository),
+                GetUser(userRepositoryImpl),
                 GetAncient(ancientRepository),
-                GetPagoda(pagodaRepository),
+                GetPagoda(pagodaRepositoryImpl),
                 GetView(viewRepository),
                 GetAllAncient(ancientRepository),
-                GetAllPagodas(pagodaRepository),
+                GetAllPagodas(pagodaRepositoryImpl),
                 GetAllViews(viewRepository),
                 GetAllPhotoViews(viewRepository),
-                UpdateUser(userRepository),
+                UpdateUser(userRepositoryImpl),
                 UpdateAncient(ancientRepository),
-                UpdatePagoda(pagodaRepository),
+                UpdatePagoda(pagodaRepositoryImpl),
                 UpdateView(viewRepository)
             )
         )

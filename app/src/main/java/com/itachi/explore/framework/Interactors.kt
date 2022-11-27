@@ -5,10 +5,9 @@ import com.itachi.core.interactors.*
 data class Interactors(
     val addUser : AddUser,
     val addAncient: AddAncient,
-    val addPagoda: AddPagoda,
+    val addPagodaUseCase: AddPagodaUseCase,
     val addView: AddView,
     val addAllAncients: AddAllAncients,
-    val addAllPagodas: AddAllPagodas,
     val addAllViews: AddAllViews,
     val deleteUser: DeleteUser,
     val deleteAncient: DeleteAncient,

@@ -16,7 +16,7 @@ abstract class BaseModel {
 
     fun deletePhotos(photos: ArrayList<PhotoVO>?, item_id: String) {
         photos?.forEach {
-            val photoRef = firebaseStorage.getReference(PHOTO_PATH).child(it.path!!)
+            val photoRef = firebaseStorage.getReference(PHOTO_PATH).child(it.id!!)
             photoRef.delete().addOnCompleteListener {
 
             }
@@ -38,7 +38,7 @@ abstract class BaseModel {
     }
 
     fun deleteUserPhoto(photo : PhotoVO?,item_id: String) {
-        val photoRef = firebaseStorage.getReference(PHOTO_PATH).child(photo!!.path!!)
+        val photoRef = firebaseStorage.getReference(PHOTO_PATH).child(photo!!.id!!)
         photoRef.delete().addOnCompleteListener {
 
         }

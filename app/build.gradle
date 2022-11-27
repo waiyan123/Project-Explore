@@ -17,7 +17,7 @@ android {
         applicationId "com.itachi.explore"
         minSdkVersion 24
         targetSdkVersion 32
-        versionCode 12
+        versionCode 13
         versionName "1.0.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -30,6 +30,9 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+    lintOptions {
+        checkReleaseBuilds false
     }
 }
 

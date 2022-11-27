@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
+import androidx.lifecycle.viewModelScope
 import com.itachi.core.domain.UserVO
 import com.itachi.explore.mvvm.model.UploadModelImpl
 import com.itachi.explore.mvvm.model.UserModelImpl
@@ -18,6 +19,9 @@ import com.sangcomz.fishbun.adapter.image.impl.GlideAdapter
 import com.sangcomz.fishbun.define.Define
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
@@ -93,12 +97,14 @@ class UserProfilePresenter : BasePresenter<UserProfileView>(), KoinComponent {
             val list = ArrayList<String>()
             list.add(profilePic)
 
-            if(mUserVO.profile_pic!!.path!="") userModel.deleteUserPhoto(mUserVO.profile_pic,mUserVO.profile_pic!!.path.toString())
+            if(mUserVO.profile_pic!!.id!="") userModel.deleteUserPhoto(mUserVO.profile_pic,mUserVO.profile_pic!!.id.toString())
 
             var geoPointsList = ArrayList<String>()
-            list.forEach {
-                var geoPoint = Util.getGeoPointFromImage(Util.getRealPathFromUrl(context, it)!!)
-                geoPointsList.add(geoPoint)
+            GlobalScope.launch {
+                list.forEach {
+                    var geoPoint = Util.getGeoPointFromImage(Util.getRealPathFromUrl(context, it)!!)
+                    geoPointsList.add(geoPoint)
+                }
             }
             uploadModel.uploadPhoto(list,geoPointsList,context){ observable ->
                 observable.subscribeOn(Schedulers.io())
@@ -128,12 +134,14 @@ class UserProfilePresenter : BasePresenter<UserProfileView>(), KoinComponent {
             val list = ArrayList<String>()
             list.add(backgroundPic)
 
-            if(mUserVO.background_pic!!.path!="") userModel.deleteUserPhoto(mUserVO.background_pic,mUserVO.background_pic!!.path.toString())
+            if(mUserVO.background_pic!!.id!="") userModel.deleteUserPhoto(mUserVO.background_pic,mUserVO.background_pic!!.id.toString())
 
             var geoPointsList = ArrayList<String>()
-            list.forEach {
-                var geoPoint = Util.getGeoPointFromImage(Util.getRealPathFromUrl(context, it)!!)
-                geoPointsList.add(geoPoint)
+            GlobalScope.launch {
+                list.forEach {
+                    var geoPoint = Util.getGeoPointFromImage(Util.getRealPathFromUrl(context, it)!!)
+                    geoPointsList.add(geoPoint)
+                }
             }
             uploadModel.uploadPhoto(list,geoPointsList ,context){ observable ->
                 observable.subscribeOn(Schedulers.io())

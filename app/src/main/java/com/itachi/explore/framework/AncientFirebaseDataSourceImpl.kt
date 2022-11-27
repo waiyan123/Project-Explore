@@ -3,7 +3,7 @@ package com.itachi.explore.framework
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import com.itachi.core.data.FirestoreResult
+import com.itachi.core.common.Resource
 import com.itachi.core.data.network.AncientFirebaseDataSource
 import com.itachi.core.domain.AncientVO
 import com.itachi.explore.framework.mappers.AncientMapper
@@ -36,37 +36,21 @@ class AncientFirebaseDataSourceImpl(
             }
     }
 
-    override suspend fun getAncientList(
-        onSuccess: (List<AncientVO>) -> Unit,
-        onFailure: (String) -> Unit
-    ): Flow<FirestoreResult<List<AncientVO>>> = callbackFlow {
-
-        firestoreRef.collection(ANCIENTS)
-            .get().addOnSuccessListener {
-                val ancientList = it.toObjects(AncientEntity::class.java)
-                val strList = ancientList.map { ancientEntity ->
-                    ancientEntity.title
-                }
-                var str = ""
-                str = strList[0]!!
-                onSuccess(ancientMapper.entityListToVOList(it.toObjects(AncientEntity::class.java)))
-            }
-            .addOnFailureListener {
-
-            }
+    override suspend fun getAncientList(): Flow<Resource<List<AncientVO>>> = callbackFlow {
 
         firestoreRef.collection(ANCIENTS)
             .get()
             .addOnSuccessListener {
 
-                trySend(FirestoreResult.Success(ancientMapper.entityListToVOList(it.toObjects(AncientEntity::class.java)))).isSuccess
+                trySend(Resource.Success(ancientMapper.entityListToVOList(it.toObjects(AncientEntity::class.java)))).isSuccess
 
-                TODO("Something")
             }
-            .addOnFailureListener {
-//                offer(FirestoreResult.Error(it.localizedMessage))
+            .addOnFailureListener {exception->
+                exception.localizedMessage?.let {
+                    trySend(Resource.Error(it))
+                }
             }
-        awaitClose()
+        awaitClose { channel.close() }
     }
 
     override suspend fun getAncientById(

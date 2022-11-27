@@ -7,6 +7,7 @@ import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -15,10 +16,12 @@ import com.itachi.explore.R
 import com.itachi.explore.adapters.recycler.PagodasRecyclerAdapter
 import com.itachi.explore.mvvm.viewmodel.MyViewModelProviderFactory
 import com.itachi.explore.mvvm.viewmodel.PagodaViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_pagodas.*
 import java.util.*
 import kotlin.collections.ArrayList
 
+@AndroidEntryPoint
 class PagodasActivity : BaseActivity(),View.OnClickListener{
 
     override fun onClick(p0: View?) {
@@ -39,7 +42,7 @@ class PagodasActivity : BaseActivity(),View.OnClickListener{
     private var timer : Timer? = null
     private lateinit var rvAdapter : PagodasRecyclerAdapter
 
-    private lateinit var mViewModel : PagodaViewModel
+    private val mViewModel : PagodaViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,8 +50,6 @@ class PagodasActivity : BaseActivity(),View.OnClickListener{
 
         showAnim(shimmer_banner,true)
         showAnim(shimmer_showall,true)
-
-        mViewModel = ViewModelProvider(this,MyViewModelProviderFactory).get(PagodaViewModel::class.java)
 
         mViewModel.checkLanguage().observe(this, androidx.lifecycle.Observer { lang->
             when(lang) {
@@ -82,7 +83,7 @@ class PagodasActivity : BaseActivity(),View.OnClickListener{
             Toast.makeText(this,it,Toast.LENGTH_SHORT).show()
         }
 
-        mViewModel.pagodaListOb.observe(this, androidx.lifecycle.Observer {
+        mViewModel.pagodaListLiveData.observe(this, androidx.lifecycle.Observer {
             tv_no_items.visibility = View.GONE
             rv_pagodas.visibility = View.VISIBLE
 

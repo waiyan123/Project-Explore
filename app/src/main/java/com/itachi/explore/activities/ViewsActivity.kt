@@ -90,10 +90,8 @@ class ViewsActivity : BaseActivity(),View.OnClickListener{
         private fun setUpRecyclerView() {
 
             rv_views.recycledViewPool.setMaxRecycledViews(0,0)
-            mAdapter = ViewsRecyclerAdapter {index->
-                mViewModel.clickViewItem(index).observe(this, Observer { uploadedPhotoVO->
-                    navigateViewPhoto(uploadedPhotoVO)
-                })
+            mAdapter = ViewsRecyclerAdapter {photoVO->
+                navigateViewPhoto(photoVO)
             }
             rv_views.adapter = mAdapter
             val layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)

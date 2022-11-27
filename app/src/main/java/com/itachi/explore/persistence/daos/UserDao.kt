@@ -18,7 +18,7 @@ interface UserDao {
     suspend fun insertUser(user: UserEntity)
 
     @Query("SELECT * FROM user_table WHERE user_id = :user_id")
-    fun getUser(user_id : String): Flow<UserEntity?>
+    fun getUser(user_id : String): Flow<UserEntity>
 
     @Query("SELECT * FROM user_table")
     fun getAllUsers() : List<UserEntity>

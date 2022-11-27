@@ -16,7 +16,7 @@ abstract class BaseRecyclerAdapter<VH : BaseViewHolder<W>,W> : RecyclerView.Adap
         holder.setData(dataList[position],position)
     }
 
-    fun setNewData(data : ArrayList<W>) {
+    fun setNewData(data : List<W>) {
         dataList.clear()
         dataList.addAll(data)
         notifyDataSetChanged()

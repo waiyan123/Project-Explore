@@ -49,7 +49,7 @@ class PreviewPresenter : BasePresenter<PreviewView>(),KoinComponent{
 
     fun getFullInfoItem(id : String) {
         when(uploadedPhotoVO.item_type) {
-            PAGODA_TYPE -> {
+//            PAGODA_TYPE -> {
 //                pagodaModel.getPagodaById(id,
 //                    {observable ->
 //                        observable.subscribeOn(Schedulers.io())
@@ -62,22 +62,22 @@ class PreviewPresenter : BasePresenter<PreviewView>(),KoinComponent{
 //                    {
 //                        mView.showError(it)
 //                    })
-            }
-            VIEW_TYPE -> {
-                viewsModel.getViewById(id,
-                    {observable ->
-                        observable.subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe {
-                                viewVO = it
-                                mView.showFullInfo(it.title!!, ArrayList(it.photos))
-                            }
-                    },
-                    {
-                        mView.showError(it)
-                    })
-            }
-            ANCIENT_TYPE -> {
+//            }
+//            VIEW_TYPE -> {
+//                viewsModel.getViewById(id,
+//                    {observable ->
+//                        observable.subscribeOn(Schedulers.io())
+//                            .observeOn(AndroidSchedulers.mainThread())
+//                            .subscribe {
+//                                viewVO = it
+//                                mView.showFullInfo(it.title!!, ArrayList(it.photos))
+//                            }
+//                    },
+//                    {
+//                        mView.showError(it)
+//                    })
+//            }
+//            ANCIENT_TYPE -> {
 //                ancientModel.getAncientById(id,
 //                    {observable ->
 //                        observable.subscribeOn(Schedulers.io())
@@ -90,7 +90,7 @@ class PreviewPresenter : BasePresenter<PreviewView>(),KoinComponent{
 //                    {
 //                        mView.showError(it)
 //                    })
-            }
+//            }
 
         }
 
