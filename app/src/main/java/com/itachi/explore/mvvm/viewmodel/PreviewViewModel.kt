@@ -10,16 +10,15 @@ import com.itachi.explore.utils.ANCIENT_TYPE
 import com.itachi.explore.utils.PAGODA_TYPE
 import com.itachi.explore.utils.VIEW_TYPE
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class PreviewViewModel (
+@HiltViewModel
+class PreviewViewModel @Inject constructor(
     private val getPagoda: GetPagoda,
-    private val getView: GetView,
-    private val getAncient: GetAncient,
+    private val getViewById: GetViewById,
+//    private val getAncient: GetAncient,
     private val getUser: GetUser,
     private val getLanguage: GetLanguage
 ) : ViewModel() {
@@ -76,24 +75,33 @@ class PreviewViewModel (
             }
             VIEW_TYPE -> {
                 viewModelScope.launch {
-                    getView.fromFirebase(id,
-                        {
-                            viewVOLiveData.postValue(it)
-                        },
-                        {
-                            errorMessageLiveData.postValue(it)
-                        })
+                    getViewById(id)
+                        .collect { resource->
+                            when(resource) {
+                                is Resource.Success -> {
+                                    resource.data?.let {
+                                        viewVOLiveData.postValue(it)
+                                    }
+                                }
+                                is Resource.Error -> {
+                                    errorMessageLiveData.postValue(resource.message)
+                                }
+                                is Resource.Loading -> {
+
+                                }
+                            }
+                        }
                 }
             }
             ANCIENT_TYPE -> {
                 viewModelScope.launch {
-                    getAncient.fromFirebase(id,
-                        {
-                            ancientVOLiveData.postValue(it)
-                        },
-                        {
-                            errorMessageLiveData.postValue(it)
-                        })
+//                    getAncient.fromFirebase(id,
+//                        {
+//                            ancientVOLiveData.postValue(it)
+//                        },
+//                        {
+//                            errorMessageLiveData.postValue(it)
+//                        })
                 }
             }
 

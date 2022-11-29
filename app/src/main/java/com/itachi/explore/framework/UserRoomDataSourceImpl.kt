@@ -14,8 +14,7 @@ class UserRoomDataSourceImpl(
     private val auth : FirebaseAuth,
     private val userMapper: UserMapper,
     private val database: MyDatabase
-) : UserRoomDataSource,
-    KoinComponent {
+) : UserRoomDataSource{
 
     override suspend fun addUser(userVO: UserVO) {
         Log.d("test---","add user to Room ${userVO.name}")

@@ -9,7 +9,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.itachi.core.data.PagodaRepositoryImpl
 import com.itachi.core.data.UserRepositoryImpl
-import com.itachi.core.data.ViewRepository
+import com.itachi.core.data.ViewRepositoryImpl
 import com.itachi.core.interactors.*
 import com.itachi.explore.di.applicationModule
 import com.itachi.explore.framework.*
@@ -39,6 +39,11 @@ class MyApplication : Application() {
         MDetect.init(this@MyApplication)
         Slider.init(imageLoadingService)
         FacebookSdk.sdkInitialize(this@MyApplication)
+
+        val roomDatabase = Room.databaseBuilder(this, MyDatabase::class.java, "My Database")
+            .allowMainThreadQueries()
+            .fallbackToDestructiveMigration()
+            .build()
 
         //for ancient
         val ancientEntityToVoMapper = AncientEntityToVoMapper()
@@ -84,9 +89,9 @@ class MyApplication : Application() {
         val photoEntityToVoMapper = UploadedPhotoEntityToVoMapper()
         val viewMapper = ViewMapper()
         val viewFirebaseDataSource = ViewFirebaseDataSourceImpl(viewMapper,firestoreRef,firebaseStorageRef,firebaseAuthRef)
-        val viewRoomDataSource = ViewRoomDataSourceImpl(viewMapper)
+        val viewRoomDataSource = ViewRoomDataSourceImpl(viewMapper,roomDatabase)
 
-        val viewRepository = ViewRepository(viewFirebaseDataSource,viewRoomDataSource)
+        val viewRepository = ViewRepositoryImpl(viewFirebaseDataSource,viewRoomDataSource)
 
         //for user
         val userEntityToVoMapper = UserEntityToVoMapper()
@@ -94,11 +99,6 @@ class MyApplication : Application() {
         val userVoToFirebaseMapper = UserVoToFirebaseMapper()
         val userMapper = UserMapper(userEntityToVoMapper,userVoToEntityMapper,userVoToFirebaseMapper)
         val userFirebaseDataSource = UserFirebaseDataSourceImpl(userMapper,firestoreRef,firebaseStorageRef,firebaseAuthRef)
-
-        val roomDatabase = Room.databaseBuilder(this, MyDatabase::class.java, "My Database")
-            .allowMainThreadQueries()
-            .fallbackToDestructiveMigration()
-            .build()
 
         val firebaseAuth = FirebaseAuth.getInstance()
         val userRoomDataSource = UserRoomDataSourceImpl(firebaseAuth,userMapper,roomDatabase)
@@ -122,11 +122,11 @@ class MyApplication : Application() {
                 GetUser(userRepositoryImpl),
                 GetAncient(ancientRepository),
                 GetPagoda(pagodaRepositoryImpl),
-                GetView(viewRepository),
+                GetViewById(viewRepository),
                 GetAllAncient(ancientRepository),
                 GetAllPagodas(pagodaRepositoryImpl),
                 GetAllViews(viewRepository),
-                GetAllPhotoViews(viewRepository),
+                GetAllViewsPhoto(viewRepository),
                 UpdateUser(userRepositoryImpl),
                 UpdateAncient(ancientRepository),
                 UpdatePagoda(pagodaRepositoryImpl),

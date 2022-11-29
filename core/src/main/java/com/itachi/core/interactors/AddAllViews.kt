@@ -5,6 +5,6 @@ import com.itachi.core.domain.ViewVO
 
 class AddAllViews(private val viewRepository: ViewRepository) {
 
-    suspend fun toRoom(viewVoList : List<ViewVO>) = viewRepository.addAllViewsToRoom(viewVoList)
+    suspend operator fun invoke(viewVoList : List<ViewVO>) = viewRepository.addAllViews(viewVoList)
 
 }

@@ -1,47 +1,23 @@
 package com.itachi.core.data.network
 
+import com.itachi.core.common.Resource
 import com.itachi.core.domain.UploadedPhotoVO
 import com.itachi.core.domain.ViewVO
+import kotlinx.coroutines.flow.Flow
 
 interface ViewFirebaseDataSource {
 
-    suspend fun getPhotoViews(
-        onSuccess: (uploadedPhotoList: List<UploadedPhotoVO>) -> Unit,
-        onFailure: (error: String) -> Unit
-    )
+    fun getViewsPhotos() : Flow<Resource<List<UploadedPhotoVO>>>
 
-    suspend fun getViewsList(
-        onSuccess : (List<ViewVO>) -> Unit,
-        onFailure : (String) -> Unit
-    )
+    fun getViewById(viewId : String) : Flow<Resource<ViewVO>>
 
-    suspend fun getViewById(
-        viewId : String,
-        onSuccess : (ViewVO) -> Unit,
-        onFailure : (String) -> Unit
-    )
+    fun getAllViews() : Flow<Resource<List<ViewVO>>>
 
-    suspend fun getViewsListByUserId(
-        userId : String,
-        onSuccess : (List<ViewVO>) -> Unit,
-        onFailure: (String) -> Unit
-    )
+    fun getViewsListByUserId(userId : String) : Flow<Resource<List<ViewVO>>>
 
-    suspend fun deleteViewById(
-        viewVO: ViewVO,
-        onSuccess : (String) -> Unit,
-        onFailure: (String) -> Unit
-    )
+    fun deleteViewById(viewVO: ViewVO) : Flow<Resource<String>>
 
-    suspend fun addView(
-        viewVO: ViewVO ,
-        onSuccess : (String) -> Unit,
-        onFailure: (String) -> Unit
-    )
+    fun addView(viewVO: ViewVO) : Flow<Resource<String>>
 
-    suspend fun updateView(
-        viewVO: ViewVO,
-        onSuccess: (String) -> Unit,
-        onFailure: (String) -> Unit
-    )
+    fun updateView(viewVO: ViewVO) : Flow<Resource<String>>
 }

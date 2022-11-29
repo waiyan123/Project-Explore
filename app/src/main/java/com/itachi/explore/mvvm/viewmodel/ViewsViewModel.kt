@@ -1,16 +1,16 @@
 package com.itachi.explore.mvvm.viewmodel
 
 import android.content.SharedPreferences
-import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.itachi.core.common.Resource
 import com.itachi.core.data.ViewRepository
+import com.itachi.core.data.ViewRepositoryImpl
 import com.itachi.core.domain.UploadedPhotoVO
 import com.itachi.explore.utils.LANGUAGE
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import me.myatminsoe.mdetect.MDetect
 import org.koin.core.KoinComponent
@@ -20,13 +20,12 @@ import javax.inject.Inject
 class ViewsViewModel @Inject constructor(
     private val viewRepository: ViewRepository,
     private val sharPreferences: SharedPreferences
-) : ViewModel(), KoinComponent {
+) : ViewModel() {
 
-    private val uploadedPhotoVOList = MutableLiveData<ArrayList<UploadedPhotoVO>>()
+    private val uploadedPhotoVOList = MutableLiveData<List<UploadedPhotoVO>>()
     private val errorMsg = MutableLiveData<String>()
     private val checkLanguage = MutableLiveData<String>()
 
-//    private val sharPreferences : SharedPreferences by inject()
 
     init {
         when (sharPreferences.getString(LANGUAGE, "en")) {
@@ -46,24 +45,25 @@ class ViewsViewModel @Inject constructor(
         return errorMsg
     }
 
-    fun showPhotoList(): MutableLiveData<ArrayList<UploadedPhotoVO>> {
+    fun showPhotoList(): MutableLiveData<List<UploadedPhotoVO>> {
         viewModelScope.launch {
-            viewRepository.getAllPhotoViewsFromFirebase(
-                {
-                    uploadedPhotoVOList.postValue(ArrayList(it))
-                },
-                {
-                    errorMsg.postValue(it)
+            viewRepository.getAllViewsPhoto()
+                .collect {resource->
+                    when(resource) {
+                        is Resource.Success -> {
+                            resource.data?.let {
+                                uploadedPhotoVOList.postValue(it)
+                            }
+                        }
+                        is Resource.Error -> {
+                            errorMsg.postValue(resource.message)
+                        }
+                        is Resource.Loading -> {
+
+                        }
+                    }
                 }
-            )
-            viewRepository.getAllPhotoViewsFromFirebase(
-                {
-                    uploadedPhotoVOList.postValue(ArrayList(it))
-                },
-                {
-                    errorMsg.postValue(it)
-                }
-            )
+
         }
         return uploadedPhotoVOList
     }

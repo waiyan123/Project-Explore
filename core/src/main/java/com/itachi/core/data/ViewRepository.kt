@@ -1,62 +1,27 @@
 package com.itachi.core.data
 
-import com.itachi.core.data.db.ViewRoomDataSource
-import com.itachi.core.data.network.ViewFirebaseDataSource
-import com.itachi.core.domain.PagodaVO
+import com.itachi.core.common.Resource
 import com.itachi.core.domain.UploadedPhotoVO
 import com.itachi.core.domain.ViewVO
-import javax.inject.Inject
+import kotlinx.coroutines.flow.Flow
 
-class ViewRepository (
-    private val viewFirebaseDataSource: ViewFirebaseDataSource,
-    private val viewRoomDataSource: ViewRoomDataSource
-) {
-    suspend fun getAllPhotoViewsFromFirebase(
-        onSuccess: (uploadedPhotoList: List<UploadedPhotoVO>) -> Unit,
-        onFailure: (error: String) -> Unit
-    ) = viewFirebaseDataSource.getPhotoViews(onSuccess,onFailure)
+interface ViewRepository {
 
-    suspend fun getAllViewsFromFirebase(
-        onSuccess : (List<ViewVO>) -> Unit,
-        onFailure : (String) -> Unit
-    ) = viewFirebaseDataSource.getViewsList(onSuccess,onFailure)
+    fun addView(viewVO: ViewVO) : Flow<Resource<String>>
 
-    suspend fun getViewByIdFromFirebase(
-        viewId : String,
-        onSuccess : (ViewVO) -> Unit,
-        onFailure : (String) -> Unit
-    ) = viewFirebaseDataSource.getViewById(viewId,onSuccess,onFailure)
+    suspend fun addAllViews(viewList : List<ViewVO>)
 
-    suspend fun getViewsListByUserIdFromFirebase(
-        userId : String,
-        onSuccess : (List<ViewVO>) -> Unit,
-        onFailure: (String) -> Unit
-    ) = viewFirebaseDataSource.getViewsListByUserId(userId,onSuccess,onFailure)
+    fun getViewById(viewId : String) : Flow<Resource<ViewVO>>
 
-    suspend fun deleteViewFromFirebase(
-        viewVO: ViewVO,
-        onSuccess : (String) -> Unit,
-        onFailure: (String) -> Unit
-    ) = viewFirebaseDataSource.deleteViewById(viewVO,onSuccess,onFailure)
+    fun getAllViews() : Flow<Resource<List<ViewVO>>>
 
-    suspend fun addViewToFirebase(
-        viewVO: ViewVO ,
-        onSuccess : (String) -> Unit,
-        onFailure: (String) -> Unit
-    ) = viewFirebaseDataSource.addView(viewVO,onSuccess,onFailure)
+    fun getAllViewsPhoto() : Flow<Resource<List<UploadedPhotoVO>>>
 
-    suspend fun updateViewToFirebase(
-        viewVO: ViewVO,
-        onSuccess: (String) -> Unit,
-        onFailure: (String) -> Unit
-    ) = viewFirebaseDataSource.updateView(viewVO,onSuccess,onFailure)
+    fun getViewListByUserId(userId : String) : Flow<Resource<List<ViewVO>>>
 
-    suspend fun addViewToRoom(viewVO : ViewVO) = viewRoomDataSource.add(viewVO)
-    suspend fun addAllViewsToRoom(viewVoList : List<ViewVO>) = viewRoomDataSource.addAll(viewVoList)
-    suspend fun deleteViewFromRoom(viewVO: ViewVO) = viewRoomDataSource.delete(viewVO)
-    suspend fun deleteAllViewsFromRoom() = viewRoomDataSource.deleteAll()
-    suspend fun getViewByIdFromRoom(id : String) = viewRoomDataSource.get(id)
-    suspend fun getAllViewsFromRoom() = viewRoomDataSource.getAll()
-    suspend fun updateViewToRoom(viewVO: ViewVO) = viewRoomDataSource.update(viewVO)
+    fun deleteView(viewVO: ViewVO) : Flow<Resource<String>>
 
+    suspend fun deleteAllViews()
+
+    fun updateView(viewVO: ViewVO) : Flow<Resource<String>>
 }
