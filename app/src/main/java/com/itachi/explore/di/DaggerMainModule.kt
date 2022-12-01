@@ -7,7 +7,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.storage.FirebaseStorage
-import com.itachi.core.data.LanguageRepository
+import com.itachi.core.data.LanguageRepositoryImpl
 import com.itachi.core.data.RemoteConfigRepository
 import com.itachi.core.data.UserRepository
 import com.itachi.core.data.UserRepositoryImpl
@@ -121,7 +121,7 @@ object DaggerMainModule {
     @Provides
     @Singleton
     fun providesGetLanguage(
-        languageRepository: LanguageRepository
+        languageRepository: LanguageRepositoryImpl
     ) : GetLanguage{
         return GetLanguage(languageRepository)
     }
@@ -130,8 +130,8 @@ object DaggerMainModule {
     @Singleton
     fun providesLanguageRepository(
         languageSharedPreferencesDataSource: LanguageSharedPreferencesDataSource
-    ) : LanguageRepository {
-        return LanguageRepository(languageSharedPreferencesDataSource)
+    ) : LanguageRepositoryImpl {
+        return LanguageRepositoryImpl(languageSharedPreferencesDataSource)
     }
 
     @Provides
@@ -145,7 +145,7 @@ object DaggerMainModule {
     @Provides
     @Singleton
     fun providesSetLanguage(
-        languageRepository: LanguageRepository
+        languageRepository: LanguageRepositoryImpl
     ) : SetLanguage {
         return SetLanguage(languageRepository)
     }

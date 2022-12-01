@@ -1,9 +1,6 @@
 package com.itachi.explore.framework
 
 import android.content.SharedPreferences
-import android.util.Log
-import com.itachi.core.data.LanguageDataSource
-import com.itachi.core.data.LanguageRepository
 import com.itachi.core.data.sharedpreferences.LanguageSharedPreferencesDataSource
 import com.itachi.explore.utils.LANGUAGE
 import kotlinx.coroutines.flow.flow

@@ -1,13 +1,8 @@
 package com.itachi.core.data
 
-import com.itachi.core.data.sharedpreferences.LanguageSharedPreferencesDataSource
+import kotlinx.coroutines.flow.Flow
 
-class LanguageRepository(
-    private val languageSharedPreferenceDataSource : LanguageSharedPreferencesDataSource
-) : LanguageDataSource{
-
-    override fun setLanguage(lang: String) = languageSharedPreferenceDataSource.setLanguageToSharedPreferences(lang)
-
-    override fun getLanguage() = languageSharedPreferenceDataSource.getLanguageFromSharedPreferences()
-
+interface LanguageRepository {
+    fun setLanguage(lang : String)
+    fun getLanguage() : Flow<String>
 }

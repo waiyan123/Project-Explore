@@ -7,34 +7,49 @@ import com.itachi.explore.framework.mappers.ListMapperImpl
 import com.itachi.explore.framework.mappers.Mapper
 import com.itachi.explore.persistence.MyDatabase
 import com.itachi.explore.persistence.entities.AncientEntity
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
-class AncientRoomDataSourceImpl(private val ancientMapper: AncientMapper) : AncientRoomDataSource, KoinComponent {
+class AncientRoomDataSourceImpl(
+    private val ancientMapper: AncientMapper,
+    private val database: MyDatabase
+) : AncientRoomDataSource {
 
-    private val database: MyDatabase by inject()
-
-    override suspend fun add(ancientVO: AncientVO) {
+    override suspend fun addAncient(ancientVO: AncientVO) {
         database.ancientDao().addAncient(ancientMapper.voToEntity(ancientVO))
     }
 
-    override suspend fun addAll(ancientList: List<AncientVO>) {
+    override suspend fun addAllAncients(ancientList: List<AncientVO>) {
         database.ancientDao().insertAncientList(ancientMapper.voListToEntityList(ancientList))
     }
 
-    override suspend fun delete(ancientVO: AncientVO) {
+    override suspend fun deleteAncient(ancientVO: AncientVO) {
         database.ancientDao().deleteAncientById(ancientVO.item_id)
     }
 
-    override suspend fun deleteAll(ancientList: List<AncientVO>) {
+    override suspend fun deleteAllAncients() {
         database.ancientDao().deleteAncientList()
     }
 
-    override suspend fun get(id: String) = ancientMapper.entityToVO(database.ancientDao().getAncientById(id))
+    override fun getAncientById(id: String): Flow<AncientVO> = flow {
+        database.ancientDao().getAncientById(id)
+            .collect {
+                ancientMapper.entityToVO(it)
+            }
+    }
 
-    override suspend fun getAll(): List<AncientVO> = ancientMapper.entityListToVOList(database.ancientDao().getAncientsList())
+    override fun getAllAncients(): Flow<List<AncientVO>> = flow {
+        database.ancientDao().getAncientsList()
+            .collect {
+                emit(ancientMapper.entityListToVOList(it))
+            }
+    }
 
     override suspend fun update(ancientVO: AncientVO) {
-        TODO("Not yet implemented")
+        database.ancientDao().updateAncient(ancientMapper.voToEntity(ancientVO))
     }
+
 }

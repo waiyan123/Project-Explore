@@ -6,7 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
-import android.widget.EditText
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -22,9 +22,6 @@ import com.sangcomz.fishbun.MimeType
 import com.sangcomz.fishbun.adapter.image.impl.GlideAdapter
 import com.sangcomz.fishbun.define.Define
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import me.myatminsoe.mdetect.MDetect
@@ -40,8 +37,6 @@ class FormViewModel @Inject constructor(
     private val uploadPhotosUseCase: UploadPhotosUseCase,
     private val addPagodaUseCase: AddPagodaUseCase
 ) : ViewModel(){
-
-//    private val languageModel : LanguageModelImpl by inject()
 
     private val uris = ArrayList<Uri>()
     private val mPickupImages = ArrayList<String>()
@@ -77,12 +72,19 @@ class FormViewModel @Inject constructor(
                     }
                 }
             }
+        }
+        checkLanguage()
+    }
+
+    private fun checkLanguage() {
+        viewModelScope.launch {
             getLanguage().collect {
+
                 language.postValue(it)
             }
         }
-
     }
+
     fun onEditItemVO(itemVO : ItemVO) {
         mItemVO.postValue(itemVO)
 
@@ -164,15 +166,15 @@ class FormViewModel @Inject constructor(
     ) {
         when (type) {
             PAGODA_TYPE -> {
-                addPagoda(name, created, festival, about, type, context)
+                addPagoda(name, created, festival, about, type)
             }
 
             VIEW_TYPE -> {
-                addView(name, created, festival, about, type, context)
+                addView(name, created, festival, about, type)
             }
 
             ANCIENT_TYPE -> {
-                addAncient(name, created, festival, about, type, context)
+                addAncient(name, created, festival, about, type)
             }
 
             FOOD_TYPE -> {
@@ -198,8 +200,7 @@ class FormViewModel @Inject constructor(
         created: String,
         festival: String,
         about: String,
-        type: String,
-        context: Context
+        type: String
     ) {
         var isFestival = false
 
@@ -264,8 +265,7 @@ class FormViewModel @Inject constructor(
         created: String,
         festival: String,
         about: String,
-        type: String,
-        context: Context
+        type: String
     ) {
         var isFestival = false
         if (festival.isNotEmpty()) isFestival = true
@@ -319,8 +319,7 @@ class FormViewModel @Inject constructor(
         created: String,
         festival: String,
         about: String,
-        type: String,
-        context: Context
+        type: String
     ) {
         var isFestival = false
         if (festival.isNotEmpty()) isFestival = true

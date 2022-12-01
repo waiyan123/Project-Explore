@@ -116,7 +116,7 @@ class UserProfileViewModel @Inject constructor(
     }
 
     fun onClickedChangeButton(dialogModel : UserProfileUploadDialogModel) {
-        Log.d("test---", dialogModel.imagePath)
+
     }
 
     fun addItem(userVO : UserVO){

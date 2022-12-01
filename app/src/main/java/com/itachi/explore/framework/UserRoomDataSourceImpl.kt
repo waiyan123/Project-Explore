@@ -17,7 +17,7 @@ class UserRoomDataSourceImpl(
 ) : UserRoomDataSource{
 
     override suspend fun addUser(userVO: UserVO) {
-        Log.d("test---","add user to Room ${userVO.name}")
+
         database.userDao().insertUser(userMapper.voToEntity(userVO))
     }
 
@@ -26,7 +26,7 @@ class UserRoomDataSourceImpl(
         database.userDao().getUser(userId ?: auth.currentUser!!.uid)
             .collect {userEntity->
                 userEntity?.let {
-                    Log.d("test---","get user from Room ${it.name}")
+
                     emit(Resource.Success(userMapper.entityToVO(userEntity)))
                 }
             }

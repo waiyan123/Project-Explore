@@ -267,13 +267,13 @@ class UserProfileActivity : BaseActivity(), ViewPager.OnPageChangeListener,
         if (requestCode == REQUEST_PROFILE_PIC && grantResults.isNotEmpty()
             && grantResults[0] == PackageManager.PERMISSION_GRANTED
         ) {
-            Log.d("test---","Permission granted profile")
+
             mViewModel.onClickedUserProfilePic()
         }
         else if (requestCode == REQUEST_BACKGROUND_PIC && grantResults.isNotEmpty()
             && grantResults[0] == PackageManager.PERMISSION_GRANTED
         ) {
-            Log.d("test---","Permission granted background")
+
             mViewModel.onClickedUserBackgroundPic()
         }
     }

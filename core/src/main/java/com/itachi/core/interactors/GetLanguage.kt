@@ -1,10 +1,9 @@
 package com.itachi.core.interactors
 
-import com.itachi.core.data.LanguageDataSource
 import com.itachi.core.data.LanguageRepository
 
 class GetLanguage(
-    private val languageDataSource: LanguageDataSource
+    private val languageRepository: LanguageRepository
 ) {
-    operator fun invoke() = languageDataSource.getLanguage()
+    operator fun invoke() = languageRepository.getLanguage()
 }

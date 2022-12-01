@@ -1,6 +1,6 @@
 package com.itachi.explore
 
-import com.itachi.core.data.AncientRepository
+import com.itachi.core.data.AncientRepositoryImpl
 import android.app.Application
 import androidx.room.Room
 import com.facebook.FacebookSdk
@@ -64,10 +64,11 @@ class MyApplication : Application() {
             firebaseAuthRef
         )
         val ancientRoomDataSource = AncientRoomDataSourceImpl(
-            ancientMapper
+            ancientMapper,
+            roomDatabase
         )
 
-        val ancientRepository = AncientRepository(ancientFirebaseDataSource, ancientRoomDataSource)
+        val ancientRepository = AncientRepositoryImpl(ancientFirebaseDataSource, ancientRoomDataSource)
 
         //for pagoda
         val pagodaEntityToVoMapper = PagodaEntityToVoMapper()
@@ -120,7 +121,7 @@ class MyApplication : Application() {
                 DeleteAllPagodas(pagodaRepositoryImpl),
                 DeleteAllViews(viewRepository),
                 GetUser(userRepositoryImpl),
-                GetAncient(ancientRepository),
+                GetAncientById(ancientRepository),
                 GetPagoda(pagodaRepositoryImpl),
                 GetViewById(viewRepository),
                 GetAllAncient(ancientRepository),

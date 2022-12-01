@@ -11,6 +11,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.Bitmap
 import android.view.View
+import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -21,19 +22,17 @@ import com.itachi.explore.R
 import com.itachi.explore.mvvm.viewmodel.AncientViewModel
 import com.itachi.explore.mvvm.viewmodel.AppViewmodel
 import com.itachi.explore.mvvm.viewmodel.MyViewModelProviderFactory
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class AncientActivity : BaseActivity(), View.OnClickListener {
 
-    lateinit var mViewModel: AncientViewModel
+    private val mViewModel: AncientViewModel by viewModels()
     private lateinit var rvAdapter: AncientRecyclerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ancient)
-
-        mViewModel = ViewModelProvider(this, MyViewModelProviderFactory)
-            .get(AncientViewModel::class.java)
 
         img_back.setOnClickListener(this)
 
@@ -88,7 +87,7 @@ class AncientActivity : BaseActivity(), View.OnClickListener {
         mViewModel.getAncients().observe(this, Observer {ancientList->
             rvAdapter.setNewData(ancientList)
         })
-        mViewModel.getAncientBackground().observe(this, Observer {bgPic->
+        mViewModel.getAncientBg().observe(this, Observer {bgPic->
             Glide.with(this)
                 .asBitmap()
                 .load(bgPic)

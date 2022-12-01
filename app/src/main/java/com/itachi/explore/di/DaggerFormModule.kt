@@ -4,10 +4,7 @@ import android.content.Context
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import com.itachi.core.data.PagodaRepository
-import com.itachi.core.data.PagodaRepositoryImpl
-import com.itachi.core.data.PhotoRepository
-import com.itachi.core.data.PhotoRepositoryImpl
+import com.itachi.core.data.*
 import com.itachi.core.data.db.PagodaRoomDataSource
 import com.itachi.core.data.network.PagodaFirebaseDataSource
 import com.itachi.core.data.network.PhotoFirebaseDataSource

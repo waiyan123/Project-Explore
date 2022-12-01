@@ -31,7 +31,6 @@ class DetailsViewModel @Inject constructor(
     private val deletePagoda: DeletePagoda
 ) : ViewModel(){
 
-
     val mItemVO = MutableLiveData<ItemVO>()
     val isUploader = MutableLiveData<Boolean>()
     val successMsg = MutableLiveData<String>()

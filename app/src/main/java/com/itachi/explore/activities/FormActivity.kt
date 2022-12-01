@@ -7,6 +7,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import com.bumptech.glide.Glide
 import com.itachi.explore.utils.*
@@ -16,6 +17,7 @@ import kotlin.collections.ArrayList
 import android.view.MotionEvent
 import android.view.View.OnTouchListener
 import android.view.WindowManager
+import androidx.activity.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.itachi.core.domain.AncientVO
@@ -26,10 +28,11 @@ import com.itachi.explore.R
 import com.itachi.explore.mvvm.viewmodel.FormViewModel
 import com.itachi.explore.mvvm.viewmodel.LoginViewModel
 import com.itachi.explore.mvvm.viewmodel.MyViewModelProviderFactory
+import dagger.hilt.android.AndroidEntryPoint
 import me.myatminsoe.mdetect.MDetect
 import me.myatminsoe.mdetect.Rabbit
 
-
+@AndroidEntryPoint
 class FormActivity : BaseActivity(), View.OnClickListener {
 
     private fun changeLanguage(lang: String) {
@@ -42,7 +45,6 @@ class FormActivity : BaseActivity(), View.OnClickListener {
                 ll_about.hint = getString(R.string.about_en)
                 btn_add.text = getString(R.string.add_en)
             }
-
             "mm_unicode" -> {
                 ll_name.hint = getString(R.string.name_mm_unicode)
                 tv_choose_type.text = getString(R.string.choose_type_mm_unicode)
@@ -264,7 +266,7 @@ class FormActivity : BaseActivity(), View.OnClickListener {
         }
     }
 
-    lateinit var mViewModel: FormViewModel
+    private val mViewModel: FormViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_form)
@@ -283,9 +285,6 @@ class FormActivity : BaseActivity(), View.OnClickListener {
             }
             false
         })
-
-        mViewModel =
-            ViewModelProvider(this, MyViewModelProviderFactory).get(FormViewModel::class.java)
 
         img_add_photos.setOnClickListener(this)
         btn_add.setOnClickListener(this)

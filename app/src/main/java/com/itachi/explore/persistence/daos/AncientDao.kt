@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.itachi.core.domain.AncientVO
 import com.itachi.explore.persistence.entities.AncientEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface AncientDao {
@@ -16,11 +17,14 @@ interface AncientDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addAncient(ancientEntity: AncientEntity)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun updateAncient(ancientEntity: AncientEntity)
+
     @Query("SELECT * FROM ancient_table")
-    suspend fun getAncientsList() : List<AncientEntity>
+    fun getAncientsList() : Flow<List<AncientEntity>>
 
     @Query("SELECT * FROM ancient_table WHERE item_id = :itemId")
-    suspend fun getAncientById(itemId: String) : AncientEntity
+    fun getAncientById(itemId: String) : Flow<AncientEntity>
 
     @Query("DELETE FROM ancient_table")
     suspend fun deleteAncientList()

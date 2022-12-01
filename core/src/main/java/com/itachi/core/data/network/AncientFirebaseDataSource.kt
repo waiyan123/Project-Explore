@@ -6,50 +6,20 @@ import com.itachi.core.domain.ItemVO
 import kotlinx.coroutines.flow.Flow
 
 interface AncientFirebaseDataSource {
-    suspend fun getAncientBackground(
-        bgUrl : (String) -> Unit,
-        onFailure: (String) -> Unit
-    )
 
-    suspend fun getAncientList() : Flow<Resource<List<AncientVO>>>
+    fun addAncient(ancientVO : AncientVO) : Flow<Resource<String>>
 
-    suspend fun getAncientById(
-        ancientId : String,
-        onSuccess : (AncientVO) -> Unit,
-        onFailure : (String) -> Unit
-    )
+    fun addAllAncients(ancientList : List<AncientVO>) : Flow<Resource<String>>
 
-    suspend fun getAncientsListByUserId(
-        userId : String,
-        onSuccess : (List<AncientVO>) -> Unit,
-        onFailure: (String) -> Unit
-    )
+    fun getAncientBackground() : Flow<Resource<String>>
 
-    suspend fun deleteAncientById(
-        ancientVO: AncientVO,
-        onSuccess : (String) -> Unit,
-        onFailure: (String) -> Unit
-    )
+    fun getAllAncients() : Flow<Resource<List<AncientVO>>>
 
-    suspend fun deleteAllAncients(
-        ancientList : List<AncientVO>,
-        onSuccess: (String) -> Unit,
-        onFailure: (String) -> Unit
-    )
+    fun getAncientById(ancientId : String) : Flow<Resource<AncientVO>>
 
-    suspend fun addAncient(
-        ancientVO : AncientVO,
-        onSuccess : (String) -> Unit,
-        onFailure: (String) -> Unit)
+    fun getAncientsListByUserId(userId : String) : Flow<Resource<List<AncientVO>>>
 
-    suspend fun addAllAncients(
-        ancientList : List<AncientVO>,
-        onSuccess: (String) -> Unit,
-        onFailure: (String) -> Unit
-    )
+    fun deleteAncient(ancientVO: AncientVO) : Flow<Resource<String>>
 
-    suspend fun updateAncient(
-        ancientVO : AncientVO,
-        onSuccess : (String) -> Unit,
-        onFailure: (String) -> Unit)
+    fun updateAncient(ancientVO : AncientVO) : Flow<Resource<AncientVO>>
 }

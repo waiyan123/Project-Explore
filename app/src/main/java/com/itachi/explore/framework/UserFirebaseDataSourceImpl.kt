@@ -72,7 +72,7 @@ class UserFirebaseDataSourceImpl(
 
                     val userVO = snap.documents[0].toObject(UserVO::class.java)
                     userVO?.let {
-                        Log.d("test---","get user from Firebase ${userVO.name}")
+
                         trySend(Resource.Success(it))
                     }
                 }else trySend(Resource.Error("User doesn't exist"))
