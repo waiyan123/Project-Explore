@@ -8,7 +8,7 @@ import kotlinx.android.synthetic.main.rv_item_ancient.view.*
 import me.myatminsoe.mdetect.MDetect
 import me.myatminsoe.mdetect.Rabbit
 
-class AncientViewHolder(itemView : View, val adapterOnClick : (Int) -> Unit) : BaseViewHolder<AncientVO>(itemView){
+class AncientViewHolder(itemView : View, val adapterOnClick : (AncientVO) -> Unit) : BaseViewHolder<AncientVO>(itemView){
 
     override fun setData(data: AncientVO, position: Int) {
         Glide.with(itemView.context.applicationContext)
@@ -27,7 +27,7 @@ class AncientViewHolder(itemView : View, val adapterOnClick : (Int) -> Unit) : B
         itemView.tv_ancient_about.text = about
 
         itemView.setOnClickListener {
-            adapterOnClick(position)
+            adapterOnClick(data)
         }
     }
 

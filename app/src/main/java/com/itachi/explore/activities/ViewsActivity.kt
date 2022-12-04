@@ -44,7 +44,6 @@ class ViewsActivity : BaseActivity(),View.OnClickListener{
 
 
     private val mViewModel : ViewsViewModel by viewModels()
-//    lateinit var mViewModel : ViewsViewModel
         private lateinit var mAdapter : ViewsRecyclerAdapter
 
         override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,7 +60,6 @@ class ViewsActivity : BaseActivity(),View.OnClickListener{
 
         override fun onResume() {
             super.onResume()
-//        mPresenter.showPhotoList()
             mViewModel.showPhotoList().observe(this, Observer { viewPhotoList->
                 mAdapter.setNewData(viewPhotoList)
             })

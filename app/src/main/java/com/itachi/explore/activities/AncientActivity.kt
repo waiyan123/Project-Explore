@@ -108,10 +108,8 @@ class AncientActivity : BaseActivity(), View.OnClickListener {
     }
 
     private fun setUpPagodaRecyclerView() {
-        rvAdapter = AncientRecyclerAdapter {
-            mViewModel.clickAncientItem(it).observe(this, Observer { ancientVO->
-                navigateToAncientDetail(ancientVO)
-            })
+        rvAdapter = AncientRecyclerAdapter {ancientVO->
+            navigateToAncientDetail(ancientVO)
         }
 
         with(rv_ancient) {

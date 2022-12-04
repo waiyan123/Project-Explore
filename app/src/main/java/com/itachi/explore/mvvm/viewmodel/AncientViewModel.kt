@@ -7,6 +7,7 @@ import com.itachi.core.common.Resource
 import com.itachi.core.domain.AncientVO
 import com.itachi.core.interactors.GetAllAncientUseCase
 import com.itachi.core.interactors.GetAncientBackgroundUseCase
+import com.itachi.core.interactors.GetLanguageUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -15,7 +16,8 @@ import javax.inject.Inject
 @HiltViewModel
 class AncientViewModel @Inject constructor(
     private val getAncientBackgroundUseCase: GetAncientBackgroundUseCase,
-    private val getAllAncientUseCase: GetAllAncientUseCase
+    private val getAllAncientUseCase: GetAllAncientUseCase,
+    private val getLanguageUseCase: GetLanguageUseCase
 ) : ViewModel() {
 
     private val ancientList  = MutableLiveData<List<AncientVO>>()
@@ -74,7 +76,12 @@ class AncientViewModel @Inject constructor(
     }
 
     fun checkLanguage() : MutableLiveData<String>{
-        checkLanguage.postValue("")
+        viewModelScope.launch {
+            getLanguageUseCase()
+                .collect {
+                    checkLanguage.postValue(it)
+                }
+        }
         return checkLanguage
     }
 }

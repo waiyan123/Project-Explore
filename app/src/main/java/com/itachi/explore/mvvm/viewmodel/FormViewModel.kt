@@ -57,7 +57,6 @@ class FormViewModel @Inject constructor(
     var formType = "Add"
     val language = MutableLiveData<String>()
     val mItemVOLiveData = MutableLiveData<ItemVO>()
-    private var uploadedPhotoVO: UploadedPhotoVO? = null
 
     init {
         viewModelScope.launch {

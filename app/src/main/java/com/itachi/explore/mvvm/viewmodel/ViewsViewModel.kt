@@ -8,6 +8,8 @@ import com.itachi.core.common.Resource
 import com.itachi.core.data.ViewRepository
 import com.itachi.core.data.ViewRepositoryImpl
 import com.itachi.core.domain.UploadedPhotoVO
+import com.itachi.core.interactors.GetAllViewsPhotoUseCase
+import com.itachi.core.interactors.GetLanguageUseCase
 import com.itachi.explore.utils.LANGUAGE
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
@@ -18,8 +20,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ViewsViewModel @Inject constructor(
-    private val viewRepository: ViewRepository,
-    private val sharPreferences: SharedPreferences
+    private val getAllViewsPhotoUseCase: GetAllViewsPhotoUseCase,
+    private val getLanguageUseCase: GetLanguageUseCase
 ) : ViewModel() {
 
     private val uploadedPhotoVOList = MutableLiveData<List<UploadedPhotoVO>>()
@@ -28,17 +30,7 @@ class ViewsViewModel @Inject constructor(
 
 
     init {
-        when (sharPreferences.getString(LANGUAGE, "en")) {
-            null -> checkLanguage.postValue("en")
-            "en" -> checkLanguage.postValue("en")
-            "mm" -> {
-                if (MDetect.isUnicode()) {
-                    checkLanguage.postValue("mm_unicode")
-                } else {
-                    checkLanguage.postValue("mm_zawgyi")
-                }
-            }
-        }
+
     }
 
     fun getErrorMessage(): MutableLiveData<String> {
@@ -47,7 +39,7 @@ class ViewsViewModel @Inject constructor(
 
     fun showPhotoList(): MutableLiveData<List<UploadedPhotoVO>> {
         viewModelScope.launch {
-            viewRepository.getAllViewsPhoto()
+            getAllViewsPhotoUseCase()
                 .collect {resource->
                     when(resource) {
                         is Resource.Success -> {
@@ -69,7 +61,12 @@ class ViewsViewModel @Inject constructor(
     }
 
     fun checkLanguage(): MutableLiveData<String> {
-        checkLanguage.postValue("")
+        viewModelScope.launch {
+            getLanguageUseCase()
+                .collect {
+                    checkLanguage.postValue(it)
+                }
+        }
         return checkLanguage
     }
 }
