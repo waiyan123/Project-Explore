@@ -16,11 +16,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PreviewViewModel @Inject constructor(
-    private val getPagoda: GetPagoda,
-    private val getViewById: GetViewById,
+    private val getPagodaUseCase: GetPagodaUseCase,
+    private val getViewByIdUseCase: GetViewByIdUseCase,
 //    private val getAncient: GetAncient,
     private val getUser: GetUser,
-    private val getLanguage: GetLanguage
+    private val getLanguageUseCase: GetLanguageUseCase
 ) : ViewModel() {
 
     private lateinit var uploadedPhotoVO: UploadedPhotoVO
@@ -56,7 +56,7 @@ class PreviewViewModel @Inject constructor(
         when (uploadedPhotoVO.item_type) {
             PAGODA_TYPE -> {
                 viewModelScope.launch {
-                    getPagoda(id).collect {resource->
+                    getPagodaUseCase(id).collect { resource->
                         when(resource) {
                             is Resource.Success-> {
                                 resource.data?.let {pagodaVO ->
@@ -75,7 +75,7 @@ class PreviewViewModel @Inject constructor(
             }
             VIEW_TYPE -> {
                 viewModelScope.launch {
-                    getViewById(id)
+                    getViewByIdUseCase(id)
                         .collect { resource->
                             when(resource) {
                                 is Resource.Success -> {

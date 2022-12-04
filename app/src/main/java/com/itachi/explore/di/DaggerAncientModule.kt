@@ -29,64 +29,64 @@ object DaggerAncientModule {
     @Singleton
     fun providesAddAllAncients(
         ancientRepository : AncientRepository
-    ) : AddAllAncients {
-        return AddAllAncients(ancientRepository)
+    ) : AddAllAncientsUseCase {
+        return AddAllAncientsUseCase(ancientRepository)
     }
 
     @Provides
     @Singleton
     fun providesAddAncient(
         ancientRepository: AncientRepository
-    ) : AddAncient {
-        return AddAncient(ancientRepository)
+    ) : AddAncientUseCase {
+        return AddAncientUseCase(ancientRepository)
     }
 
     @Provides
     @Singleton
     fun providesDeleteAllAncients(
         ancientRepository: AncientRepository
-    ) : DeleteAllAncients {
-        return DeleteAllAncients(ancientRepository)
+    ) : DeleteAllAncientsUseCase {
+        return DeleteAllAncientsUseCase(ancientRepository)
     }
 
     @Provides
     @Singleton
     fun providesDeleteAncient(
         ancientRepository: AncientRepository
-    ) : DeleteAncient {
-        return DeleteAncient(ancientRepository)
+    ) : DeleteAncientUseCase {
+        return DeleteAncientUseCase(ancientRepository)
     }
 
     @Provides
     @Singleton
     fun providesGetAllAncient(
         ancientRepository: AncientRepository
-    ) : GetAllAncient {
-        return GetAllAncient(ancientRepository)
+    ) : GetAllAncientUseCase {
+        return GetAllAncientUseCase(ancientRepository)
     }
 
     @Provides
     @Singleton
     fun providesGetAncientById(
         ancientRepository: AncientRepository
-    ) : GetAncientById {
-        return GetAncientById(ancientRepository)
+    ) : GetAncientByIdUseCase {
+        return GetAncientByIdUseCase(ancientRepository)
     }
 
     @Provides
     @Singleton
     fun providesUpdateAncient(
         ancientRepository: AncientRepository
-    ) : UpdateAncient {
-        return UpdateAncient(ancientRepository)
+    ) : UpdateAncientUseCase {
+        return UpdateAncientUseCase(ancientRepository)
     }
 
     @Provides
     @Singleton
     fun providesGetAncientBackground(
         ancientRepository: AncientRepository
-    ) : GetAncientBackground {
-        return GetAncientBackground(ancientRepository)
+    ) : GetAncientBackgroundUseCase {
+        return GetAncientBackgroundUseCase(ancientRepository)
     }
 
     @Provides

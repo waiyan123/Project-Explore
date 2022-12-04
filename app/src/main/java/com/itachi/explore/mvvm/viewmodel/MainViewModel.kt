@@ -1,6 +1,5 @@
 package com.itachi.explore.mvvm.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,14 +10,13 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.system.measureTimeMillis
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val getUser : GetUser,
     private val signOut : SignOut,
-    private val getLanguage: GetLanguage,
-    private val setLanguage: SetLanguage,
+    private val getLanguageUseCase: GetLanguageUseCase,
+    private val setLanguageUseCase: SetLanguageUseCase,
     private val checkAppVersionUpdate: CheckAppVersionUpdate
 ) : ViewModel(){
 
@@ -69,7 +67,7 @@ class MainViewModel @Inject constructor(
 
     private fun checkLanguage() {
         viewModelScope.launch {
-                getLanguage().collect {
+                getLanguageUseCase().collect {
                     language.postValue(it)
                 }
 
@@ -77,7 +75,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun setUpLanguage(lang: String) {
-        setLanguage(lang)
+        setLanguageUseCase(lang)
         checkLanguage()
     }
 

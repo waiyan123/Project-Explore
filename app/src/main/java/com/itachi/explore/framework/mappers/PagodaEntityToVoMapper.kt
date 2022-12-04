@@ -10,7 +10,7 @@ class PagodaEntityToVoMapper @Inject constructor() : Mapper<PagodaEntity, Pagoda
     override fun map(input: PagodaEntity?): PagodaVO {
         if(input!=null) {
             val photoEntity = input.photos?.map {
-                PhotoVO(it.path!!,it.url!!,it.geo_points!!)
+                PhotoVO(it.id,it.url,it.geo_points)
             }
             return PagodaVO(
                 input.about ?: "",

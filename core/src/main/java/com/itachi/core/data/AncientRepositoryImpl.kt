@@ -69,7 +69,7 @@ class AncientRepositoryImpl(
         return ancientFirebaseDataSource.getAncientsListByUserId(userId)
     }
 
-    override fun updateAncient(ancientVO: AncientVO): Flow<Resource<AncientVO>> = flow{
+    override fun updateAncient(ancientVO: AncientVO): Flow<Resource<String>> = flow{
         ancientFirebaseDataSource.updateAncient(ancientVO)
             .collect {resourceFirebase->
                 ancientRoomDataSource.update(ancientVO)

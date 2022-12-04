@@ -5,7 +5,7 @@ import com.itachi.core.data.PagodaRepositoryImpl
 import com.itachi.core.domain.PagodaVO
 import com.itachi.core.domain.PhotoVO
 
-class UpdatePagoda(private val pagodaRepository: PagodaRepository) {
+class UpdatePagodaUseCase(private val pagodaRepository: PagodaRepository) {
 
     operator fun invoke(pagodaVO: PagodaVO) = pagodaRepository.updatePagoda(pagodaVO)
 

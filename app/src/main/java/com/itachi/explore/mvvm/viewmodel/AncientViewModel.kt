@@ -5,20 +5,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.itachi.core.common.Resource
 import com.itachi.core.domain.AncientVO
-import com.itachi.core.interactors.GetAllAncient
-import com.itachi.core.interactors.GetAncientBackground
-import com.itachi.core.interactors.GetAncientById
-import com.itachi.explore.framework.Interactors
+import com.itachi.core.interactors.GetAllAncientUseCase
+import com.itachi.core.interactors.GetAncientBackgroundUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import org.koin.core.KoinComponent
 import javax.inject.Inject
 
 @HiltViewModel
 class AncientViewModel @Inject constructor(
-    private val getAncientBackground: GetAncientBackground,
-    private val getAllAncient: GetAllAncient
+    private val getAncientBackgroundUseCase: GetAncientBackgroundUseCase,
+    private val getAllAncientUseCase: GetAllAncientUseCase
 ) : ViewModel() {
 
     private val ancientList  = MutableLiveData<List<AncientVO>>()
@@ -29,7 +26,7 @@ class AncientViewModel @Inject constructor(
 
     fun getAncientBg() : MutableLiveData<String>{
         viewModelScope.launch {
-            getAncientBackground()
+            getAncientBackgroundUseCase()
                 .collect { resource->
                     when(resource) {
                         is Resource.Success -> {
@@ -49,7 +46,7 @@ class AncientViewModel @Inject constructor(
 
     fun getAncients() : MutableLiveData<List<AncientVO>>{
         viewModelScope.launch {
-            getAllAncient()
+            getAllAncientUseCase()
                 .collect {resource->
                     when(resource) {
                         is Resource.Success -> {

@@ -9,7 +9,7 @@ open class AncientEntityToVoMapper : Mapper<AncientEntity,AncientVO> {
     override fun map(input: AncientEntity?): AncientVO {
         if(input!=null) {
             val photoEntity = input.photos?.map {
-                PhotoVO(it.path!!,it.url!!,it.geo_points!!)
+                PhotoVO(it.id,it.url,it.geo_points)
             }
             return AncientVO(
                 input.about ?: "",

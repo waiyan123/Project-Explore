@@ -12,7 +12,7 @@ class ViewEntityToVoMapper : Mapper<ViewEntity, ViewVO> {
     override fun map(input: ViewEntity?): ViewVO {
         if(input!=null) {
             val viewEntity = input.photos?.map {
-                PhotoVO(it.path!!,it.url!!,it.geo_points!!)
+                PhotoVO(it.id,it.url,it.geo_points)
             }
             return ViewVO(
                 input.about ?: "",

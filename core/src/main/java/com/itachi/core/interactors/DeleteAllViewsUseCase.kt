@@ -4,7 +4,7 @@ import com.itachi.core.data.ViewRepository
 import com.itachi.core.data.ViewRepositoryImpl
 import com.itachi.core.domain.ViewVO
 
-class DeleteAllViews(private val viewRepository: ViewRepository) {
+class DeleteAllViewsUseCase(private val viewRepository: ViewRepository) {
 
     suspend operator fun invoke() = viewRepository.deleteAllViews()
 }

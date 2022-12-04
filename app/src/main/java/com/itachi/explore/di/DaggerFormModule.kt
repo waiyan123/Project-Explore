@@ -9,12 +9,14 @@ import com.itachi.core.data.db.PagodaRoomDataSource
 import com.itachi.core.data.network.PagodaFirebaseDataSource
 import com.itachi.core.data.network.PhotoFirebaseDataSource
 import com.itachi.core.domain.PagodaVO
+import com.itachi.core.domain.UploadedPhotoVO
 import com.itachi.core.interactors.*
 import com.itachi.explore.framework.PagodaFirebaseDataSourceImpl
 import com.itachi.explore.framework.PagodaRoomDataSourceImpl
 import com.itachi.explore.framework.PhotoFirebaseDataSourceImpl
 import com.itachi.explore.framework.mappers.*
 import com.itachi.explore.persistence.entities.PagodaEntity
+import com.itachi.explore.persistence.entities.UploadedPhotoEntity
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -37,32 +39,40 @@ object DaggerFormModule {
     @Singleton
     fun providesGetPagoda(
         pagodaRepository: PagodaRepository
-    ) : GetPagoda{
-        return GetPagoda(pagodaRepository)
+    ) : GetPagodaUseCase{
+        return GetPagodaUseCase(pagodaRepository)
     }
 
     @Provides
     @Singleton
     fun providesDeletePagoda(
         pagodaRepository : PagodaRepository
-    ) : DeletePagoda{
-        return DeletePagoda(pagodaRepository)
+    ) : DeletePagodaUseCase{
+        return DeletePagodaUseCase(pagodaRepository)
     }
 
     @Provides
     @Singleton
     fun providesGetAllPagodas(
         pagodaRepository: PagodaRepository
-    ) : GetAllPagodas {
-        return GetAllPagodas(pagodaRepository)
+    ) : GetAllPagodasUseCase {
+        return GetAllPagodasUseCase(pagodaRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun providesUpdatePagoda(
+        pagodaRepository: PagodaRepository
+    ) : UpdatePagodaUseCase {
+        return UpdatePagodaUseCase(pagodaRepository)
     }
 
     @Provides
     @Singleton
     fun providesGetPagodaBanner(
         pagodaRepository: PagodaRepository
-    ) : GetPagodaBanner {
-        return GetPagodaBanner(pagodaRepository)
+    ) : GetPagodaBannerUseCase {
+        return GetPagodaBannerUseCase(pagodaRepository)
     }
 
     @Provides
@@ -84,6 +94,22 @@ object DaggerFormModule {
 
     @Provides
     @Singleton
+    fun providesDeletePhotoUseCase(
+        photoRepository: PhotoRepository
+    ) : DeletePhotoUseCase {
+        return DeletePhotoUseCase(photoRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun providesUploadPhotoUrlUseCase(
+        photoRepository: PhotoRepository
+    ) : UploadPhotoUrlUseCase {
+        return UploadPhotoUrlUseCase(photoRepository)
+    }
+
+    @Provides
+    @Singleton
     fun providesPhotoRepository(
         photoFirebaseDataSource: PhotoFirebaseDataSource
     ) : PhotoRepository {
@@ -93,11 +119,41 @@ object DaggerFormModule {
     @Provides
     @Singleton
     fun providesPhotoFirebaseDataSource(
+        uploadedPhotoMapper: UploadedPhotoMapperFunctions,
         firestoreRef : FirebaseFirestore,
         firebaseStorage: FirebaseStorage,
         @ApplicationContext context: Context
     ) : PhotoFirebaseDataSource {
-        return PhotoFirebaseDataSourceImpl(firestoreRef,firebaseStorage,context)
+        return PhotoFirebaseDataSourceImpl(uploadedPhotoMapper,firestoreRef,firebaseStorage,context)
+    }
+
+    @Provides
+    @Singleton
+    fun providesUploadedPhotoMapper(
+        uploadedPhotoEntityToVoMapper: Mapper<UploadedPhotoEntity, UploadedPhotoVO>,
+        uploadedPhotoVoToEntityMapper: Mapper<UploadedPhotoVO,UploadedPhotoEntity>,
+        uploadedPhotoVoToFirebaseMapper: Mapper<UploadedPhotoVO,HashMap<String,Any>>
+    ) : UploadedPhotoMapperFunctions {
+        return UploadedPhotoMapper(uploadedPhotoEntityToVoMapper,
+            uploadedPhotoVoToEntityMapper,uploadedPhotoVoToFirebaseMapper)
+    }
+
+    @Provides
+    @Singleton
+    fun providesUploadedPhotoEntityToVoMapper() : Mapper<UploadedPhotoEntity,UploadedPhotoVO> {
+        return UploadedPhotoEntityToVoMapper()
+    }
+
+    @Provides
+    @Singleton
+    fun providesUploadedPhotoVoToEntityMapper() : Mapper<UploadedPhotoVO,UploadedPhotoEntity> {
+        return UploadedPhotoVoToEntityMapper()
+    }
+
+    @Provides
+    @Singleton
+    fun providesUploadedPhotoVoToFirebaseMapper() : Mapper<UploadedPhotoVO,HashMap<String,Any>> {
+        return UploadedPhotoVoToFirebaseMapper()
     }
 
 

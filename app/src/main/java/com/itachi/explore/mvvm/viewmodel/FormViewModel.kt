@@ -12,10 +12,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.itachi.core.domain.*
 import com.itachi.core.common.Resource
-import com.itachi.core.interactors.AddPagodaUseCase
-import com.itachi.core.interactors.GetLanguage
-import com.itachi.core.interactors.GetUser
-import com.itachi.core.interactors.UploadPhotosUseCase
+import com.itachi.core.interactors.*
 import com.itachi.explore.utils.*
 import com.sangcomz.fishbun.FishBun
 import com.sangcomz.fishbun.MimeType
@@ -32,31 +29,40 @@ import kotlin.collections.ArrayList
 
 @HiltViewModel
 class FormViewModel @Inject constructor(
-    private val getUser : GetUser,
-    private val getLanguage : GetLanguage,
+    private val getUser: GetUser,
+    private val getLanguageUseCase: GetLanguageUseCase,
     private val uploadPhotosUseCase: UploadPhotosUseCase,
-    private val addPagodaUseCase: AddPagodaUseCase
-) : ViewModel(){
+    private val uploadPhotoUrlUseCase: UploadPhotoUrlUseCase,
+    private val deletePhotoUseCase: DeletePhotoUseCase,
+    private val addPagodaUseCase: AddPagodaUseCase,
+    private val addViewUseCase: AddViewUseCase,
+    private val addAncientUseCase: AddAncientUseCase,
+    private val updatePagodaUseCase: UpdatePagodaUseCase,
+    private val updateViewUseCase: UpdateViewUseCase,
+    private val updateAncientUseCase: UpdateAncientUseCase
+
+) : ViewModel() {
 
     private val uris = ArrayList<Uri>()
     private val mPickupImages = ArrayList<String>()
-    private var mPhotoVOList = MutableLiveData<ArrayList<PhotoVO>>()
     private lateinit var mUserVO: UserVO
     private val itemId = UUID.randomUUID().toString()
+    private lateinit var mItemVO: ItemVO
 
-    val images = MutableLiveData<ArrayList<Uri>>()
+    val images = MutableLiveData<List<Uri>>()
     val progressLoading = MutableLiveData<Boolean>()
     val successMsg = MutableLiveData<String>()
     val errorMsg = MutableLiveData<String>()
     val pickupImageError = MutableLiveData<Boolean>()
     var formType = "Add"
     val language = MutableLiveData<String>()
-    val mItemVO = MutableLiveData<ItemVO>()
+    val mItemVOLiveData = MutableLiveData<ItemVO>()
+    private var uploadedPhotoVO: UploadedPhotoVO? = null
 
     init {
         viewModelScope.launch {
-            getUser().collect { resource->
-                when(resource) {
+            getUser().collect { resource ->
+                when (resource) {
                     is Resource.Success -> {
                         resource.data?.let {
                             mUserVO = it
@@ -78,24 +84,29 @@ class FormViewModel @Inject constructor(
 
     private fun checkLanguage() {
         viewModelScope.launch {
-            getLanguage().collect {
+            getLanguageUseCase().collect {
 
                 language.postValue(it)
             }
         }
     }
 
-    fun onEditItemVO(itemVO : ItemVO) {
-        mItemVO.postValue(itemVO)
+    fun onEditItemVO(itemVO: ItemVO) {
+        mItemVOLiveData.postValue(itemVO)
+        mItemVO = itemVO
 
         val uri = itemVO.photos.map {
             Uri.parse(it.url)
         }
-
+        uri.forEach {
+            mPickupImages.add(it.toString())
+        }
         images.postValue(ArrayList(uri))
+        formType = "Update"
+
     }
 
-    fun checkValidate(text : String = "") : Boolean{
+    fun checkValidate(text: String = ""): Boolean {
         return text.isNotEmpty() && text.isNotBlank()
     }
 
@@ -137,33 +148,14 @@ class FormViewModel @Inject constructor(
         }
     }
 
-//    @SuppressLint("CheckResult")
-//    private fun uploadPhotos(type: String, context: Context) {
-//
-//        progressLoading.postValue(true)
-//
-//        Util.getGeoPointsFromImageList(context, mPickupImages)
-//            .subscribeOn(Schedulers.io())
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribe { geoPointsList ->
-//                Util.compressImage(mPickupImages, context, 30)
-//                    .subscribeOn(Schedulers.io())
-//                    .observeOn(AndroidSchedulers.mainThread())
-//                    .subscribe { byteArrayList ->
-//
-//                    }
-//
-//            }
-//    }
-
     fun addItem(
         name: String,
         created: String,
         festival: String,
         about: String,
-        type: String,
-        context: Context
+        type: String
     ) {
+        progressLoading.postValue(true)
         when (type) {
             PAGODA_TYPE -> {
                 addPagoda(name, created, festival, about, type)
@@ -190,8 +182,160 @@ class FormViewModel @Inject constructor(
             }
         }
     }
-    fun updateItem(name: String, created: String, festival: String, about: String, type: String) {
 
+    fun updateItem(name: String, created: String, festival: String, about: String) {
+        progressLoading.postValue(true)
+        var mAbout = about
+        var mName = name
+        var mCreatedDate = created
+        var mFestivalDate = festival
+
+        if (!MDetect.isUnicode()) {
+            mAbout = Rabbit.zg2uni(about)
+            mName = Rabbit.zg2uni(name)
+            mCreatedDate = Rabbit.zg2uni(created)
+            mFestivalDate = Rabbit.zg2uni(festival)
+        }
+        mItemVO.title = mName
+        mItemVO.created_date = mCreatedDate
+        mItemVO.festival_date = mFestivalDate
+        mItemVO.about = mAbout
+
+        when (mItemVO.item_type) {
+            PAGODA_TYPE -> {
+                val pagodaVO = mItemVO.toPagodaVO()
+                viewModelScope.launch {
+                    if (mPickupImages.size > 0) {
+                        deletePhotoUseCase(mItemVO.photos, mItemVO.item_id)
+                        uploadPhotosUseCase(mPickupImages)
+                            .collect {resource->
+                                resource.data?.let { photoList ->
+                                    photoList.forEach {
+                                        val uploadedPhotoVO = UploadedPhotoVO(it.url,mUserVO.user_id,pagodaVO.item_id,
+                                            pagodaVO.item_type,it.geo_points)
+                                        uploadPhotoUrlUseCase(uploadedPhotoVO)
+                                    }
+                                    mItemVO.photos = photoList
+                                    updatePagoda(pagodaVO)
+                                }
+                            }
+                    } else {
+                        updatePagoda(pagodaVO)
+                    }
+                }
+            }
+            VIEW_TYPE -> {
+                val viewVO = mItemVO.toViewVO()
+                viewModelScope.launch {
+                    if (mPickupImages.size > 0) {
+                        deletePhotoUseCase(mItemVO.photos, mItemVO.item_id)
+                        uploadPhotosUseCase(mPickupImages)
+                            .collect {resource->
+                                resource.data?.let { photoList ->
+                                    photoList.forEach {
+                                        val uploadedPhotoVO = UploadedPhotoVO(it.url,mUserVO.user_id,viewVO.item_id,
+                                            viewVO.item_type,it.geo_points)
+                                        uploadPhotoUrlUseCase(uploadedPhotoVO)
+                                    }
+                                    viewVO.photos = photoList
+                                    updateView(viewVO)
+                                }
+                            }
+                    } else {
+                        updateView(viewVO)
+                    }
+                }
+            }
+
+            ANCIENT_TYPE -> {
+                val ancientVO = mItemVO.toAncientVO()
+                viewModelScope.launch {
+                    if (mPickupImages.size > 0) {
+                        deletePhotoUseCase(mItemVO.photos, mItemVO.item_id)
+                        uploadPhotosUseCase(mPickupImages)
+                            .collect {resource->
+                                resource.data?.let { photoList ->
+                                    photoList.forEach {
+                                        val uploadedPhotoVO = UploadedPhotoVO(it.url,mUserVO.user_id,ancientVO.item_id,
+                                            ancientVO.item_type,it.geo_points)
+                                        uploadPhotoUrlUseCase(uploadedPhotoVO)
+                                    }
+                                    mItemVO.photos = photoList
+                                    updateAncient(ancientVO)
+                                }
+                            }
+                    } else {
+                        updateAncient(ancientVO)
+                    }
+                }
+            }
+
+            FOOD_TYPE -> {
+
+            }
+
+            ACCESSORY_TYPE -> {
+
+            }
+
+            SUPPORT_TYPE -> {
+
+            }
+        }
+    }
+
+    private suspend fun updatePagoda(pagodaVO: PagodaVO) {
+        updatePagodaUseCase(pagodaVO)
+            .collect { resource ->
+                when (resource) {
+                    is Resource.Success -> {
+                        progressLoading.postValue(false)
+                        successMsg.postValue(resource.data)
+                    }
+                    is Resource.Error -> {
+                        progressLoading.postValue(false)
+                        errorMsg.postValue(resource.message)
+                    }
+                }
+            }
+
+    }
+
+    private suspend fun updateView(viewVO: ViewVO) {
+        updateViewUseCase(viewVO)
+            .collect { resource ->
+                when (resource) {
+                    is Resource.Success -> {
+                        progressLoading.postValue(false)
+                        successMsg.postValue(resource.data)
+                    }
+                    is Resource.Error -> {
+                        progressLoading.postValue(false)
+                        errorMsg.postValue(resource.message)
+                    }
+
+                }
+
+            }
+    }
+
+    private fun updateAncient(ancientVO: AncientVO) {
+        viewModelScope.launch {
+            updateAncientUseCase(ancientVO)
+                .collect { resource ->
+                    when (resource) {
+                        is Resource.Success -> {
+                            progressLoading.postValue(false)
+                            successMsg.postValue(resource.data)
+                        }
+                        is Resource.Error -> {
+                            progressLoading.postValue(false)
+                            errorMsg.postValue(resource.message)
+                        }
+
+                    }
+                }
+        }
     }
 
     @SuppressLint("CheckResult")
@@ -202,20 +346,9 @@ class FormViewModel @Inject constructor(
         about: String,
         type: String
     ) {
-        var isFestival = false
+        val isFestival = festival.isNotEmpty()
 
-        if (festival.isNotEmpty()) isFestival = true
-        val pagodaVO = PagodaVO(
-            about,
-            emptyList(),
-            created, festival,
-            isFestival,
-            itemId,
-            type,
-            emptyList(),
-            name,
-            mUserVO.user_id
-        )
+        val pagodaVO = PagodaVO(about, emptyList(), created, festival, isFestival, itemId, type, emptyList(), name, mUserVO.user_id)
 
         if (!MDetect.isUnicode()) {
             val mAbout = Rabbit.zg2uni(about)
@@ -228,30 +361,34 @@ class FormViewModel @Inject constructor(
             pagodaVO.festival_date = mFestivalDate
         }
 
+        progressLoading.postValue(true)
         if (mPickupImages.size > 0) {
             pickupImageError.postValue(false)
-            progressLoading.postValue(true)
             viewModelScope.launch {
-                uploadPhotosUseCase(mPickupImages).collect {
-                    it.data?.let { photoList->
+                uploadPhotosUseCase(mPickupImages).collect {resource->
+                    resource.data?.let { photoList ->
+                        photoList.forEach {
+                            val uploadedPhotoVO = UploadedPhotoVO(it.url,mUserVO.user_id,pagodaVO.item_id,
+                            pagodaVO.item_type,it.geo_points)
+                            uploadPhotoUrlUseCase(uploadedPhotoVO)
+                        }
                         pagodaVO.photos = photoList
-                    }
-                    addPagodaUseCase(pagodaVO)
-                        .collect { resource->
-                            when(resource){
-                                is Resource.Success -> {
-                                    successMsg.postValue(resource.data)
-                                    progressLoading.postValue(false)
-                                }
-                                is Resource.Error -> {
-                                    errorMsg.postValue(resource.message)
-                                    progressLoading.postValue(false)
-                                }
-                                is Resource.Loading -> {
-                                    progressLoading.postValue(true)
+                        addPagodaUseCase(pagodaVO)
+                            .collect { resource ->
+                                when (resource) {
+                                    is Resource.Success -> {
+                                        successMsg.postValue(resource.data)
+                                        progressLoading.postValue(false)
+                                    }
+                                    is Resource.Error -> {
+                                        errorMsg.postValue(resource.message)
+                                        progressLoading.postValue(false)
+                                    }
+
                                 }
                             }
-                        }
+                    }
+
                 }
             }
 
@@ -292,22 +429,36 @@ class FormViewModel @Inject constructor(
             viewVO.festival_date = mFestivalDate
         }
 
+        progressLoading.postValue(true)
         if (mPickupImages.size > 0) {
-//            pickupImageError.postValue(false)
-//            progressLoading.postValue(true)
-//            uploadPhotos(type, context)
-//            mPhotoVOList.observeForever { photoVOList ->
-//                viewVO.photos = photoVOList
-//                GlobalScope.launch {
-//                    interactors.addView.toFirebase(viewVO,
-//                        { success ->
-//                            successMsg.postValue(success)
-//                        },
-//                        { error ->
-//                            errorMsg.postValue(error)
-//                        })
-//                }
-//            }
+            pickupImageError.postValue(false)
+            viewModelScope.launch {
+                uploadPhotosUseCase(mPickupImages).collect {resource->
+                    resource.data?.let { photoList ->
+                        photoList.forEach {
+                            val uploadedPhotoVO = UploadedPhotoVO(it.url,mUserVO.user_id,viewVO.item_id,
+                                viewVO.item_type,it.geo_points)
+                            uploadPhotoUrlUseCase(uploadedPhotoVO)
+                        }
+                        viewVO.photos = photoList
+                        addViewUseCase(viewVO)
+                            .collect { resource ->
+                                when (resource) {
+                                    is Resource.Success -> {
+                                        successMsg.postValue(resource.data)
+                                        progressLoading.postValue(false)
+                                    }
+                                    is Resource.Error -> {
+                                        errorMsg.postValue(resource.message)
+                                        progressLoading.postValue(false)
+                                    }
+
+                                }
+                            }
+                    }
+
+                }
+            }
 
         } else {
             pickupImageError.postValue(true)
@@ -323,17 +474,7 @@ class FormViewModel @Inject constructor(
     ) {
         var isFestival = false
         if (festival.isNotEmpty()) isFestival = true
-        val ancientVO = AncientVO(
-            about,
-            emptyList(),
-            created, festival,
-            isFestival,
-            itemId,
-            type,
-            emptyList(),
-            name,
-            mUserVO.user_id
-        )
+        val ancientVO = AncientVO(about, emptyList(), created, festival, isFestival, itemId, type, emptyList(), name, mUserVO.user_id)
 
         if (!MDetect.isUnicode()) {
             val mAbout = Rabbit.zg2uni(about)
@@ -346,22 +487,36 @@ class FormViewModel @Inject constructor(
             ancientVO.festival_date = mFestivalDate
         }
 
+        progressLoading.postValue(true)
         if (mPickupImages.size > 0) {
-//            pickupImageError.postValue(false)
-//            progressLoading.postValue(true)
-//            uploadPhotos(type, context)
-//            mPhotoVOList.observeForever { photoVOList ->
-//                ancientVO.photos = photoVOList
-//                GlobalScope.launch {
-//                    interactors.addAncient.toFirebase(ancientVO,
-//                        { success ->
-//                            successMsg.postValue(success)
-//                        },
-//                        { error ->
-//                            errorMsg.postValue(error)
-//                        })
-//                }
-//            }
+            pickupImageError.postValue(false)
+            progressLoading.postValue(true)
+            viewModelScope.launch {
+                uploadPhotosUseCase(mPickupImages).collect {resource->
+                    resource.data?.let { photoList ->
+                        photoList.forEach {
+                            val uploadedPhotoVO = UploadedPhotoVO(it.url,mUserVO.user_id,ancientVO.item_id,
+                                ancientVO.item_type,it.geo_points)
+                            uploadPhotoUrlUseCase(uploadedPhotoVO)
+                        }
+                        ancientVO.photos = photoList
+                        addAncientUseCase(ancientVO)
+                            .collect { resource ->
+                                when (resource) {
+                                    is Resource.Success -> {
+                                        successMsg.postValue(resource.data)
+                                        progressLoading.postValue(false)
+                                    }
+                                    is Resource.Error -> {
+                                        errorMsg.postValue(resource.message)
+                                        progressLoading.postValue(false)
+                                    }
+                                }
+                            }
+                    }
+
+                }
+            }
 
         } else {
             pickupImageError.postValue(true)

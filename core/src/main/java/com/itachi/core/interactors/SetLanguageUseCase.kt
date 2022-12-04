@@ -2,8 +2,8 @@ package com.itachi.core.interactors
 
 import com.itachi.core.data.LanguageRepository
 
-class GetLanguage(
+class SetLanguageUseCase(
     private val languageRepository: LanguageRepository
 ) {
-    operator fun invoke() = languageRepository.getLanguage()
+    operator fun invoke(lang : String) = languageRepository.setLanguage(lang)
 }

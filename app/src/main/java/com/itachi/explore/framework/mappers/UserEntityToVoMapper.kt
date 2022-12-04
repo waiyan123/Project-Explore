@@ -11,10 +11,10 @@ class UserEntityToVoMapper : Mapper<UserEntity, UserVO> {
 
     override fun map(input: UserEntity?): UserVO {
         if(input!=null) {
-            val profileEntity = PhotoVO(input.profile_pic!!.path!!,input.profile_pic!!.url!!,
-                input.profile_pic!!.geo_points!!)
-            val bgEntity = PhotoVO(input.background_pic!!.path!!,input.background_pic!!.url!!,
-                input.background_pic!!.geo_points!!)
+            val profileEntity = PhotoVO(input.profile_pic!!.id,input.profile_pic!!.url,
+                input.profile_pic!!.geo_points)
+            val bgEntity = PhotoVO(input.background_pic!!.id,input.background_pic!!.url,
+                input.background_pic!!.geo_points)
             return UserVO(
                 input.facebook_id ?: "",
                 input.user_id ?: "",

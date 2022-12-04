@@ -6,29 +6,24 @@ import androidx.lifecycle.viewModelScope
 import com.itachi.core.domain.ItemVO
 import com.itachi.core.domain.PagodaVO
 import com.itachi.core.common.Resource
-import com.itachi.core.interactors.DeletePagoda
-import com.itachi.core.interactors.GetLanguage
-import com.itachi.core.interactors.GetPagoda
+import com.itachi.core.interactors.DeletePagodaUseCase
+import com.itachi.core.interactors.GetLanguageUseCase
+import com.itachi.core.interactors.GetPagodaUseCase
 import com.itachi.core.interactors.GetUser
-import com.itachi.explore.framework.Interactors
-import com.itachi.explore.mvvm.model.LanguageModelImpl
 import com.itachi.explore.utils.ANCIENT_TYPE
 import com.itachi.explore.utils.PAGODA_TYPE
 import com.itachi.explore.utils.VIEW_TYPE
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import org.koin.core.KoinComponent
-import org.koin.core.inject
 import javax.inject.Inject
 
 @HiltViewModel
 class DetailsViewModel @Inject constructor(
-    private val getPagoda : GetPagoda,
-    private val getLanguage: GetLanguage,
+    private val getPagodaUseCase : GetPagodaUseCase,
+    private val getLanguageUseCase: GetLanguageUseCase,
     private val getUser: GetUser,
-    private val deletePagoda: DeletePagoda
+    private val deletePagodaUseCase: DeletePagodaUseCase
 ) : ViewModel(){
 
     val mItemVO = MutableLiveData<ItemVO>()
@@ -39,7 +34,7 @@ class DetailsViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            getLanguage()
+            getLanguageUseCase()
                 .collect {
                     language.postValue(it)
                 }
@@ -51,7 +46,7 @@ class DetailsViewModel @Inject constructor(
             when(itemVO.item_type){
                 PAGODA_TYPE -> {
                     viewModelScope.launch {
-                        getPagoda(itemVO.item_id).collect { resource->
+                        getPagodaUseCase(itemVO.item_id).collect { resource->
                             when(resource) {
                                 is Resource.Success -> {
                                     resource.data?.let { pagodaVO->
@@ -107,7 +102,7 @@ class DetailsViewModel @Inject constructor(
             when(itemVO.item_type) {
                 PAGODA_TYPE->{
                     viewModelScope.launch {
-                        deletePagoda(itemVO as PagodaVO).collect { resource->
+                        deletePagodaUseCase(itemVO as PagodaVO).collect { resource->
                             when(resource) {
                                 is Resource.Success -> {
                                     resource.data?.let {strSuccess->

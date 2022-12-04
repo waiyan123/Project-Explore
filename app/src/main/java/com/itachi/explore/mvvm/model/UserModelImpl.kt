@@ -2,14 +2,9 @@ package com.itachi.explore.mvvm.model
 
 import android.annotation.SuppressLint
 import com.itachi.core.domain.UserVO
-import com.itachi.explore.framework.mappers.PhotoEntityToVoMapper
-import com.itachi.explore.framework.mappers.UserMapper
 import com.itachi.explore.persistence.MyDatabase
-import com.itachi.explore.persistence.entities.UserEntity
 import com.itachi.explore.utils.*
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 

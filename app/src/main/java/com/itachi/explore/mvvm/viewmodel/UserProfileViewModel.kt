@@ -24,7 +24,7 @@ class UserProfileViewModel @Inject constructor(
     private val getUser : GetUser
 ) : ViewModel(){
 
-    var mUserVO = UserVO()
+    lateinit var mUserVO : UserVO
     val mutableUploadProfileModel = MutableLiveData<UserProfileUploadDialogModel>()
 
     val editable = MutableLiveData<Boolean>()
@@ -100,7 +100,7 @@ class UserProfileViewModel @Inject constructor(
         mutableUploadProfileModel.postValue(
             UserProfileUploadDialogModel(
                 title = "Profile",
-                imagePath = mUserVO.profile_pic.url,
+                imagePath = mUserVO.profile_pic?.url ?: "",
                 clickAction = "Pick up"
             )
         )
@@ -109,7 +109,7 @@ class UserProfileViewModel @Inject constructor(
         mutableUploadProfileModel.postValue(
             UserProfileUploadDialogModel(
                 title = "Background",
-                imagePath = mUserVO.background_pic.url,
+                imagePath = mUserVO.background_pic?.url ?: "",
                 clickAction = "Pick up"
             )
         )

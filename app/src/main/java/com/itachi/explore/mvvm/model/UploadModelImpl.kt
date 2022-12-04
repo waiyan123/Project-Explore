@@ -70,14 +70,14 @@ class UploadModelImpl : UploadModel, BaseModel() {
 
     override fun uploadPhotoUrl(
         path: String,
-        facebookId: String,
+        userId: String,
         itemId: String,
         itemType: String,
         geoPoints: String
     ) {
         val uploadedPhoto = hashMapOf(
             PHOTO_URL to path,
-            UPLOADER_ID to facebookId,
+            UPLOADER_ID to userId,
             ITEM_ID to itemId,
             ITEM_TYPE to itemType,
             GEO_POINTS to geoPoints

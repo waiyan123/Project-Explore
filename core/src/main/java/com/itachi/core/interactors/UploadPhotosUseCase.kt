@@ -6,5 +6,7 @@ import com.itachi.core.domain.PhotoVO
 import kotlinx.coroutines.flow.Flow
 
 class UploadPhotosUseCase(private val photoRepository: PhotoRepository) {
-    operator fun invoke(filePathList: List<String>) : Flow<Resource<List<PhotoVO>>> = photoRepository.uploadPhotos(filePathList)
+    operator fun invoke(
+        filePathList: List<String>
+    ) : Flow<Resource<List<PhotoVO>>> = photoRepository.uploadPhotos(filePathList)
 }

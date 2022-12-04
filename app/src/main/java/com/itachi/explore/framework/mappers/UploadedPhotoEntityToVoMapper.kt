@@ -7,19 +7,18 @@ import com.itachi.explore.persistence.entities.UploadedPhotoEntity
 import com.itachi.explore.persistence.entities.ViewEntity
 import javax.inject.Inject
 
-class UploadedPhotoEntityToVoMapper @Inject constructor(): Mapper<UploadedPhotoEntity, UploadedPhotoVO> {
+open class UploadedPhotoEntityToVoMapper : Mapper<UploadedPhotoEntity, UploadedPhotoVO> {
 
     override fun map(input: UploadedPhotoEntity?): UploadedPhotoVO {
-        if(input!=null) {
+        return if(input!=null) {
 
-            return UploadedPhotoVO(
+            UploadedPhotoVO(
                 input.url ?: "",
                 input.uploader_id ?: "",
                 input.item_id ?: "",
                 input.item_type ?: "",
                 input.geo_points ?: ""
             )
-        }
-        else return UploadedPhotoVO("","","","","")
+        } else UploadedPhotoVO("","","","","")
     }
 }

@@ -122,8 +122,8 @@ object DaggerMainModule {
     @Singleton
     fun providesGetLanguage(
         languageRepository: LanguageRepositoryImpl
-    ) : GetLanguage{
-        return GetLanguage(languageRepository)
+    ) : GetLanguageUseCase{
+        return GetLanguageUseCase(languageRepository)
     }
 
     @Provides
@@ -146,8 +146,8 @@ object DaggerMainModule {
     @Singleton
     fun providesSetLanguage(
         languageRepository: LanguageRepositoryImpl
-    ) : SetLanguage {
-        return SetLanguage(languageRepository)
+    ) : SetLanguageUseCase {
+        return SetLanguageUseCase(languageRepository)
     }
 
     @Provides

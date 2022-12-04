@@ -5,24 +5,20 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.itachi.core.common.Resource
-import com.itachi.core.domain.AncientVO
 import com.itachi.core.domain.PagodaVO
-import com.itachi.core.interactors.GetAllPagodas
-import com.itachi.core.interactors.GetLanguage
-import com.itachi.core.interactors.GetPagodaBanner
-import com.itachi.explore.activities.PagodasActivity
-import com.itachi.explore.framework.Interactors
+import com.itachi.core.interactors.GetAllPagodasUseCase
+import com.itachi.core.interactors.GetLanguageUseCase
+import com.itachi.core.interactors.GetPagodaBannerUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class PagodaViewModel @Inject constructor(
-    private val getPagodaBanner: GetPagodaBanner,
-    private val getAllPagodas: GetAllPagodas,
-    private val getLanguage: GetLanguage
+    private val getPagodaBannerUseCase: GetPagodaBannerUseCase,
+    private val getAllPagodasUseCase: GetAllPagodasUseCase,
+    private val getLanguageUseCase: GetLanguageUseCase
 ) : ViewModel() {
 
     val bannerPhotos = MutableLiveData<ArrayList<String>>()
@@ -41,7 +37,7 @@ class PagodaViewModel @Inject constructor(
 
     private fun getBannerPhotos(){
         viewModelScope.launch {
-            getPagodaBanner().collect {resource->
+            getPagodaBannerUseCase().collect { resource->
                 when(resource) {
                     is Resource.Success -> {
                         resource.data?.let { list->
@@ -64,13 +60,18 @@ class PagodaViewModel @Inject constructor(
     fun getPagodaList()  {
 
         viewModelScope.launch {
-            getAllPagodas().collect {resource->
+            getAllPagodasUseCase().collect { resource->
                 when(resource) {
                     is Resource.Success -> {
                         resource.data?.let { list ->
                             pagodaListLiveData.postValue(list)
                             pagodaList.clear()
                             pagodaList.addAll(list)
+                            list.forEach {pgVO->
+                                pgVO.photos.forEach {photo->
+                                    Log.d("test---","id ${photo.id}")
+                                }
+                            }
                         }
                     }
                     is Resource.Error -> {
@@ -94,7 +95,7 @@ class PagodaViewModel @Inject constructor(
 
     fun checkLanguage() : MutableLiveData<String>{
         viewModelScope.launch {
-            getLanguage().collect {lang->
+            getLanguageUseCase().collect { lang->
                 checkLanguage.postValue(lang)
             }
         }

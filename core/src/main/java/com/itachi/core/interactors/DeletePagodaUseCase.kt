@@ -4,7 +4,8 @@ import com.itachi.core.data.PagodaRepository
 import com.itachi.core.data.PagodaRepositoryImpl
 import com.itachi.core.domain.PagodaVO
 
-class GetAllPagodas(private val pagodaRepository: PagodaRepository) {
+class DeletePagodaUseCase(private val pagodaRepository: PagodaRepository) {
 
-    operator fun invoke() = pagodaRepository.getAllPagodas()
+    operator fun invoke(pagodaVO: PagodaVO) = pagodaRepository.deletePagoda(pagodaVO)
+
 }

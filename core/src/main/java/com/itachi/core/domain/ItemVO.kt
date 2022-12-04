@@ -26,3 +26,48 @@ abstract class ItemVO(
     abstract var uploader_id: String
 
 }
+
+fun ItemVO.toPagodaVO() : PagodaVO {
+    return PagodaVO(
+        about,
+        comments,
+        created_date,
+        festival_date,
+        is_there_festival,
+        item_id,
+        item_type,
+        photos,
+        title,
+        uploader_id
+    )
+}
+
+fun ItemVO.toViewVO() : ViewVO {
+    return ViewVO(
+        about,
+        comments,
+        created_date,
+        festival_date,
+        is_there_festival,
+        item_id,
+        item_type,
+        photos,
+        title,
+        uploader_id
+    )
+}
+
+fun ItemVO.toAncientVO() : AncientVO {
+    return AncientVO(
+        about,
+        comments,
+        created_date,
+        festival_date,
+        is_there_festival,
+        item_id,
+        item_type,
+        photos,
+        title,
+        uploader_id
+    )
+}

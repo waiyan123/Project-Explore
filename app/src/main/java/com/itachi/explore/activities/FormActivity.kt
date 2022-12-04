@@ -124,7 +124,7 @@ class FormActivity : BaseActivity(), View.OnClickListener {
         finish()
     }
 
-    private fun showPickUpImages(list: ArrayList<Uri>) {
+    private fun showPickUpImages(list: List<Uri>) {
         img_photo_item1.setImageResource(R.drawable.ic_tab_unselected_black_24dp)
         img_photo_item2.setImageResource(R.drawable.ic_tab_unselected_black_24dp)
         img_photo_item3.setImageResource(R.drawable.ic_tab_unselected_black_24dp)
@@ -177,8 +177,7 @@ class FormActivity : BaseActivity(), View.OnClickListener {
                                 et_created_date.text.toString(),
                                 et_festival_date.text.toString(),
                                 et_about.text.toString(),
-                                tv_choose_type.text.toString(),
-                                this
+                                tv_choose_type.text.toString()
                             )
                         }
                     }
@@ -187,8 +186,7 @@ class FormActivity : BaseActivity(), View.OnClickListener {
                             et_name.text.toString(),
                             et_created_date.text.toString(),
                             et_festival_date.text.toString(),
-                            et_about.text.toString(),
-                            tv_choose_type.text.toString()
+                            et_about.text.toString()
                         )
                     }
                 }
@@ -210,19 +208,17 @@ class FormActivity : BaseActivity(), View.OnClickListener {
             }
 
             R.id.tv_view_type -> {
-                showToast("Coming soon")
-//                tv_choose_type.text = VIEW_TYPE
-//                tv_choose_type.setTextColor(Color.BLUE)
-//                tv_choose_type.error = null
-//                alertDialog!!.dismiss()
+                tv_choose_type.text = VIEW_TYPE
+                tv_choose_type.setTextColor(Color.BLUE)
+                tv_choose_type.error = null
+                alertDialog!!.dismiss()
             }
 
             R.id.tv_ancient_type -> {
-                showToast("Coming soon")
-//                tv_choose_type.text = ANCIENT_TYPE
-//                tv_choose_type.setTextColor(Color.BLUE)
-//                tv_choose_type.error = null
-//                alertDialog!!.dismiss()
+                tv_choose_type.text = ANCIENT_TYPE
+                tv_choose_type.setTextColor(Color.BLUE)
+                tv_choose_type.error = null
+                alertDialog!!.dismiss()
             }
 
             R.id.tv_food_type -> {
@@ -306,8 +302,14 @@ class FormActivity : BaseActivity(), View.OnClickListener {
         mViewModel.language.observe(this){
             changeLanguage(it)
         }
-        mViewModel.mItemVO.observe(this) {itemVO->
-            showEditDetails(itemVO.title,itemVO.created_date,itemVO.festival_date,itemVO.about,itemVO.item_type)
+        mViewModel.mItemVOLiveData.observe(this) {itemVO->
+            showEditDetails(
+                itemVO.title,
+                itemVO.created_date,
+                itemVO.festival_date,
+                itemVO.about,
+                itemVO.item_type
+            )
         }
 
         mViewModel.progressLoading.observe(this){loading->

@@ -4,9 +4,9 @@ import com.itachi.core.domain.PhotoVO
 import ss.com.bannerslider.adapters.SliderAdapter
 import ss.com.bannerslider.viewholder.ImageSlideViewHolder
 
-class PagodaSliderAdapter(list : ArrayList<PhotoVO>) : SliderAdapter(){
+class PagodaSliderAdapter(list : List<PhotoVO>) : SliderAdapter(){
 
-    private val photoList : MutableList<PhotoVO> = list
+    private val photoList : List<PhotoVO> = list
 
     override fun getItemCount(): Int {
         return photoList.size

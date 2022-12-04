@@ -1,7 +1,6 @@
 package com.itachi.explore.mvvm.viewmodel
 
 import android.content.Intent
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,7 +14,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.itachi.core.domain.PhotoVO
 import com.itachi.core.domain.UserVO
 import com.itachi.core.interactors.AddUser
-import com.itachi.core.interactors.GetLanguage
+import com.itachi.core.interactors.GetLanguageUseCase
 import com.itachi.explore.R
 import com.itachi.explore.activities.LoginActivity
 import com.itachi.core.common.Resource
@@ -29,7 +28,7 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val addUser : AddUser,
     private val auth : FirebaseAuth,
-    private val getLanguage : GetLanguage
+    private val getLanguageUseCase : GetLanguageUseCase
 ) : ViewModel(), KoinComponent {
 
     val loginSuccess = MutableLiveData<Boolean>()
@@ -43,7 +42,7 @@ class LoginViewModel @Inject constructor(
     init {
         isAlreadyLogin.postValue(auth.currentUser!=null)
         viewModelScope.launch {
-            getLanguage().collect {
+            getLanguageUseCase().collect {
                 language.postValue(it)
             }
         }

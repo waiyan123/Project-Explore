@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import androidx.activity.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.itachi.core.domain.*
@@ -21,11 +22,13 @@ import com.itachi.explore.third_parties.PagodaSliderAdapter
 import com.itachi.explore.utils.ANCIENT_TYPE
 import com.itachi.explore.utils.PAGODA_TYPE
 import com.itachi.explore.utils.VIEW_TYPE
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_detail.*
 import kotlinx.android.synthetic.main.dialog_post_detail.*
 import me.myatminsoe.mdetect.MDetect
 import me.myatminsoe.mdetect.Rabbit
 
+@AndroidEntryPoint
 class ActivityDetail : BaseActivity(),View.OnClickListener{
 
     private fun changeLanguage(lang: String) {
@@ -154,15 +157,11 @@ class ActivityDetail : BaseActivity(),View.OnClickListener{
         }
     }
 
-    lateinit var mViewModel : DetailsViewModel
+    private val mViewModel : DetailsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
-
-        mViewModel = ViewModelProvider(this,MyViewModelProviderFactory)
-            .get(DetailsViewModel::class.java)
-
 
         val pagodaItem = intent.getSerializableExtra(EXTRA_EVENT_ID_PAGODA) as PagodaVO?
         val viewItem = intent.getSerializableExtra(EXTRA_EVENT_ID_VIEW) as ViewVO?
@@ -170,21 +169,15 @@ class ActivityDetail : BaseActivity(),View.OnClickListener{
 
         when {
             pagodaItem!=null -> {
-                pagodaItem.photos?.let {
-                    setUpSlider(ArrayList(it))
-                }
+                setUpSlider(pagodaItem.photos)
                 mViewModel.setupItemVO(pagodaItem)
             }
             viewItem!=null -> {
-                viewItem.photos?.let {
-                    setUpSlider(ArrayList(it))
-                }
+                setUpSlider(viewItem.photos)
                 mViewModel.setupItemVO(viewItem)
             }
             ancientItem!=null -> {
-                ancientItem.photos?.let {
-                    setUpSlider(ArrayList(it))
-                }
+                setUpSlider(ancientItem.photos)
                 mViewModel.setupItemVO(ancientItem)
 
             }
@@ -220,7 +213,7 @@ class ActivityDetail : BaseActivity(),View.OnClickListener{
     }
 
 
-    private fun setUpSlider(photoList : ArrayList<PhotoVO>) {
+    private fun setUpSlider(photoList : List<PhotoVO>) {
         banner_slider.visibility = View.VISIBLE
         sliderAdapter = PagodaSliderAdapter(photoList)
         banner_slider.setAdapter(sliderAdapter)

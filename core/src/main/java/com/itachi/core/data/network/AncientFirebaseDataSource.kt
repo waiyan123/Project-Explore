@@ -21,5 +21,5 @@ interface AncientFirebaseDataSource {
 
     fun deleteAncient(ancientVO: AncientVO) : Flow<Resource<String>>
 
-    fun updateAncient(ancientVO : AncientVO) : Flow<Resource<AncientVO>>
+    fun updateAncient(ancientVO : AncientVO) : Flow<Resource<String>>
 }

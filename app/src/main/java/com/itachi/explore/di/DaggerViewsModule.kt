@@ -30,64 +30,64 @@ object DaggerViewsModule {
     @Singleton
     fun providesAddView(
         viewRepository: ViewRepository
-    ) : AddView {
-        return AddView(viewRepository)
+    ) : AddViewUseCase {
+        return AddViewUseCase(viewRepository)
     }
 
     @Provides
     @Singleton
     fun providesAddAllViews(
         viewRepository: ViewRepository
-    ) : AddAllViews {
-        return AddAllViews(viewRepository)
+    ) : AddAllViewsUseCase {
+        return AddAllViewsUseCase(viewRepository)
     }
 
     @Provides
     @Singleton
     fun providesDeleteAllViews(
         viewRepository: ViewRepository
-    ) : DeleteAllViews {
-        return DeleteAllViews(viewRepository)
+    ) : DeleteAllViewsUseCase {
+        return DeleteAllViewsUseCase(viewRepository)
     }
 
     @Provides
     @Singleton
     fun providesDeleteView(
         viewRepository: ViewRepository
-    ) : DeleteView {
-        return DeleteView(viewRepository)
+    ) : DeleteViewUseCase {
+        return DeleteViewUseCase(viewRepository)
     }
 
     @Provides
     @Singleton
     fun providesGetAllViews(
         viewRepository: ViewRepository
-    ) : GetAllViews {
-        return GetAllViews(viewRepository)
+    ) : GetAllViewsUseCase {
+        return GetAllViewsUseCase(viewRepository)
     }
 
     @Provides
     @Singleton
     fun providesGetAllViewsPhoto(
         viewRepository: ViewRepository
-    ) : GetAllViewsPhoto {
-        return GetAllViewsPhoto(viewRepository)
+    ) : GetAllViewsPhotoUseCase {
+        return GetAllViewsPhotoUseCase(viewRepository)
     }
 
     @Provides
     @Singleton
     fun providesGetViewById(
         viewRepository: ViewRepository
-    ) : GetViewById {
-        return GetViewById(viewRepository)
+    ) : GetViewByIdUseCase {
+        return GetViewByIdUseCase(viewRepository)
     }
 
     @Provides
     @Singleton
     fun providesUpdateView(
         viewRepository: ViewRepository
-    ) : UpdateView {
-        return UpdateView(viewRepository)
+    ) : UpdateViewUseCase {
+        return UpdateViewUseCase(viewRepository)
     }
 
     @Provides

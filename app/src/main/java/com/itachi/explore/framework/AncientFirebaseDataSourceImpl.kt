@@ -117,14 +117,14 @@ class AncientFirebaseDataSourceImpl(
         TODO("Not yet implemented")
     }
 
-    override fun updateAncient(ancientVO: AncientVO): Flow<Resource<AncientVO>> = callbackFlow{
+    override fun updateAncient(ancientVO: AncientVO): Flow<Resource<String>> = callbackFlow{
 
         val firestoreAncient = ancientMapper.voToFirebaseHashmap(ancientVO)
         firestoreRef.collection(ANCIENTS)
             .document(ancientVO.item_id)
             .update(firestoreAncient as Map<String, Any>)
             .addOnSuccessListener {
-                trySend(Resource.Success(ancientVO))
+                trySend(Resource.Success("Successfully updated Ancient"))
             }
             .addOnFailureListener {
                 trySend(Resource.Error(it.localizedMessage ?: "Unexpected error occur!"))
