@@ -1,5 +1,6 @@
 package com.itachi.explore.framework
 
+import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -40,40 +41,8 @@ class AncientFirebaseDataSourceImpl(
 
         firestoreRef.collection(ANCIENTS)
             .get()
-            .addOnSuccessListener {
-
-                trySend(Resource.Success(ancientMapper.entityListToVOList(it.toObjects(AncientEntity::class.java)))).isSuccess
-
-            }
-            .addOnFailureListener {
-                trySend(Resource.Error(it.localizedMessage ?: "Unexpected error occur!"))
-            }
-        awaitClose { channel.close() }
-    }
-
-    override fun getAncientById(ancientId: String): Flow<Resource<AncientVO>> = callbackFlow{
-        firestoreRef.collection(ANCIENTS).whereEqualTo(ITEM_ID, ancientId)
-            .get()
             .addOnSuccessListener {snapShot->
-                if (snapShot.documents.isNotEmpty()) {
-                    val ancientEntity = snapShot.documents[0].toObject(AncientEntity::class.java)
-                    ancientEntity?.let {
-                        trySend(Resource.Success(ancientMapper.entityToVO(it)))
-                    }
-                }
-            }
-            .addOnFailureListener {
-                trySend(Resource.Error(it.localizedMessage ?: "Unexpected error occur!"))
-            }
-        awaitClose { channel.close() }
-    }
-
-    override fun getAncientsListByUserId(userId: String): Flow<Resource<List<AncientVO>>> = callbackFlow{
-
-        firestoreRef.collection(ANCIENTS).whereEqualTo(UPLOADER_ID, userId)
-            .get()
-            .addOnSuccessListener { snapShot ->
-                if (snapShot.documents.isNotEmpty()) {
+                if(snapShot.documents.isNotEmpty()) {
                     val ancientList = snapShot.toObjects(AncientEntity::class.java)
                     trySend(Resource.Success(ancientMapper.entityListToVOList(ancientList)))
                 }
@@ -84,7 +53,44 @@ class AncientFirebaseDataSourceImpl(
         awaitClose { channel.close() }
     }
 
-    override fun deleteAncient(ancientVO: AncientVO): Flow<Resource<String>> = callbackFlow{
+    override fun getAncientById(ancientId: String): Flow<Resource<AncientVO>> = callbackFlow {
+
+        firestoreRef.collection(ANCIENTS).whereEqualTo(ITEM_ID, ancientId)
+            .get()
+            .addOnSuccessListener { snapShot ->
+                if (snapShot.documents.isNotEmpty()) {
+                    val ancientEntity = snapShot.documents[0].toObject(AncientEntity::class.java)
+                    ancientEntity?.let {
+                        trySend(Resource.Success(ancientMapper.entityToVO(it)))
+                    }
+                } else {
+                    trySend(Resource.Error("There is no ancient item"))
+                }
+            }
+            .addOnFailureListener {
+                trySend(Resource.Error(it.localizedMessage ?: "Unexpected error occur!"))
+            }
+        awaitClose { channel.close() }
+    }
+
+    override fun getAncientsListByUserId(userId: String): Flow<Resource<List<AncientVO>>> =
+        callbackFlow {
+
+            firestoreRef.collection(ANCIENTS).whereEqualTo(UPLOADER_ID, userId)
+                .get()
+                .addOnSuccessListener { snapShot ->
+                    if (snapShot.documents.isNotEmpty()) {
+                        val ancientList = snapShot.toObjects(AncientEntity::class.java)
+                        trySend(Resource.Success(ancientMapper.entityListToVOList(ancientList)))
+                    }
+                }
+                .addOnFailureListener {
+                    trySend(Resource.Error(it.localizedMessage ?: "Unexpected error occur!"))
+                }
+            awaitClose { channel.close() }
+        }
+
+    override fun deleteAncient(ancientVO: AncientVO): Flow<Resource<String>> = callbackFlow {
 
         firestoreRef.collection(ANCIENTS)
             .document(ancientVO.item_id)
@@ -117,7 +123,7 @@ class AncientFirebaseDataSourceImpl(
         TODO("Not yet implemented")
     }
 
-    override fun updateAncient(ancientVO: AncientVO): Flow<Resource<String>> = callbackFlow{
+    override fun updateAncient(ancientVO: AncientVO): Flow<Resource<String>> = callbackFlow {
 
         val firestoreAncient = ancientMapper.voToFirebaseHashmap(ancientVO)
         firestoreRef.collection(ANCIENTS)

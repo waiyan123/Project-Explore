@@ -67,11 +67,6 @@ class PagodaViewModel @Inject constructor(
                             pagodaListLiveData.postValue(list)
                             pagodaList.clear()
                             pagodaList.addAll(list)
-                            list.forEach {pgVO->
-                                pgVO.photos.forEach {photo->
-                                    Log.d("test---","id ${photo.id}")
-                                }
-                            }
                         }
                     }
                     is Resource.Error -> {

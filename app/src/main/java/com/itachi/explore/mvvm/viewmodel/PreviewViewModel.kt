@@ -1,5 +1,6 @@
 package com.itachi.explore.mvvm.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -16,51 +17,45 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PreviewViewModel @Inject constructor(
-    private val getPagodaUseCase: GetPagodaUseCase,
+    private val getPagodaByIdUseCase: GetPagodaByIdUseCase,
     private val getViewByIdUseCase: GetViewByIdUseCase,
-//    private val getAncient: GetAncient,
+    private val getAncientByIdUseCase: GetAncientByIdUseCase,
     private val getUser: GetUser,
     private val getLanguageUseCase: GetLanguageUseCase
 ) : ViewModel() {
 
     private lateinit var uploadedPhotoVO: UploadedPhotoVO
+    val uploadedPhotoVOLiveData = MutableLiveData<UploadedPhotoVO>()
 
-    private val pagodaVOLiveData = MutableLiveData<PagodaVO>()
-
-    private val viewVOLiveData = MutableLiveData<ViewVO>()
-
-    private val ancientVOLiveData = MutableLiveData<AncientVO>()
+    val mItemVO = MutableLiveData<ItemVO>()
 
     private lateinit var userVO: UserVO
+    val uploaderVO = MutableLiveData<UserVO>()
 
     private lateinit var currentImgUrl: String
 
-    val geoPointsAvailableLiveData = MutableLiveData<Boolean>()
+    val language = MutableLiveData<String>()
 
     val errorMessageLiveData = MutableLiveData<String>()
 
     fun handleIntent(photoVO: UploadedPhotoVO) {
         uploadedPhotoVO = photoVO
+        uploadedPhotoVOLiveData.postValue(photoVO)
         currentImgUrl = photoVO.url
-        onCheckedGeoPoints(photoVO.geo_points)
+        getFullInfoItem()
+        checkLanguage()
+        getUploader(photoVO.uploader_id)
     }
 
-    private fun onCheckedGeoPoints(geoPoints: String) {
-        if (geoPoints != "" && geoPoints != "0.0,0.0") {
-            geoPointsAvailableLiveData.postValue(true)
-        } else geoPointsAvailableLiveData.postValue(false)
-    }
-
-
-    fun getFullInfoItem(id: String) {
+    private fun getFullInfoItem() {
         when (uploadedPhotoVO.item_type) {
             PAGODA_TYPE -> {
                 viewModelScope.launch {
-                    getPagodaUseCase(id).collect { resource->
+                    getPagodaByIdUseCase(uploadedPhotoVO.item_id).collect { resource->
                         when(resource) {
                             is Resource.Success-> {
                                 resource.data?.let {pagodaVO ->
-                                    pagodaVOLiveData.postValue(pagodaVO)
+                                    mItemVO.postValue(pagodaVO)
                                 }
                             }
                             is Resource.Error-> {
@@ -75,12 +70,12 @@ class PreviewViewModel @Inject constructor(
             }
             VIEW_TYPE -> {
                 viewModelScope.launch {
-                    getViewByIdUseCase(id)
+                    getViewByIdUseCase(uploadedPhotoVO.item_id)
                         .collect { resource->
                             when(resource) {
                                 is Resource.Success -> {
                                     resource.data?.let {
-                                        viewVOLiveData.postValue(it)
+                                        mItemVO.postValue(it)
                                     }
                                 }
                                 is Resource.Error -> {
@@ -95,17 +90,45 @@ class PreviewViewModel @Inject constructor(
             }
             ANCIENT_TYPE -> {
                 viewModelScope.launch {
-//                    getAncient.fromFirebase(id,
-//                        {
-//                            ancientVOLiveData.postValue(it)
-//                        },
-//                        {
-//                            errorMessageLiveData.postValue(it)
-//                        })
+                    getAncientByIdUseCase(uploadedPhotoVO.item_id)
+                        .collect {resource->
+                            when(resource) {
+                                is Resource.Success -> {
+                                    resource.data?.let {
+                                        mItemVO.postValue(it)
+                                    }
+                                }
+                                is Resource.Error -> {
+                                    errorMessageLiveData.postValue(resource.message)
+                                }
+                                is Resource.Loading -> {
+
+                                }
+                            }
+                        }
                 }
             }
-
         }
+    }
 
+    private fun getUploader(id : String) {
+        viewModelScope.launch {
+            getUser(id)
+                .collect { resource->
+                    resource.data?.let {
+                        uploaderVO.postValue(it)
+                        userVO = it
+                    }
+                }
+        }
+    }
+
+    private fun checkLanguage() {
+        viewModelScope.launch {
+            getLanguageUseCase()
+                .collect {
+                    language.postValue(it)
+                }
+        }
     }
 }

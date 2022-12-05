@@ -182,19 +182,14 @@ class ActivityDetail : BaseActivity(),View.OnClickListener{
 
             }
         }
-
-
         img_setting.setOnClickListener(this)
         img_back.setOnClickListener(this)
-    }
 
-    override fun onResume() {
-        super.onResume()
         mViewModel.mItemVO.observe(this) {itemVO->
             when(itemVO.item_type) {
-                PAGODA_TYPE -> showPagodaDetailViews(itemVO as PagodaVO)
-                VIEW_TYPE -> showViewDetailViews(itemVO as ViewVO)
-                ANCIENT_TYPE -> showAncientDetailViews(itemVO as AncientVO)
+                PAGODA_TYPE -> showPagodaDetailViews(itemVO.toPagodaVO())
+                VIEW_TYPE -> showViewDetailViews(itemVO.toViewVO())
+                ANCIENT_TYPE -> showAncientDetailViews(itemVO.toAncientVO())
             }
         }
         mViewModel.isUploader.observe(this) {
@@ -209,7 +204,11 @@ class ActivityDetail : BaseActivity(),View.OnClickListener{
         mViewModel.language.observe(this){
             changeLanguage(it)
         }
+    }
 
+    override fun onResume() {
+        super.onResume()
+        mViewModel.refreshDetails()
     }
 
 
@@ -235,17 +234,16 @@ class ActivityDetail : BaseActivity(),View.OnClickListener{
 
             R.id.tv_edit -> {
                 alertDialog?.dismiss()
-                mViewModel.mItemVO.observe(this) {
-
+                mViewModel.itemVO?.let {
                     when(it.item_type){
                         PAGODA_TYPE->{
-                            editPagoda(it as PagodaVO)
+                            editPagoda(it.toPagodaVO())
                         }
                         VIEW_TYPE->{
-                            editView(it as ViewVO)
+                            editView(it.toViewVO())
                         }
                         ANCIENT_TYPE->{
-                            editAncient(it as AncientVO)
+                            editAncient(it.toAncientVO())
                         }
                     }
                 }

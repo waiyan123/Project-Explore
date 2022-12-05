@@ -1,5 +1,6 @@
 package com.itachi.explore.framework
 
+import android.util.Log
 import com.itachi.core.data.db.AncientRoomDataSource
 import com.itachi.core.domain.AncientVO
 import com.itachi.explore.framework.mappers.AncientMapper
@@ -19,25 +20,29 @@ class AncientRoomDataSourceImpl(
 ) : AncientRoomDataSource {
 
     override suspend fun addAncient(ancientVO: AncientVO) {
+        Log.d("test---","add ancient to room")
         database.ancientDao().addAncient(ancientMapper.voToEntity(ancientVO))
     }
 
     override suspend fun addAllAncients(ancientList: List<AncientVO>) {
+        Log.d("test---","add all ancient to room")
         database.ancientDao().insertAncientList(ancientMapper.voListToEntityList(ancientList))
     }
 
     override suspend fun deleteAncient(ancientVO: AncientVO) {
+        Log.d("test---","delete ancient from room")
         database.ancientDao().deleteAncientById(ancientVO.item_id)
     }
 
     override suspend fun deleteAllAncients() {
+        Log.d("test---","delete all ancients from room")
         database.ancientDao().deleteAncientList()
     }
 
     override fun getAncientById(id: String): Flow<AncientVO> = flow {
         database.ancientDao().getAncientById(id)
             .collect {
-                ancientMapper.entityToVO(it)
+                emit(ancientMapper.entityToVO(it))
             }
     }
 

@@ -14,7 +14,7 @@ class PhotoRepositoryImpl(
         filePathList : List<String>
     ): Flow<Resource<List<PhotoVO>>> = photoFirebaseDataSource.uploadPhotos(filePathList)
 
-    override suspend fun deletePhotos(photoList: List<PhotoVO>,itemId : String) = photoFirebaseDataSource.deletePhotos(photoList,itemId)
+    override fun deletePhotos(photoList: List<PhotoVO>,itemId : String) = photoFirebaseDataSource.deletePhotos(photoList,itemId)
     override suspend fun uploadPhotoUrl(uploadedPhotoVO: UploadedPhotoVO) {
         photoFirebaseDataSource.uploadPhotoUrl(uploadedPhotoVO)
     }

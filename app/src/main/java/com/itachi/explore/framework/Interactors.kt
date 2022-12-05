@@ -18,7 +18,7 @@ data class Interactors(
     val deleteAllViewsUseCase: DeleteAllViewsUseCase,
     val getUser: GetUser,
     val getAncientByIdUseCase: GetAncientByIdUseCase,
-    val getPagodaUseCase: GetPagodaUseCase,
+    val getPagodaUseCase: GetPagodaByIdUseCase,
     val getViewByIdUseCase: GetViewByIdUseCase,
     val getAllAncientUseCase: GetAllAncientUseCase,
     val getAllPagodasUseCase: GetAllPagodasUseCase,

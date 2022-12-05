@@ -122,7 +122,7 @@ class MyApplication : Application() {
                 DeleteAllViewsUseCase(viewRepository),
                 GetUser(userRepositoryImpl),
                 GetAncientByIdUseCase(ancientRepository),
-                GetPagodaUseCase(pagodaRepositoryImpl),
+                GetPagodaByIdUseCase(pagodaRepositoryImpl),
                 GetViewByIdUseCase(viewRepository),
                 GetAllAncientUseCase(ancientRepository),
                 GetAllPagodasUseCase(pagodaRepositoryImpl),

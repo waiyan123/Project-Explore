@@ -3,30 +3,36 @@ package com.itachi.explore.mvvm.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.itachi.core.domain.ItemVO
-import com.itachi.core.domain.PagodaVO
 import com.itachi.core.common.Resource
-import com.itachi.core.interactors.DeletePagodaUseCase
-import com.itachi.core.interactors.GetLanguageUseCase
-import com.itachi.core.interactors.GetPagodaUseCase
-import com.itachi.core.interactors.GetUser
+import com.itachi.core.domain.*
+import com.itachi.core.interactors.*
 import com.itachi.explore.utils.ANCIENT_TYPE
 import com.itachi.explore.utils.PAGODA_TYPE
 import com.itachi.explore.utils.VIEW_TYPE
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@OptIn(FlowPreview::class)
 @HiltViewModel
 class DetailsViewModel @Inject constructor(
-    private val getPagodaUseCase : GetPagodaUseCase,
+    private val getPagodaByIdUseCase : GetPagodaByIdUseCase,
+    private val getViewByIdUseCase: GetViewByIdUseCase,
+    private val getAncientByIdUseCase: GetAncientByIdUseCase,
     private val getLanguageUseCase: GetLanguageUseCase,
     private val getUser: GetUser,
-    private val deletePagodaUseCase: DeletePagodaUseCase
+    private val deletePagodaUseCase: DeletePagodaUseCase,
+    private val deleteViewUseCase: DeleteViewUseCase,
+    private val deleteAncientUseCase: DeleteAncientUseCase,
+    private val deletePhotoUseCase: DeletePhotoUseCase
 ) : ViewModel(){
 
     val mItemVO = MutableLiveData<ItemVO>()
+    lateinit var itemVO : ItemVO
+
     val isUploader = MutableLiveData<Boolean>()
     val successMsg = MutableLiveData<String>()
     val errorMsg = MutableLiveData<String>()
@@ -42,11 +48,10 @@ class DetailsViewModel @Inject constructor(
     }
 
     fun refreshDetails() {
-        mItemVO.observeForever {itemVO->
             when(itemVO.item_type){
                 PAGODA_TYPE -> {
                     viewModelScope.launch {
-                        getPagodaUseCase(itemVO.item_id).collect { resource->
+                        getPagodaByIdUseCase(itemVO.item_id).collect { resource->
                             when(resource) {
                                 is Resource.Success -> {
                                     resource.data?.let { pagodaVO->
@@ -64,19 +69,51 @@ class DetailsViewModel @Inject constructor(
                     }
                 }
                 VIEW_TYPE -> {
+                    viewModelScope.launch {
+                        getViewByIdUseCase(itemVO.item_id).collect { resource->
+                            when(resource) {
+                                is Resource.Success -> {
+                                    resource.data?.let { viewVO->
+                                        mItemVO.postValue(viewVO)
+                                    }
+                                }
+                                is Resource.Error -> {
 
+                                }
+                                is Resource.Loading -> {
+
+                                }
+                            }
+                        }
+                    }
                 }
                 ANCIENT_TYPE -> {
+                    viewModelScope.launch {
+                        getAncientByIdUseCase(itemVO.item_id).collect { resource->
+                            when(resource) {
+                                is Resource.Success -> {
+                                    resource.data?.let { ancientVO->
+                                        mItemVO.postValue(ancientVO)
+                                    }
+                                }
+                                is Resource.Error -> {
 
+                                }
+                                is Resource.Loading -> {
+
+                                }
+                            }
+                        }
+                    }
                 }
 
             }
-        }
     }
 
 
-    fun setupItemVO(itemVO: ItemVO) {
-        mItemVO.postValue(itemVO)
+    fun setupItemVO(vo: ItemVO) {
+        mItemVO.postValue(vo)
+        itemVO = vo
         viewModelScope.launch {
             getUser().collect {resource->
                 when(resource) {
@@ -98,35 +135,80 @@ class DetailsViewModel @Inject constructor(
         }
     }
     fun deleteItem() {
-        mItemVO.observeForever { itemVO->
             when(itemVO.item_type) {
                 PAGODA_TYPE->{
                     viewModelScope.launch {
-                        deletePagodaUseCase(itemVO as PagodaVO).collect { resource->
-                            when(resource) {
-                                is Resource.Success -> {
-                                    resource.data?.let {strSuccess->
-                                        successMsg.postValue(strSuccess)
+                        deletePhotoUseCase(itemVO.photos,itemVO.item_id)
+                            .flatMapConcat {
+                                deletePagodaUseCase(itemVO.toPagodaVO())
+                            }
+                            .collect { resource->
+                                when(resource) {
+                                    is Resource.Success -> {
+                                        resource.data?.let {strSuccess->
+                                            successMsg.postValue(strSuccess)
+                                        }
+                                    }
+                                    is Resource.Error -> {
+                                        errorMsg.postValue(resource.message)
+                                    }
+                                    is Resource.Loading -> {
+
                                     }
                                 }
-                                is Resource.Error -> {
-                                    errorMsg.postValue(resource.message)
-                                }
-                                is Resource.Loading -> {
-
-                                }
                             }
-                        }
+
+
                     }
                 }
                 VIEW_TYPE->{
+                    viewModelScope.launch {
+                        deletePhotoUseCase(itemVO.photos,itemVO.item_id)
+                            .flatMapConcat {
+                                deleteViewUseCase(itemVO.toViewVO())
+                            }
+                            .collect { resource->
+                                when(resource) {
+                                    is Resource.Success -> {
+                                        resource.data?.let {strSuccess->
+                                            successMsg.postValue(strSuccess)
+                                        }
+                                    }
+                                    is Resource.Error -> {
+                                        errorMsg.postValue(resource.message)
+                                    }
+                                    is Resource.Loading -> {
 
+                                    }
+                                }
+                            }
+
+
+                    }
                 }
                 ANCIENT_TYPE->{
+                    viewModelScope.launch {
+                        deletePhotoUseCase(itemVO.photos,itemVO.item_id)
+                            .flatMapConcat {
+                                deleteAncientUseCase(itemVO.toAncientVO())
+                            }
+                            .collect { resource->
+                                when(resource) {
+                                    is Resource.Success -> {
+                                        resource.data?.let {strSuccess->
+                                            successMsg.postValue(strSuccess)
+                                        }
+                                    }
+                                    is Resource.Error -> {
+                                        errorMsg.postValue(resource.message)
+                                    }
+                                    is Resource.Loading -> {
 
+                                    }
+                                }
+                            }
+                    }
                 }
             }
-        }
     }
-
 }

@@ -19,7 +19,9 @@ import com.sangcomz.fishbun.MimeType
 import com.sangcomz.fishbun.adapter.image.impl.GlideAdapter
 import com.sangcomz.fishbun.define.Define
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.launch
 import me.myatminsoe.mdetect.MDetect
 import me.myatminsoe.mdetect.Rabbit
@@ -27,6 +29,7 @@ import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 
+@OptIn(FlowPreview::class)
 @HiltViewModel
 class FormViewModel @Inject constructor(
     private val getUser: GetUser,
@@ -96,9 +99,6 @@ class FormViewModel @Inject constructor(
 
         val uri = itemVO.photos.map {
             Uri.parse(it.url)
-        }
-        uri.forEach {
-            mPickupImages.add(it.toString())
         }
         images.postValue(ArrayList(uri))
         formType = "Update"
@@ -205,8 +205,10 @@ class FormViewModel @Inject constructor(
                 val pagodaVO = mItemVO.toPagodaVO()
                 viewModelScope.launch {
                     if (mPickupImages.size > 0) {
-                        deletePhotoUseCase(mItemVO.photos, mItemVO.item_id)
-                        uploadPhotosUseCase(mPickupImages)
+                        deletePhotoUseCase(pagodaVO.photos, pagodaVO.item_id)
+                            .flatMapConcat {
+                                uploadPhotosUseCase(mPickupImages)
+                            }
                             .collect {resource->
                                 resource.data?.let { photoList ->
                                     photoList.forEach {
@@ -214,7 +216,7 @@ class FormViewModel @Inject constructor(
                                             pagodaVO.item_type,it.geo_points)
                                         uploadPhotoUrlUseCase(uploadedPhotoVO)
                                     }
-                                    mItemVO.photos = photoList
+                                    pagodaVO.photos = photoList
                                     updatePagoda(pagodaVO)
                                 }
                             }
@@ -227,8 +229,10 @@ class FormViewModel @Inject constructor(
                 val viewVO = mItemVO.toViewVO()
                 viewModelScope.launch {
                     if (mPickupImages.size > 0) {
-                        deletePhotoUseCase(mItemVO.photos, mItemVO.item_id)
-                        uploadPhotosUseCase(mPickupImages)
+                        deletePhotoUseCase(viewVO.photos, viewVO.item_id)
+                            .flatMapConcat {
+                                uploadPhotosUseCase(mPickupImages)
+                            }
                             .collect {resource->
                                 resource.data?.let { photoList ->
                                     photoList.forEach {
@@ -250,8 +254,10 @@ class FormViewModel @Inject constructor(
                 val ancientVO = mItemVO.toAncientVO()
                 viewModelScope.launch {
                     if (mPickupImages.size > 0) {
-                        deletePhotoUseCase(mItemVO.photos, mItemVO.item_id)
-                        uploadPhotosUseCase(mPickupImages)
+                        deletePhotoUseCase(ancientVO.photos, ancientVO.item_id)
+                            .flatMapConcat {
+                                uploadPhotosUseCase(mPickupImages)
+                            }
                             .collect {resource->
                                 resource.data?.let { photoList ->
                                     photoList.forEach {
@@ -259,7 +265,7 @@ class FormViewModel @Inject constructor(
                                             ancientVO.item_type,it.geo_points)
                                         uploadPhotoUrlUseCase(uploadedPhotoVO)
                                     }
-                                    mItemVO.photos = photoList
+                                    ancientVO.photos = photoList
                                     updateAncient(ancientVO)
                                 }
                             }
@@ -364,7 +370,8 @@ class FormViewModel @Inject constructor(
         if (mPickupImages.size > 0) {
             pickupImageError.postValue(false)
             viewModelScope.launch {
-                uploadPhotosUseCase(mPickupImages).collect {resource->
+                uploadPhotosUseCase(mPickupImages)
+                    .collect {resource->
                     resource.data?.let { photoList ->
                         photoList.forEach {
                             val uploadedPhotoVO = UploadedPhotoVO(it.url,mUserVO.user_id,pagodaVO.item_id,
@@ -387,7 +394,6 @@ class FormViewModel @Inject constructor(
                                 }
                             }
                     }
-
                 }
             }
 

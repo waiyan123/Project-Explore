@@ -5,7 +5,6 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.io.Serializable
 
-
 @Entity(tableName = "pagoda_table")
 data class PagodaEntity (
 

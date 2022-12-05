@@ -9,7 +9,7 @@ interface PhotoRepository {
 
     fun uploadPhotos(filePathList : List<String>) : Flow<Resource<List<PhotoVO>>>
 
-    suspend fun deletePhotos(photoList : List<PhotoVO>,itemId : String)
+    fun deletePhotos(photoList : List<PhotoVO>,itemId : String) : Flow<Resource<String>>
 
     suspend fun uploadPhotoUrl(uploadedPhotoVO: UploadedPhotoVO)
 }

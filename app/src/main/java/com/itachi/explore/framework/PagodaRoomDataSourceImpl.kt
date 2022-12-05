@@ -19,10 +19,12 @@ class PagodaRoomDataSourceImpl(
     private val database: MyDatabase by inject()
 
     override suspend fun addPagoda(pagodaVO: PagodaVO) {
+        Log.d("test---","add pagoda to room")
         database.pagodaDao().addPagoda(pagodaMapper.voToEntity(pagodaVO))
     }
 
     override suspend fun deletePagoda(pagodaVO: PagodaVO) {
+        Log.d("test---","delete pagoda from room")
         database.pagodaDao().deletePagodaById(pagodaVO.item_id)
     }
 
@@ -46,10 +48,12 @@ class PagodaRoomDataSourceImpl(
     }
 
     override suspend fun addAllPagodas(pagodaList: List<PagodaVO>) {
+        Log.d("test---","add all pagoda to room")
         database.pagodaDao().insertPagodaList(pagodaMapper.voListToEntityList(pagodaList))
     }
 
     override suspend fun deleteAllPagodas() {
+        Log.d("test---","delete all pagoda from room")
         database.pagodaDao().deletePagodaList()
     }
 

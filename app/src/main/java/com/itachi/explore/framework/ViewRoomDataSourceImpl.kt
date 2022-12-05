@@ -1,5 +1,6 @@
 package com.itachi.explore.framework
 
+import android.util.Log
 import com.itachi.core.data.db.ViewRoomDataSource
 import com.itachi.core.domain.ViewVO
 import com.itachi.explore.framework.mappers.ViewMapper
@@ -16,6 +17,7 @@ class ViewRoomDataSourceImpl (
     ) : ViewRoomDataSource{
 
     override suspend fun addView(viewVO: ViewVO) {
+        Log.d("test---","add view to room")
         database.viewDao().addView(viewMapper.voToEntity(viewVO))
     }
 
@@ -24,10 +26,12 @@ class ViewRoomDataSourceImpl (
     }
 
     override suspend fun deleteView(viewVO: ViewVO) {
+        Log.d("test---","delete view from room")
         database.viewDao().deleteViewById(viewVO.item_id)
     }
 
     override suspend fun deleteAllViews() {
+        Log.d("test---","delete all views from room")
         database.viewDao().deleteViewList()
     }
 

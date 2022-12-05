@@ -5,8 +5,10 @@ import com.itachi.core.data.db.AncientRoomDataSource
 import com.itachi.core.data.network.AncientFirebaseDataSource
 import com.itachi.core.domain.AncientVO
 import com.itachi.core.domain.ItemVO
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
 
+@OptIn(FlowPreview::class)
 class AncientRepositoryImpl(
     private val ancientFirebaseDataSource: AncientFirebaseDataSource,
     private val ancientRoomDataSource: AncientRoomDataSource
@@ -47,8 +49,11 @@ class AncientRepositoryImpl(
             .flatMapConcat {
                 ancientFirebaseDataSource.getAllAncients()
             }
-            .collect {
-                emit(it)
+            .collect {resource->
+                resource.data?.let {
+                    ancientRoomDataSource.addAllAncients(it)
+                }
+                emit(resource)
             }
     }
 
@@ -60,8 +65,12 @@ class AncientRepositoryImpl(
             .flatMapConcat {
                 ancientFirebaseDataSource.getAncientById(ancientId)
             }
-            .collect {
-                emit(it)
+            .collect {resource->
+                resource.data?.let {
+                    ancientRoomDataSource.addAncient(it)
+                    emit(resource)
+                }
+
             }
     }
 

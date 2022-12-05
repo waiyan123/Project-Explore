@@ -39,8 +39,8 @@ object DaggerFormModule {
     @Singleton
     fun providesGetPagoda(
         pagodaRepository: PagodaRepository
-    ) : GetPagodaUseCase{
-        return GetPagodaUseCase(pagodaRepository)
+    ) : GetPagodaByIdUseCase{
+        return GetPagodaByIdUseCase(pagodaRepository)
     }
 
     @Provides

@@ -22,6 +22,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flow
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -79,7 +80,7 @@ class PhotoFirebaseDataSourceImpl(
 
     }
 
-    override suspend fun deletePhotos(photoList: List<PhotoVO>, itemId: String) {
+    override fun deletePhotos(photoList: List<PhotoVO>, itemId: String) : Flow<Resource<String>> = flow{
         photoList.forEach {
             val photoRef = firebaseStorage.getReference(PHOTO_PATH).child(it.id)
             photoRef.delete().addOnCompleteListener {
@@ -96,7 +97,7 @@ class PhotoFirebaseDataSourceImpl(
                     doc.reference.delete()
                 }
             }
-
+        emit(Resource.Success("Delete successful!"))
     }
 
     override suspend fun uploadPhotoUrl(uploadedPhotoVO: UploadedPhotoVO) {
