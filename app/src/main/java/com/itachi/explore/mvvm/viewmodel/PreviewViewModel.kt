@@ -1,6 +1,5 @@
 package com.itachi.explore.mvvm.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -20,7 +19,7 @@ class PreviewViewModel @Inject constructor(
     private val getPagodaByIdUseCase: GetPagodaByIdUseCase,
     private val getViewByIdUseCase: GetViewByIdUseCase,
     private val getAncientByIdUseCase: GetAncientByIdUseCase,
-    private val getUser: GetUser,
+    private val getUserUseCase: GetUserUseCase,
     private val getLanguageUseCase: GetLanguageUseCase
 ) : ViewModel() {
 
@@ -113,7 +112,7 @@ class PreviewViewModel @Inject constructor(
 
     private fun getUploader(id : String) {
         viewModelScope.launch {
-            getUser(id)
+            getUserUseCase(id)
                 .collect { resource->
                     resource.data?.let {
                         uploaderVO.postValue(it)

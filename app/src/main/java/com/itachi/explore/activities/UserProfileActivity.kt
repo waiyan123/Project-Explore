@@ -41,17 +41,7 @@ import kotlinx.android.synthetic.main.dialog_change_user_image.*
 class UserProfileActivity : BaseActivity(), ViewPager.OnPageChangeListener,
     BottomNavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
-    fun displayLoading() {
-        showLoading()
-        val lp = WindowManager.LayoutParams()
-
-        lp.copyFrom(alertDialog!!.window!!.attributes)
-        lp.width = 350
-        lp.height = 300
-        alertDialog!!.window!!.attributes = lp
-    }
-
-    fun showUserBackgroundPic(url: String) {
+    private fun showUserBackgroundPic(url: String) {
         hideLoading()
         Glide.with(applicationContext)
             .load(url)
@@ -59,7 +49,7 @@ class UserProfileActivity : BaseActivity(), ViewPager.OnPageChangeListener,
             .into(img_user_background)
     }
 
-    fun showUserProfilePic(url: String) {
+    private fun showUserProfilePic(url: String) {
         hideLoading()
         Glide.with(applicationContext)
             .load(url)
@@ -67,16 +57,9 @@ class UserProfileActivity : BaseActivity(), ViewPager.OnPageChangeListener,
             .into(img_user_profile)
     }
 
-    fun showUploadSuccessFul(str: String) {
-        hideLoading()
-        showToast(str)
-    }
 
     override fun onClick(p0: View?) {
         when (p0!!.id) {
-            R.id.img_edit_user_profile -> {
-//                mPresenter.onClickedEditButton()
-            }
             R.id.tv_done_user_profile -> {
 //                mPresenter.onClickedDone(this, et_user_name.text.toString())
             }
@@ -130,21 +113,17 @@ class UserProfileActivity : BaseActivity(), ViewPager.OnPageChangeListener,
         }
     }
 
-    fun dismissDialog() {
-        if (alertDialog!!.isShowing) alertDialog!!.dismiss()
-    }
-
     private fun showProfileReadingMode(userVO: UserVO) {
 
-        if (userVO.get_is_uploader == true) {
+        if (userVO.get_is_uploader) {
             img_check_user_profile.visibility = View.VISIBLE
         }
         Glide.with(applicationContext)
-            .load(userVO.background_pic!!.url)
+            .load(userVO.background_pic.url)
             .placeholder(R.drawable.ic_placeholder)
             .into(img_user_background)
         Glide.with(applicationContext)
-            .load(userVO.profile_pic!!.url)
+            .load(userVO.profile_pic.url)
             .placeholder(R.drawable.ic_placeholder)
             .into(img_user_profile)
         tv_user_name.text = userVO.name
@@ -177,10 +156,10 @@ class UserProfileActivity : BaseActivity(), ViewPager.OnPageChangeListener,
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.bot_nav_timeline -> {
-                vp_profile.setCurrentItem(0)
+                vp_profile.currentItem = 0
             }
             R.id.bot_nav_items -> {
-                vp_profile.setCurrentItem(1)
+                vp_profile.currentItem = 1
             }
 
         }
@@ -205,7 +184,9 @@ class UserProfileActivity : BaseActivity(), ViewPager.OnPageChangeListener,
 
         val userVoItem = intent.getSerializableExtra(EXTRA_EVENT_ID_USER_PROFILE) as UserVO?
 
-        mViewModel.getUser(userVoItem).observe(this){
+        mViewModel.getUser(userVoItem)
+
+        mViewModel.userVOLiveData.observe(this){
             showProfileReadingMode(it)
         }
 
@@ -232,6 +213,21 @@ class UserProfileActivity : BaseActivity(), ViewPager.OnPageChangeListener,
         mViewModel.mutableUploadProfileModel.observe(this){
             showPickupImageDialog(it)
         }
+        mViewModel.profilePicLiveData.observe(this) {
+            showUserProfilePic(it.url)
+        }
+        mViewModel.backgroundPicLiveData.observe(this) {
+            showUserBackgroundPic(it.url)
+        }
+        mViewModel.progressLoadingLiveData.observe(this) {
+            if(it) {
+                showLoading()
+            }else hideLoading()
+        }
+        mViewModel.responseMessageLiveData.observe(this) {
+            showToast(it)
+        }
+
 
     }
 
@@ -286,35 +282,37 @@ class UserProfileActivity : BaseActivity(), ViewPager.OnPageChangeListener,
 
         dialogBuilder.setView(view)
         alertDialog = dialogBuilder.create()
-        alertDialog!!.window!!.attributes.windowAnimations = R.style.DialogChosing
-        alertDialog!!.show()
+        alertDialog?.let {dialog->
+            dialog.window!!.attributes.windowAnimations = R.style.DialogChosing
+            dialog.show()
 
-        alertDialog!!.btn_change.text = uploadProfileModel.clickAction
-        alertDialog!!.tv_dialog_user_image_title.text = uploadProfileModel.title
-        alertDialog!!.tv_dialog_user_image_title.visibility = View.VISIBLE
+            dialog.btn_change.text = uploadProfileModel.clickAction
+            dialog.tv_dialog_user_image_title.text = uploadProfileModel.title
+            dialog.tv_dialog_user_image_title.visibility = View.VISIBLE
 
-        Glide.with(applicationContext)
-            .load(uploadProfileModel.imagePath)
-            .placeholder(R.drawable.ic_placeholder)
-            .into(alertDialog!!.img_dialog_user_profile)
+            Glide.with(applicationContext)
+                .load(uploadProfileModel.imagePath)
+                .placeholder(R.drawable.ic_placeholder)
+                .into(dialog.img_dialog_user_profile)
 
-        alertDialog!!.btn_change.setOnClickListener {
-            if (uploadProfileModel.clickAction == "Pick up") {
-                alertDialog!!.dismiss()
-                if(uploadProfileModel.title == "Profile") {
-                    startActivityForResult(Intent(Intent.ACTION_PICK), REQUEST_PROFILE_PIC)
+            dialog.btn_change.setOnClickListener {
+                if (uploadProfileModel.clickAction == "Pick up") {
+                    dialog.dismiss()
+                    if(uploadProfileModel.title == "Profile") {
+                        startActivityForResult(Intent(Intent.ACTION_PICK), REQUEST_PROFILE_PIC)
+                    }
+                    else {
+                        startActivityForResult(Intent(Intent.ACTION_PICK), REQUEST_BACKGROUND_PIC)
+                    }
+
+                } else if (uploadProfileModel.clickAction == "Change") {
+                    dialog.dismiss()
+                    mViewModel.onClickedChangeButton(uploadProfileModel)
                 }
-                else {
-                    startActivityForResult(Intent(Intent.ACTION_PICK), REQUEST_BACKGROUND_PIC)
-                }
-
-            } else if (uploadProfileModel.clickAction == "Change") {
-                alertDialog!!.dismiss()
-                mViewModel.onClickedChangeButton(uploadProfileModel)
             }
-        }
-        alertDialog!!.tv_cancel.setOnClickListener {
-            alertDialog?.dismiss()
+            dialog.tv_cancel.setOnClickListener {
+                alertDialog?.dismiss()
+            }
         }
     }
 

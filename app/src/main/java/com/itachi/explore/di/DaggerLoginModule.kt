@@ -1,7 +1,8 @@
 package com.itachi.explore.di
 
 import com.itachi.core.data.UserRepository
-import com.itachi.core.interactors.AddUser
+import com.itachi.core.interactors.AddUserUseCase
+import com.itachi.core.interactors.UpdateUserUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -12,13 +13,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object DaggerLoginModule {
 
-    @Provides
-    @Singleton
-    fun providesAddUser(
-        userRepository : UserRepository
-    ) : AddUser {
-        return AddUser(userRepository)
-    }
 
 //    @Provides
 //    @Singleton

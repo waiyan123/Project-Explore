@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val getUser : GetUser,
+    private val getUserUseCase : GetUserUseCase,
     private val signOut : SignOut,
     private val getLanguageUseCase: GetLanguageUseCase,
     private val setLanguageUseCase: SetLanguageUseCase,
@@ -29,7 +29,7 @@ class MainViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            getUser().collect{resource->
+            getUserUseCase().collect{ resource->
                 when(resource) {
                     is Resource.Success -> {
                         resource.data?.let {

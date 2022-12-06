@@ -13,7 +13,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.itachi.core.domain.PhotoVO
 import com.itachi.core.domain.UserVO
-import com.itachi.core.interactors.AddUser
+import com.itachi.core.interactors.AddUserUseCase
 import com.itachi.core.interactors.GetLanguageUseCase
 import com.itachi.explore.R
 import com.itachi.explore.activities.LoginActivity
@@ -26,7 +26,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val addUser : AddUser,
+    private val addUserUseCase : AddUserUseCase,
     private val auth : FirebaseAuth,
     private val getLanguageUseCase : GetLanguageUseCase
 ) : ViewModel(), KoinComponent {
@@ -87,7 +87,7 @@ class LoginViewModel @Inject constructor(
             .addOnCompleteListener {
                 val userId = auth.currentUser!!.uid
                 viewModelScope.launch {
-                    addUser(
+                    addUserUseCase(
                         UserVO(
                             "",
                             "" + userId,
@@ -118,60 +118,9 @@ class LoginViewModel @Inject constructor(
                             is Resource.Loading -> {
                                 displayLoading.postValue(true)
                             }
-                            else -> {}
                         }
                     }
                 }
-
-//                firestoreRef.collection(USER)
-//                    .whereEqualTo(USER_ID,userId)
-//                    .get()
-//                    .addOnSuccessListener { snapshot->
-//                        val userVO = snapshot.documents[0].toObject(UserVO::class.java)!!
-//                        viewModelScope.launch {
-//                            addUser(userVO).collect { resource->
-//                                when(resource) {
-//                                    is Resource.Success -> {
-//                                        loginSuccess.postValue(true)
-//                                    }
-//                                    is Resource.Error -> {
-//                                        resource.message?.let {
-//                                            errorMessage.postValue(it)
-//                                        }
-//                                    }
-//                                    is Resource.Loading -> {
-//
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
-//                    .addOnFailureListener{
-//                        viewModelScope.launch {
-//                            addUser(UserVO("",""+userId,"",
-//                                "",account.email!!,account.displayName!!, PhotoVO("",account.photoUrl.toString(),""),
-//                                PhotoVO("","",""),"",false))
-//                                .collect {resource->
-//                                    when(resource) {
-//                                        is Resource.Success -> {
-//                                            loginSuccess.postValue(true)
-//                                        }
-//                                        is Resource.Error -> {
-//                                            resource.message?.let {
-//                                                errorMessage.postValue(it)
-//                                            }
-//                                        }
-//                                        is Resource.Loading -> {
-//
-//                                        }
-//                                    }
-//                                }
-//                        }
-//                    }
-//            }
-//            .addOnFailureListener { exception->
-//                errorMessage.postValue(exception.localizedMessage)
-//            }
             }
     }
 }

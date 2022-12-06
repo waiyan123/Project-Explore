@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -32,7 +31,7 @@ import kotlin.collections.ArrayList
 @OptIn(FlowPreview::class)
 @HiltViewModel
 class FormViewModel @Inject constructor(
-    private val getUser: GetUser,
+    private val getUserUseCase: GetUserUseCase,
     private val getLanguageUseCase: GetLanguageUseCase,
     private val uploadPhotosUseCase: UploadPhotosUseCase,
     private val uploadPhotoUrlUseCase: UploadPhotoUrlUseCase,
@@ -63,7 +62,7 @@ class FormViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            getUser().collect { resource ->
+            getUserUseCase().collect { resource ->
                 when (resource) {
                     is Resource.Success -> {
                         resource.data?.let {

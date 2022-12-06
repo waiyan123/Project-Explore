@@ -107,20 +107,20 @@ class MyApplication : Application() {
 
         MyViewModelProviderFactory.inject(
             Interactors(
-                AddUser(userRepositoryImpl),
+                AddUserUseCase(userRepositoryImpl),
                 AddAncientUseCase(ancientRepository),
                 AddPagodaUseCase(pagodaRepositoryImpl),
                 AddViewUseCase(viewRepository),
                 AddAllAncientsUseCase(ancientRepository),
                 AddAllViewsUseCase(viewRepository),
-                DeleteUser(userRepositoryImpl),
+                DeleteUserUseCase(userRepositoryImpl),
                 DeleteAncientUseCase(ancientRepository),
                 DeletePagodaUseCase(pagodaRepositoryImpl),
                 DeleteViewUseCase(viewRepository),
                 DeleteAllAncientsUseCase(ancientRepository),
                 DeleteAllPagodasUseCase(pagodaRepositoryImpl),
                 DeleteAllViewsUseCase(viewRepository),
-                GetUser(userRepositoryImpl),
+                GetUserUseCase(userRepositoryImpl),
                 GetAncientByIdUseCase(ancientRepository),
                 GetPagodaByIdUseCase(pagodaRepositoryImpl),
                 GetViewByIdUseCase(viewRepository),
@@ -128,7 +128,7 @@ class MyApplication : Application() {
                 GetAllPagodasUseCase(pagodaRepositoryImpl),
                 GetAllViewsUseCase(viewRepository),
                 GetAllViewsPhotoUseCase(viewRepository),
-                UpdateUser(userRepositoryImpl),
+                UpdateUserUseCase(userRepositoryImpl),
                 UpdateAncientUseCase(ancientRepository),
                 UpdatePagodaUseCase(pagodaRepositoryImpl),
                 UpdateViewUseCase(viewRepository)

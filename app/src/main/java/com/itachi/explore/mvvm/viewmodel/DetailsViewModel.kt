@@ -23,7 +23,7 @@ class DetailsViewModel @Inject constructor(
     private val getViewByIdUseCase: GetViewByIdUseCase,
     private val getAncientByIdUseCase: GetAncientByIdUseCase,
     private val getLanguageUseCase: GetLanguageUseCase,
-    private val getUser: GetUser,
+    private val getUserUseCase: GetUserUseCase,
     private val deletePagodaUseCase: DeletePagodaUseCase,
     private val deleteViewUseCase: DeleteViewUseCase,
     private val deleteAncientUseCase: DeleteAncientUseCase,
@@ -115,7 +115,7 @@ class DetailsViewModel @Inject constructor(
         mItemVO.postValue(vo)
         itemVO = vo
         viewModelScope.launch {
-            getUser().collect {resource->
+            getUserUseCase().collect { resource->
                 when(resource) {
                     is Resource.Success -> {
                         resource.data?.let {

@@ -38,10 +38,26 @@ object DaggerMainModule {
 
     @Provides
     @Singleton
+    fun providesAddUser(
+        userRepository : UserRepository
+    ) : AddUserUseCase {
+        return AddUserUseCase(userRepository)
+    }
+
+    @Provides
+    @Singleton
     fun providesGetUser(
         userRepository: UserRepository
-    ) : GetUser{
-        return GetUser(userRepository)
+    ) : GetUserUseCase{
+        return GetUserUseCase(userRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun providesUpdateUserUseCase(
+        userRepository: UserRepository
+    ) : UpdateUserUseCase {
+        return UpdateUserUseCase(userRepository)
     }
 
     @Provides

@@ -38,7 +38,7 @@ class UserRoomDataSourceImpl(
     }
 
     override suspend fun updateUser(userVO: UserVO) {
-
+        database.userDao().insertUser(userMapper.voToEntity(userVO))
     }
 
     private suspend fun getAllUsers() : List<UserVO> {
