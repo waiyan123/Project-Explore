@@ -95,8 +95,8 @@ class LoginViewModel @Inject constructor(
                             "",
                             account.email!!,
                             account.displayName!!,
-                            PhotoVO("", account.photoUrl.toString(), ""),
-                            PhotoVO("", "", ""),
+                            PhotoVO("0", account.photoUrl.toString(), ""),
+                            PhotoVO("0", "", ""),
                             "",
                             false
                         )

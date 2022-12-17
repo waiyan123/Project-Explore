@@ -99,6 +99,7 @@ class UserFirebaseDataSourceImpl(
             .addOnFailureListener {
                 trySend(Resource.Error(it.localizedMessage ?: "Unexpected error"))
             }
+        awaitClose { channel.close() }
     }
 
     override fun signOut(): Flow<Resource<String>> = flow {

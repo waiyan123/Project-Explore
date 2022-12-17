@@ -2,6 +2,7 @@ package com.itachi.explore.mvvm.viewmodel
 
 import android.app.Activity
 import android.content.Intent
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -81,6 +82,7 @@ class UserProfileViewModel @Inject constructor(
                         is Resource.Success -> {
                             resource.data?.let {
                                 userVOLiveData.postValue(it)
+                                responseMessageLiveData.postValue("Successfully updated!")
                             }
                         }
                         is Resource.Error -> {
@@ -167,18 +169,18 @@ class UserProfileViewModel @Inject constructor(
                                     mUserVO.background_pic = it[0]
                                     backgroundPicLiveData.postValue(it[0])
                                 }
-
+                                progressLoadingLiveData.postValue(false)
                             }
                             responseMessageLiveData.postValue("Successfully uploaded!")
                         }
                         is Resource.Error -> {
+                            progressLoadingLiveData.postValue(false)
                             responseMessageLiveData.postValue(resource.message ?: "Error occur in uploading.")
                         }
                         is Resource.Loading -> {
 
                         }
                     }
-                    progressLoadingLiveData.postValue(false)
                 }
         }
     }

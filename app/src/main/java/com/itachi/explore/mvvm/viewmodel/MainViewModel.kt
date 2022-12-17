@@ -27,7 +27,7 @@ class MainViewModel @Inject constructor(
     val userLogin = MutableLiveData<Boolean>()
     val isUploader = MutableLiveData<Boolean>()
 
-    init {
+    fun setUp() {
         viewModelScope.launch {
             getUserUseCase().collect{ resource->
                 when(resource) {
@@ -38,11 +38,11 @@ class MainViewModel @Inject constructor(
                     }
                     is Resource.Error -> {
                         resource.message?.let {
-                            errorMsg.postValue(it)
+
                         }
                     }
                     is Resource.Loading -> {
-                        errorMsg.postValue("Loading")
+
                     }
                     else -> {
 

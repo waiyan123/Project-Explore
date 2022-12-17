@@ -78,14 +78,14 @@
 
         <activity android:name=".activities.YoutubePlayerActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"
+            android:screenOrientation="fullSensor"
             >
         </activity>
 
         <activity android:name=".activities.IntroActivity"/>
 
         <activity android:name=".activities.UserProfileActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="fullSensor"/>
 
     </application>
 

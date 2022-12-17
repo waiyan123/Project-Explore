@@ -6,15 +6,13 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
-import android.graphics.drawable.Drawable
-import android.net.Uri
 import android.os.Bundle
-import android.util.Log
+import android.provider.MediaStore
 import android.view.MenuItem
 import android.view.View
-import android.view.WindowManager
-import androidx.activity.result.contract.ActivityResultContract
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.activity.viewModels
 import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
@@ -25,17 +23,16 @@ import com.itachi.explore.adapters.pager.UserProfilePagerAdapter
 import com.itachi.explore.fragments.UserItemsFragment
 import com.itachi.explore.fragments.UserTimelineFragment
 import com.itachi.explore.mvvm.model.UserProfileUploadDialogModel
+import com.itachi.explore.mvvm.viewmodel.UserProfileViewModel
 import com.itachi.explore.utils.REQUEST_BACKGROUND_PIC
 import com.itachi.explore.utils.REQUEST_PROFILE_PIC
-import com.itachi.explore.mvvm.viewmodel.UserProfileViewModel
-import com.itachi.explore.utils.REQUEST_EXTERNAL_STORAGE
 import com.sangcomz.fishbun.FishBun
 import com.sangcomz.fishbun.MimeType
 import com.sangcomz.fishbun.adapter.image.impl.GlideAdapter
-import com.sangcomz.fishbun.define.Define
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_user_profile.*
 import kotlinx.android.synthetic.main.dialog_change_user_image.*
+
 
 @AndroidEntryPoint
 class UserProfileActivity : BaseActivity(), ViewPager.OnPageChangeListener,
@@ -175,6 +172,9 @@ class UserProfileActivity : BaseActivity(), ViewPager.OnPageChangeListener,
     }
 
     private lateinit var pagerAdapter: UserProfilePagerAdapter
+    private var mRequestCode = 0
+    private val getIntent = chooseImage()
+
 
     private val mViewModel: UserProfileViewModel by viewModels()
 
@@ -227,13 +227,8 @@ class UserProfileActivity : BaseActivity(), ViewPager.OnPageChangeListener,
         mViewModel.responseMessageLiveData.observe(this) {
             showToast(it)
         }
-
-
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-    }
 
     private fun setUpViewPager() {
         pagerAdapter = UserProfilePagerAdapter(supportFragmentManager)
@@ -249,10 +244,10 @@ class UserProfileActivity : BaseActivity(), ViewPager.OnPageChangeListener,
     }
 
     //incoming with pickup image urls
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        mViewModel.onActivityResult(requestCode,resultCode,data)
-    }
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+//        mViewModel.onActivityResult(requestCode,resultCode,data)
+//    }
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -299,10 +294,12 @@ class UserProfileActivity : BaseActivity(), ViewPager.OnPageChangeListener,
                 if (uploadProfileModel.clickAction == "Pick up") {
                     dialog.dismiss()
                     if(uploadProfileModel.title == "Profile") {
-                        startActivityForResult(Intent(Intent.ACTION_PICK), REQUEST_PROFILE_PIC)
+                        mRequestCode = REQUEST_PROFILE_PIC
+                        getIntent.launch(Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI))
                     }
                     else {
-                        startActivityForResult(Intent(Intent.ACTION_PICK), REQUEST_BACKGROUND_PIC)
+                        mRequestCode = REQUEST_BACKGROUND_PIC
+                        getIntent.launch(Intent(Intent.ACTION_PICK,MediaStore.Images.Media.INTERNAL_CONTENT_URI))
                     }
 
                 } else if (uploadProfileModel.clickAction == "Change") {
@@ -316,4 +313,11 @@ class UserProfileActivity : BaseActivity(), ViewPager.OnPageChangeListener,
         }
     }
 
+    private fun chooseImage()  = registerForActivityResult(
+            StartActivityForResult(),
+            ActivityResultCallback { result ->
+                result.data?.let {
+                    mViewModel.onActivityResult(mRequestCode,result.resultCode,it)
+                }
+            })
 }

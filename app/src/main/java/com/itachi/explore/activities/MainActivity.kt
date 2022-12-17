@@ -120,6 +120,11 @@ class MainActivity : BaseActivity(), View.OnClickListener{
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        mViewModel.setUp()
+    }
+
     private fun setUpClickListener() {
         card_pagoda.setOnClickListener(this)
         card_view.setOnClickListener(this)
