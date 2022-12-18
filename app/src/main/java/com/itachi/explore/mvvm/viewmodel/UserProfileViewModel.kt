@@ -2,7 +2,6 @@ package com.itachi.explore.mvvm.viewmodel
 
 import android.app.Activity
 import android.content.Intent
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -42,6 +41,7 @@ class UserProfileViewModel @Inject constructor(
 
     val editable = MutableLiveData<Boolean>()
     val onEdit = MutableLiveData<Boolean>()
+    var onEditStatus = false
 
     init {
 
@@ -71,6 +71,7 @@ class UserProfileViewModel @Inject constructor(
 
     fun onClickedEditButton() {
         onEdit.postValue(true)
+        onEditStatus = true
     }
 
     fun onClickedDoneButton() {
@@ -94,6 +95,7 @@ class UserProfileViewModel @Inject constructor(
                         is Resource.Loading -> TODO()
                     }
                     onEdit.postValue(false)
+                    onEditStatus = false
                     progressLoadingLiveData.postValue(false)
                 }
         }

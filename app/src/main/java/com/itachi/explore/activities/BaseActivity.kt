@@ -95,6 +95,17 @@ abstract class BaseActivity : AppCompatActivity(){
         alertDialog!!.setCancelable(false)
     }
 
+    fun showSavableDialog() {
+        val dialogBuilder = AlertDialog.Builder(this)
+        val view = layoutInflater.inflate(R.layout.dialog_saveable,null)
+        dialogBuilder.setView(view)
+        alertDialog = dialogBuilder.create()
+        alertDialog?.let {
+            it.window?.attributes?.windowAnimations = R.style.DialogChosing
+            it.show()
+        }
+    }
+
     fun showForceUpdateDialog() {
 
         if(!alertDialog!!.isShowing){

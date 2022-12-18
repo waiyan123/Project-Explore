@@ -1,16 +1,13 @@
 package com.itachi.explore.activities
 
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.MenuItem
 import android.view.View
-import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.activity.viewModels
@@ -26,12 +23,10 @@ import com.itachi.explore.mvvm.model.UserProfileUploadDialogModel
 import com.itachi.explore.mvvm.viewmodel.UserProfileViewModel
 import com.itachi.explore.utils.REQUEST_BACKGROUND_PIC
 import com.itachi.explore.utils.REQUEST_PROFILE_PIC
-import com.sangcomz.fishbun.FishBun
-import com.sangcomz.fishbun.MimeType
-import com.sangcomz.fishbun.adapter.image.impl.GlideAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_user_profile.*
 import kotlinx.android.synthetic.main.dialog_change_user_image.*
+import kotlinx.android.synthetic.main.dialog_saveable.*
 
 
 @AndroidEntryPoint
@@ -74,7 +69,7 @@ class UserProfileActivity : BaseActivity(), ViewPager.OnPageChangeListener,
             }
 
             R.id.img_back -> {
-                finish()
+                onBackPressed()
             }
         }
     }
@@ -311,6 +306,21 @@ class UserProfileActivity : BaseActivity(), ViewPager.OnPageChangeListener,
                 alertDialog?.dismiss()
             }
         }
+    }
+
+    override fun onBackPressed() {
+        if(mViewModel.onEditStatus) {
+            showSavableDialog()
+            alertDialog?.let {dialog ->
+                dialog.btn_save.setOnClickListener {
+                    dialog.dismiss()
+                    mViewModel.onClickedDoneButton()
+                }
+            }
+        } else {
+            super.onBackPressed()
+        }
+
     }
 
     private fun chooseImage()  = registerForActivityResult(
