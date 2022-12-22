@@ -11,27 +11,20 @@ import kotlinx.coroutines.flow.*
 import org.koin.core.KoinComponent
 
 class UserRoomDataSourceImpl(
-    private val auth : FirebaseAuth,
+    private val auth: FirebaseAuth,
     private val userMapper: UserMapper,
     private val database: MyDatabase
-) : UserRoomDataSource{
+) : UserRoomDataSource {
 
     override suspend fun addUser(userVO: UserVO) {
-
         database.userDao().insertUser(userMapper.voToEntity(userVO))
     }
 
-    override fun getUser(userId : String?): Flow<Resource<UserVO>> = flow {
-
+    override fun getUser(userId: String?): Flow<UserVO> =
         database.userDao().getUser(userId ?: auth.currentUser!!.uid)
-            .collect {userEntity->
-                userEntity?.let {
-
-                    emit(Resource.Success(userMapper.entityToVO(userEntity)))
-                }
+            .map {
+                userMapper.entityToVO(it)
             }
-
-    }
 
     override suspend fun deleteUser() {
         database.userDao().deleteUser()
@@ -41,10 +34,7 @@ class UserRoomDataSourceImpl(
         database.userDao().insertUser(userMapper.voToEntity(userVO))
     }
 
-    private suspend fun getAllUsers() : List<UserVO> {
-        val userVoList = database.userDao().getAllUsers().map {
-            userMapper.entityToVO(it)
-        }
-        return userVoList
-    }
+    private suspend fun getAllUsers(): List<UserVO> =
+        database.userDao().getAllUsers()
+            .map { userMapper.entityToVO(it) }
 }

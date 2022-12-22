@@ -1,6 +1,7 @@
 package com.itachi.explore.framework
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.google.firebase.auth.FirebaseAuth
@@ -56,8 +57,9 @@ class PagodaFirebaseDataSourceImpl(
         firestoreRef.collection(PAGODAS)
             .get()
             .addOnSuccessListener {
-                if (it.documents.size != 0) {
+                if (it.documents.isNotEmpty()) {
                     val pagodaList = it.toObjects(PagodaEntity::class.java)
+                    Log.d("test---","get all pagodas from firebase ${pagodaList.size}")
                     trySend(Resource.Success(pagodaMapper.entityListToVOList(pagodaList)))
 
                 } else {
@@ -75,6 +77,7 @@ class PagodaFirebaseDataSourceImpl(
             .addOnSuccessListener {
                 if (it.documents.isNotEmpty()) {
                     it.documents[0].toObject(PagodaEntity::class.java)?.let {pagodaEntity->
+                        Log.d("test---","get pagoda from firebase ${pagodaEntity.title}")
                         trySend(Resource.Success(pagodaMapper.entityToVO(pagodaEntity)))
                     }
                 }
@@ -94,6 +97,7 @@ class PagodaFirebaseDataSourceImpl(
                     val pagodaList = snapShot.toObjects(PagodaEntity::class.java)
                     trySend(Resource.Success(pagodaMapper.entityListToVOList(pagodaList)))
                 }
+                else trySend(Resource.Error("There's no item yet "))
             }
             .addOnFailureListener {
                 trySend(Resource.Error(it.localizedMessage ?: "Unexpected error occur!"))
@@ -103,7 +107,6 @@ class PagodaFirebaseDataSourceImpl(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun deletePagodaById(pagodaId: String) : Flow<Resource<String>> = callbackFlow{
-//        deletePhotos(pagodaVO.photos, pagodaVO.item_id)
 
         firestoreRef.collection(PAGODAS)
             .document(pagodaId)

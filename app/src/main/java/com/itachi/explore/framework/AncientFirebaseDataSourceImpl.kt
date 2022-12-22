@@ -83,6 +83,7 @@ class AncientFirebaseDataSourceImpl(
                         val ancientList = snapShot.toObjects(AncientEntity::class.java)
                         trySend(Resource.Success(ancientMapper.entityListToVOList(ancientList)))
                     }
+                    else trySend(Resource.Error("There's no item yet "))
                 }
                 .addOnFailureListener {
                     trySend(Resource.Error(it.localizedMessage ?: "Unexpected error occur!"))

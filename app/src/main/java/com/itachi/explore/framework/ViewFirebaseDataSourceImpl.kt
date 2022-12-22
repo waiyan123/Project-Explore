@@ -75,9 +75,7 @@ class ViewFirebaseDataSourceImpl(private val viewMapper: ViewMapper,
                     val viewsList = snapShot.toObjects(ViewVO::class.java)
                     trySend(Resource.Success(viewsList))
                 }
-                else {
-                    trySend(Resource.Error("There's no item yet "))
-                }
+                else trySend(Resource.Error("There's no item yet "))
             }
             .addOnFailureListener {
                 trySend(Resource.Error(it.localizedMessage ?: "Unexpected error occur!"))
@@ -95,6 +93,7 @@ class ViewFirebaseDataSourceImpl(private val viewMapper: ViewMapper,
                     val itemList = snapShot.toObjects(ViewVO::class.java)
                     trySend(Resource.Success(itemList))
                 }
+                else trySend(Resource.Error("There's no item yet "))
             }
             .addOnFailureListener {
                 trySend(Resource.Error(it.localizedMessage ?: "Unexpected error occur!"))

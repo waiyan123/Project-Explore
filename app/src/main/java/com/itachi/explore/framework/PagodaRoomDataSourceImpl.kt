@@ -9,55 +9,47 @@ import com.itachi.explore.persistence.MyDatabase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
 class PagodaRoomDataSourceImpl(
-    private val pagodaMapper: PagodaMapper
+    private val pagodaMapper: PagodaMapper,
+    private val database: MyDatabase
 ) : PagodaRoomDataSource, KoinComponent {
 
-    private val database: MyDatabase by inject()
-
     override suspend fun addPagoda(pagodaVO: PagodaVO) {
-        Log.d("test---","add pagoda to room")
+        Log.d("test---", "add pagoda")
         database.pagodaDao().addPagoda(pagodaMapper.voToEntity(pagodaVO))
     }
 
     override suspend fun deletePagoda(pagodaVO: PagodaVO) {
-        Log.d("test---","delete pagoda from room")
         database.pagodaDao().deletePagodaById(pagodaVO.item_id)
     }
 
-    override fun getPagodaById(id: String) : Flow<PagodaVO> = flow{
+    override fun getPagodaById(id: String): Flow<PagodaVO> =
         database.pagodaDao().getPagodaById(id)
-            .collect {
-                emit(pagodaMapper.entityToVO(it))
+            .map {
+                pagodaMapper.entityToVO(it)
             }
 
-    }
-
-    override fun getAllPagodas() : Flow<List<PagodaVO>> = flow {
+    override fun getAllPagodas(): Flow<List<PagodaVO>> =
         database.pagodaDao().getPagodaList()
-            .collect {
-                emit(pagodaMapper.entityListToVOList(it))
+            .map {
+                pagodaMapper.entityListToVOList(it)
             }
-    }
 
     override suspend fun updatePagoda(pagodaVO: PagodaVO) {
         database.pagodaDao().addPagoda(pagodaMapper.voToEntity(pagodaVO))
     }
 
     override suspend fun addAllPagodas(pagodaList: List<PagodaVO>) {
-        Log.d("test---","add all pagoda to room")
         database.pagodaDao().insertPagodaList(pagodaMapper.voListToEntityList(pagodaList))
     }
 
     override suspend fun deleteAllPagodas() {
-        Log.d("test---","delete all pagoda from room")
         database.pagodaDao().deletePagodaList()
     }
-
-
 
 
 }

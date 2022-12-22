@@ -11,6 +11,7 @@ import com.itachi.explore.persistence.entities.AncientEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
@@ -20,38 +21,32 @@ class AncientRoomDataSourceImpl(
 ) : AncientRoomDataSource {
 
     override suspend fun addAncient(ancientVO: AncientVO) {
-        Log.d("test---","add ancient to room")
         database.ancientDao().addAncient(ancientMapper.voToEntity(ancientVO))
     }
 
     override suspend fun addAllAncients(ancientList: List<AncientVO>) {
-        Log.d("test---","add all ancient to room")
         database.ancientDao().insertAncientList(ancientMapper.voListToEntityList(ancientList))
     }
 
     override suspend fun deleteAncient(ancientVO: AncientVO) {
-        Log.d("test---","delete ancient from room")
         database.ancientDao().deleteAncientById(ancientVO.item_id)
     }
 
     override suspend fun deleteAllAncients() {
-        Log.d("test---","delete all ancients from room")
         database.ancientDao().deleteAncientList()
     }
 
-    override fun getAncientById(id: String): Flow<AncientVO> = flow {
+    override fun getAncientById(id: String): Flow<AncientVO> =
         database.ancientDao().getAncientById(id)
-            .collect {
-                emit(ancientMapper.entityToVO(it))
+            .map {
+                ancientMapper.entityToVO(it)
             }
-    }
 
-    override fun getAllAncients(): Flow<List<AncientVO>> = flow {
+    override fun getAllAncients(): Flow<List<AncientVO>> =
         database.ancientDao().getAncientsList()
-            .collect {
-                emit(ancientMapper.entityListToVOList(it))
+            .map {
+                ancientMapper.entityListToVOList(it)
             }
-    }
 
     override suspend fun update(ancientVO: AncientVO) {
         database.ancientDao().updateAncient(ancientMapper.voToEntity(ancientVO))

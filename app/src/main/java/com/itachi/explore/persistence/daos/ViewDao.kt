@@ -6,6 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.itachi.explore.persistence.entities.AncientEntity
 import com.itachi.explore.persistence.entities.ViewEntity
+import kotlinx.coroutines.flow.Flow
 
 
 @Dao
@@ -18,10 +19,10 @@ interface ViewDao {
     suspend fun addView(viewEntity: ViewEntity)
 
     @Query("SELECT * FROM view_table")
-    suspend fun getViewsList() : List<ViewEntity>
+    fun getViewsList() : Flow<List<ViewEntity>>
 
     @Query("SELECT * FROM view_table WHERE item_id = :itemId")
-    suspend fun getViewById(itemId: String) : ViewEntity
+    fun getViewById(itemId: String) : Flow<ViewEntity>
 
     @Query("DELETE FROM view_table")
     suspend fun deleteViewList()

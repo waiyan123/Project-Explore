@@ -15,6 +15,7 @@ import com.itachi.explore.framework.PagodaFirebaseDataSourceImpl
 import com.itachi.explore.framework.PagodaRoomDataSourceImpl
 import com.itachi.explore.framework.PhotoFirebaseDataSourceImpl
 import com.itachi.explore.framework.mappers.*
+import com.itachi.explore.persistence.MyDatabase
 import com.itachi.explore.persistence.entities.PagodaEntity
 import com.itachi.explore.persistence.entities.UploadedPhotoEntity
 import dagger.Module
@@ -221,9 +222,34 @@ object DaggerFormModule {
     @Provides
     @Singleton
     fun providesPagodaRoomDataSource(
-        pagodaMapper: PagodaMapper
+        pagodaMapper: PagodaMapper,
+        database : MyDatabase
     ) : PagodaRoomDataSource {
-        return PagodaRoomDataSourceImpl(pagodaMapper)
+        return PagodaRoomDataSourceImpl(pagodaMapper,database)
+    }
+
+    @Provides
+    @Singleton
+    fun providesGetPagodasByUserIdUseCase(
+        pagodaRepository: PagodaRepository
+    ) : GetPagodasByUserIdUseCase {
+        return GetPagodasByUserIdUseCase(pagodaRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun providesGetViewsByUserIdUseCase(
+        viewRepository: ViewRepository
+    ) : GetViewsByUserIdUseCase {
+        return GetViewsByUserIdUseCase(viewRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun providesGetAncientsByUserIdUseCase(
+        ancientRepository: AncientRepository
+    ) : GetAncientsByUserIdUseCase {
+        return GetAncientsByUserIdUseCase(ancientRepository)
     }
 
 }

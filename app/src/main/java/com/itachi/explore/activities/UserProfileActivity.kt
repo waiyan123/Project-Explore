@@ -120,7 +120,6 @@ class UserProfileActivity : BaseActivity(), ViewPager.OnPageChangeListener,
             .into(img_user_profile)
         tv_user_name.text = userVO.name
 
-        mViewModel.addItem(userVO)
     }
 
 
@@ -237,12 +236,6 @@ class UserProfileActivity : BaseActivity(), ViewPager.OnPageChangeListener,
         vp_profile.setOnPageChangeListener(this)
         vp_profile.currentItem = 1
     }
-
-    //incoming with pickup image urls
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//        mViewModel.onActivityResult(requestCode,resultCode,data)
-//    }
 
     override fun onRequestPermissionsResult(
         requestCode: Int,

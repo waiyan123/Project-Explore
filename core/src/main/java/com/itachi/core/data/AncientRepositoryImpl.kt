@@ -12,26 +12,11 @@ import kotlinx.coroutines.flow.*
 class AncientRepositoryImpl(
     private val ancientFirebaseDataSource: AncientFirebaseDataSource,
     private val ancientRoomDataSource: AncientRoomDataSource
-) : AncientRepository{
+) : AncientRepository {
 
-    override fun addAncient(ancientVO: AncientVO): Flow<Resource<String>> = flow{
+    override fun addAncient(ancientVO: AncientVO): Flow<Resource<String>> =
         ancientFirebaseDataSource.addAncient(ancientVO)
-            .collect { resourceFirebase->
-                when(resourceFirebase) {
-                    is Resource.Success -> {
-                        resourceFirebase.data?.let {
-                            ancientRoomDataSource.addAncient(ancientVO)
-                            emit(Resource.Success(it))
-                        }
-                    }
-                    is Resource.Error -> {
-                        resourceFirebase.message?.let {
-                            emit(Resource.Error(it))
-                        }
-                    }
-                }
-            }
-    }
+            .onEach { ancientRoomDataSource.addAncient(ancientVO) }
 
     override suspend fun addAllAncients(ancientList: List<AncientVO>) {
         ancientRoomDataSource.addAllAncients(ancientList)
@@ -41,58 +26,35 @@ class AncientRepositoryImpl(
         return ancientFirebaseDataSource.getAncientBackground()
     }
 
-    override fun getAllAncients(): Flow<Resource<List<AncientVO>>> = flow {
+    override fun getAllAncients(): Flow<Resource<List<AncientVO>>> =
         ancientRoomDataSource.getAllAncients()
-            .onEach {
-                emit(Resource.Success(it))
-            }
-            .flatMapConcat {
-                ancientFirebaseDataSource.getAllAncients()
-            }
-            .collect {resource->
+            .flatMapConcat { ancientFirebaseDataSource.getAllAncients() }
+            .onEach { resource ->
                 resource.data?.let {
                     ancientRoomDataSource.addAllAncients(it)
                 }
-                emit(resource)
             }
-    }
 
-    override fun getAncientById(ancientId: String): Flow<Resource<AncientVO>> = flow{
+    override fun getAncientById(ancientId: String): Flow<Resource<AncientVO>> =
         ancientRoomDataSource.getAncientById(ancientId)
-            .onEach {
-                emit(Resource.Success(it))
-            }
-            .flatMapConcat {
-                ancientFirebaseDataSource.getAncientById(ancientId)
-            }
-            .collect {resource->
+            .flatMapConcat { ancientFirebaseDataSource.getAncientById(ancientId) }
+            .onEach { resource ->
                 resource.data?.let {
                     ancientRoomDataSource.addAncient(it)
-                    emit(resource)
                 }
-
             }
-    }
 
     override fun getAncientsListByUserId(userId: String): Flow<Resource<List<AncientVO>>> {
         return ancientFirebaseDataSource.getAncientsListByUserId(userId)
     }
 
-    override fun updateAncient(ancientVO: AncientVO): Flow<Resource<String>> = flow{
+    override fun updateAncient(ancientVO: AncientVO): Flow<Resource<String>> =
         ancientFirebaseDataSource.updateAncient(ancientVO)
-            .collect {resourceFirebase->
-                ancientRoomDataSource.update(ancientVO)
-                emit(resourceFirebase)
-            }
-    }
+            .onEach { ancientRoomDataSource.update(ancientVO) }
 
-    override fun deleteAncient(ancientVO: AncientVO): Flow<Resource<String>> = flow{
+    override fun deleteAncient(ancientVO: AncientVO): Flow<Resource<String>> =
         ancientFirebaseDataSource.deleteAncient(ancientVO)
-            .collect {
-                ancientRoomDataSource.deleteAncient(ancientVO)
-                emit(it)
-            }
-    }
+            .onEach { ancientRoomDataSource.deleteAncient(ancientVO) }
 
     override suspend fun deleteAllAncients() {
         ancientRoomDataSource.deleteAllAncients()

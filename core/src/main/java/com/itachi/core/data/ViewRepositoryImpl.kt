@@ -14,44 +14,29 @@ class ViewRepositoryImpl(
     private val viewRoomDataSource: ViewRoomDataSource
 ) : ViewRepository {
 
-    override fun addView(viewVO: ViewVO): Flow<Resource<String>> = flow {
+    override fun addView(viewVO: ViewVO): Flow<Resource<String>> =
         viewFirebaseDataSource.addView(viewVO)
-            .collect { resourceFirebase ->
-                resourceFirebase.data?.let {
-                    viewRoomDataSource.addView(viewVO)
-                    emit(resourceFirebase)
-                }
-
-            }
-    }
+            .onEach { viewRoomDataSource.addView(viewVO) }
 
     override suspend fun addAllViews(viewList: List<ViewVO>) {
         viewRoomDataSource.addAllViews(viewList)
     }
 
-    override fun getViewById(viewId: String): Flow<Resource<ViewVO>> = flow {
-        emit(Resource.Success(viewRoomDataSource.getViewById(viewId)))
-        viewFirebaseDataSource.getViewById(viewId)
-            .collect {
-                emit(it)
-            }
-    }
+    override fun getViewById(viewId: String): Flow<Resource<ViewVO>> =
+        viewRoomDataSource.getViewById(viewId)
+            .flatMapConcat { viewFirebaseDataSource.getViewById(viewId) }
 
-    override fun getAllViews(): Flow<Resource<List<ViewVO>>> = flow {
+
+    override fun getAllViews(): Flow<Resource<List<ViewVO>>> =
         viewRoomDataSource.getAllViews()
-            .onEach {
-                emit(Resource.Success(it))
-            }
             .flatMapConcat {
                 viewFirebaseDataSource.getAllViews()
             }
-            .collect { resourceFirebase ->
-                resourceFirebase.data?.let {
+            .onEach { resource ->
+                resource.data?.let {
                     viewRoomDataSource.addAllViews(it)
-                    emit(resourceFirebase)
                 }
             }
-    }
 
     override fun getAllViewsPhoto(): Flow<Resource<List<UploadedPhotoVO>>> {
         return viewFirebaseDataSource.getViewsPhotos()
@@ -62,24 +47,16 @@ class ViewRepositoryImpl(
         return viewFirebaseDataSource.getViewsListByUserId(userId)
     }
 
-    override fun deleteView(viewVO: ViewVO): Flow<Resource<String>> = flow{
+    override fun deleteView(viewVO: ViewVO): Flow<Resource<String>> =
         viewFirebaseDataSource.deleteViewById(viewVO)
-            .collect {
-                viewRoomDataSource.deleteView(viewVO)
-                emit(it)
-            }
-    }
+            .onEach { viewRoomDataSource.deleteView(viewVO) }
 
     override suspend fun deleteAllViews() {
         viewRoomDataSource.deleteAllViews()
     }
 
-    override fun updateView(viewVO: ViewVO): Flow<Resource<String>> = flow{
+    override fun updateView(viewVO: ViewVO): Flow<Resource<String>> =
         viewFirebaseDataSource.updateView(viewVO)
-            .collect {
-                viewRoomDataSource.updateView(viewVO)
-                emit(it)
-            }
-    }
+            .onEach { viewRoomDataSource.updateView(viewVO) }
 
 }

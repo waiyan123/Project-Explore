@@ -26,7 +26,7 @@ class UserRepositoryImpl(
 
         userRoomDataSource.getUser(userId)
             .onEach {
-                emit(it)
+                emit(Resource.Success(it))
             }
             .flatMapConcat {
                 userFirebaseDataSource.getUserById(userId)

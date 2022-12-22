@@ -2,34 +2,35 @@ package com.itachi.explore.mvvm.viewmodel
 
 import android.app.Activity
 import android.content.Intent
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.itachi.core.common.Resource
+import com.itachi.core.domain.ItemVO
 import com.itachi.core.domain.PhotoVO
 import com.itachi.core.domain.UserVO
-import com.itachi.core.interactors.DeletePhotoUseCase
-import com.itachi.core.interactors.GetUserUseCase
-import com.itachi.core.interactors.UpdateUserUseCase
-import com.itachi.core.interactors.UploadPhotosUseCase
+import com.itachi.core.interactors.*
 import com.itachi.explore.mvvm.model.UserProfileUploadDialogModel
 import com.itachi.explore.utils.REQUEST_BACKGROUND_PIC
 import com.itachi.explore.utils.REQUEST_PROFILE_PIC
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flatMapConcat
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @OptIn(FlowPreview::class)
 @HiltViewModel
 class UserProfileViewModel @Inject constructor(
-    private val getUserUseCase : GetUserUseCase,
-    private val updateUserUseCase : UpdateUserUseCase,
+    private val getUserUseCase: GetUserUseCase,
+    private val updateUserUseCase: UpdateUserUseCase,
     private val deletePhotoUseCase: DeletePhotoUseCase,
-    private val uploadPhotosUseCase : UploadPhotosUseCase
-) : ViewModel(){
+    private val uploadPhotosUseCase: UploadPhotosUseCase,
+    private val getPagodasByUserIdUseCase: GetPagodasByUserIdUseCase,
+    private val getViewsByUserIdUseCase: GetViewsByUserIdUseCase,
+    private val getAncientsByUserIdUseCase: GetAncientsByUserIdUseCase
+) : ViewModel() {
 
     var mUserVO = UserVO()
     val userVOLiveData = MutableLiveData<UserVO>()
@@ -43,14 +44,21 @@ class UserProfileViewModel @Inject constructor(
     val onEdit = MutableLiveData<Boolean>()
     var onEditStatus = false
 
-    init {
+    private val _itemListStateFlow = MutableStateFlow(emptyList<ItemVO>())
+    val itemListStateFlow : StateFlow<List<ItemVO>> = _itemListStateFlow
 
+    val itemListLiveData = MutableLiveData<List<ItemVO>>()
+    private val itemList = ArrayList<ItemVO>()
+
+    init {
+        Log.d("test---","viewmodel created")
     }
 
-    fun getUser(userVO : UserVO?){
+
+    fun getUser(userVO: UserVO?) {
         viewModelScope.launch {
-            getUserUseCase(userVO?.user_id).collect { resource->
-                when(resource) {
+            getUserUseCase(userVO?.user_id).collect { resource ->
+                when (resource) {
                     is Resource.Success -> {
                         resource.data?.let {
                             userVOLiveData.postValue(it)
@@ -66,7 +74,7 @@ class UserProfileViewModel @Inject constructor(
                 }
             }
         }
-        if(userVO==null) editable.postValue(true)
+        if (userVO == null) editable.postValue(true)
     }
 
     fun onClickedEditButton() {
@@ -78,8 +86,8 @@ class UserProfileViewModel @Inject constructor(
         progressLoadingLiveData.postValue(true)
         viewModelScope.launch {
             updateUserUseCase(mUserVO)
-                .collect {resource->
-                    when(resource){
+                .collect { resource ->
+                    when (resource) {
                         is Resource.Success -> {
                             resource.data?.let {
                                 userVOLiveData.postValue(it)
@@ -113,8 +121,7 @@ class UserProfileViewModel @Inject constructor(
                         )
                     )
                 }
-            }
-            else if (requestCode == REQUEST_BACKGROUND_PIC) {
+            } else if (requestCode == REQUEST_BACKGROUND_PIC) {
                 data?.let {
                     mutableUploadProfileModel.postValue(
                         UserProfileUploadDialogModel(
@@ -138,6 +145,7 @@ class UserProfileViewModel @Inject constructor(
             )
         )
     }
+
     fun onClickedUserBackgroundPic() {
         mutableUploadProfileModel.postValue(
             UserProfileUploadDialogModel(
@@ -148,26 +156,26 @@ class UserProfileViewModel @Inject constructor(
         )
     }
 
-    fun onClickedChangeButton(dialogModel : UserProfileUploadDialogModel) {
+    fun onClickedChangeButton(dialogModel: UserProfileUploadDialogModel) {
         progressLoadingLiveData.postValue(true)
-        val photo = if(dialogModel.title=="Profile") {
+        val photo = if (dialogModel.title == "Profile") {
             mUserVO.profile_pic
         } else mUserVO.background_pic
 
         viewModelScope.launch {
-            deletePhotoUseCase(listOf(photo),photo.id)
+            deletePhotoUseCase(listOf(photo), photo.id)
                 .flatMapConcat {
                     uploadPhotosUseCase(listOf(dialogModel.imagePath))
                 }
-                .collect {resource->
-                    when(resource) {
+                .collect { resource ->
+                    when (resource) {
                         is Resource.Success -> {
                             resource.data?.let {
-                                if(dialogModel.title == "Profile") {
+                                if (dialogModel.title == "Profile") {
                                     mUserVO.profile_pic = it[0]
                                     profilePicLiveData.postValue(it[0])
 
-                                }else {
+                                } else {
                                     mUserVO.background_pic = it[0]
                                     backgroundPicLiveData.postValue(it[0])
                                 }
@@ -177,7 +185,9 @@ class UserProfileViewModel @Inject constructor(
                         }
                         is Resource.Error -> {
                             progressLoadingLiveData.postValue(false)
-                            responseMessageLiveData.postValue(resource.message ?: "Error occur in uploading.")
+                            responseMessageLiveData.postValue(
+                                resource.message ?: "Error occur in uploading."
+                            )
                         }
                         is Resource.Loading -> {
 
@@ -187,7 +197,45 @@ class UserProfileViewModel @Inject constructor(
         }
     }
 
-    fun addItem(userVO : UserVO){
+    fun getUserItems(userVO: UserVO?) {
+        Log.d("test---","get user item")
 
+        userVO?.let { vo ->
+            viewModelScope.launch {
+
+                getPagodasByUserIdUseCase(vo.user_id)
+                    .onEach {
+                        it.data?.let { list->
+                            itemList.addAll(list)
+                        }
+                    }
+                    .flatMapConcat {
+                        getViewsByUserIdUseCase(vo.user_id)
+                    }
+                    .onEach {
+                        it.data?.let {list->
+                            itemList.addAll(list)
+                        }
+                    }
+                    .flatMapConcat {
+                        getAncientsByUserIdUseCase(vo.user_id)
+                    }
+                    .collect {
+                        it.data?.let {list->
+                            itemList.addAll(list)
+                        }
+                        _itemListStateFlow.value = itemList
+                        itemListLiveData.postValue(itemList)
+
+                    }
+
+
+            }
+        }
     }
+
+    fun onClickedEditItemBtn(position: Int) = itemList[position]
+
+    fun onClickedViewItemBtn(position: Int) = itemList[position]
+
 }

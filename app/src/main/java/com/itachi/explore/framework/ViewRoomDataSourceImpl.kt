@@ -7,6 +7,7 @@ import com.itachi.explore.framework.mappers.ViewMapper
 import com.itachi.explore.persistence.MyDatabase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import javax.inject.Inject
@@ -17,7 +18,6 @@ class ViewRoomDataSourceImpl (
     ) : ViewRoomDataSource{
 
     override suspend fun addView(viewVO: ViewVO) {
-        Log.d("test---","add view to room")
         database.viewDao().addView(viewMapper.voToEntity(viewVO))
     }
 
@@ -26,18 +26,16 @@ class ViewRoomDataSourceImpl (
     }
 
     override suspend fun deleteView(viewVO: ViewVO) {
-        Log.d("test---","delete view from room")
         database.viewDao().deleteViewById(viewVO.item_id)
     }
 
     override suspend fun deleteAllViews() {
-        Log.d("test---","delete all views from room")
         database.viewDao().deleteViewList()
     }
 
-    override suspend fun getViewById(id: String): ViewVO  = viewMapper.entityToVO(database.viewDao().getViewById(id))
+    override fun getViewById(id: String): Flow<ViewVO>  = database.viewDao().getViewById(id).map { viewMapper.entityToVO(it) }
 
-    override suspend fun getAllViews(): Flow<List<ViewVO>> = flowOf(viewMapper.entityListToVOList(database.viewDao().getViewsList()))
+    override fun getAllViews(): Flow<List<ViewVO>> = database.viewDao().getViewsList().map { viewMapper.entityListToVOList(it) }
 
     override suspend fun updateView(viewVO: ViewVO) {
         database.viewDao().addView(viewMapper.voToEntity(viewVO))

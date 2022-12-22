@@ -10,71 +10,46 @@ import kotlinx.coroutines.flow.*
 class PagodaRepositoryImpl(
     private val pagodaFirebaseDataSource: PagodaFirebaseDataSource,
     private val pagodaRoomDataSource: PagodaRoomDataSource
-) : PagodaRepository{
+) : PagodaRepository {
 
-    override fun getPagodaBanner() : Flow<Resource<List<String>>> = pagodaFirebaseDataSource.getPagodaBanner()
+    override fun getPagodaBanner(): Flow<Resource<List<String>>> =
+        pagodaFirebaseDataSource.getPagodaBanner()
 
-    override fun getAllPagodas() : Flow<Resource<List<PagodaVO>>> = flow {
+    override fun getAllPagodas(): Flow<Resource<List<PagodaVO>>> =
         pagodaRoomDataSource.getAllPagodas()
-            .onEach {
-                emit(Resource.Success(it))
-            }
-            .flatMapConcat {
-                pagodaFirebaseDataSource.getAllPagodas()
-            }
-            .collect { resourceFirebase->
-                resourceFirebase.data?.let { pagodaList->
-                    pagodaRoomDataSource.addAllPagodas(pagodaList)
-                    emit(resourceFirebase)
+            .flatMapConcat { pagodaFirebaseDataSource.getAllPagodas() }
+            .onEach { resource ->
+                resource.data?.let {
+                    pagodaRoomDataSource.addAllPagodas(it)
                 }
             }
-    }
 
-    override fun getPagodaById(pagodaId : String) : Flow<Resource<PagodaVO>> = flow {
+    override fun getPagodaById(pagodaId: String): Flow<Resource<PagodaVO>> =
         pagodaRoomDataSource.getPagodaById(pagodaId)
-            .onEach {
-                emit(Resource.Success(it))
-            }
-            .flatMapConcat {
-                pagodaFirebaseDataSource.getPagodaById(pagodaId)
-            }
-            .collect { resourceFirebase->
-                resourceFirebase.data?.let {pagodaVO->
-                    pagodaRoomDataSource.addPagoda(pagodaVO)
-                    emit(resourceFirebase)
+            .flatMapConcat { pagodaFirebaseDataSource.getPagodaById(pagodaId) }
+            .onEach { resource ->
+                resource.data?.let {
+                    pagodaRoomDataSource.addPagoda(it)
                 }
             }
 
-    }
 
-    override fun getPagodaListByUploaderId(uploaderId : String) : Flow<Resource<List<PagodaVO>>> = pagodaFirebaseDataSource.getPagodaListByUserId(uploaderId)
+    override fun getPagodaListByUploaderId(uploaderId: String): Flow<Resource<List<PagodaVO>>> =
+        pagodaFirebaseDataSource.getPagodaListByUserId(uploaderId)
 
-    override fun deletePagoda(pagodaVO: PagodaVO) : Flow<Resource<String>> = flow {
-
-        pagodaFirebaseDataSource.deletePagodaById(pagodaVO.item_id)
-            .collect {
-                emit(it)
-                pagodaRoomDataSource.deletePagoda(pagodaVO)
-            }
-    }
+    override fun deletePagoda(pagodaVO: PagodaVO): Flow<Resource<String>> = pagodaFirebaseDataSource
+        .deletePagodaById(pagodaVO.item_id)
+        .onEach { pagodaRoomDataSource.deletePagoda(pagodaVO) }
 
     override suspend fun deleteAllPagodas() = pagodaRoomDataSource.deleteAllPagodas()
 
-    override fun addPagoda(pagodaVO: PagodaVO) : Flow<Resource<String>> = flow {
-
+    override fun addPagoda(pagodaVO: PagodaVO): Flow<Resource<String>> =
         pagodaFirebaseDataSource.addPagoda(pagodaVO)
-            .collect {
-                pagodaRoomDataSource.addPagoda(pagodaVO)
-                emit(it)
-            }
-    }
+            .onEach { pagodaRoomDataSource.addPagoda(pagodaVO) }
 
-    override fun updatePagoda(pagodaVO: PagodaVO) : Flow<Resource<String>> = flow {
+
+    override fun updatePagoda(pagodaVO: PagodaVO): Flow<Resource<String>> =
         pagodaFirebaseDataSource.updatePagoda(pagodaVO)
-            .collect {
-                emit(it)
-                pagodaRoomDataSource.updatePagoda(pagodaVO)
-            }
-    }
+            .onEach { pagodaRoomDataSource.updatePagoda(pagodaVO) }
 
 }

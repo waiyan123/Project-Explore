@@ -9,7 +9,7 @@ interface ViewRoomDataSource {
     suspend fun addAllViews(viewVoList : List<ViewVO>)
     suspend fun deleteView(viewVO: ViewVO)
     suspend fun deleteAllViews()
-    suspend fun getViewById(id : String) : ViewVO
-    suspend fun getAllViews() : Flow<List<ViewVO>>
+    fun getViewById(id : String) : Flow<ViewVO>
+    fun getAllViews() : Flow<List<ViewVO>>
     suspend fun updateView(viewVO: ViewVO)
 }

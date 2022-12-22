@@ -79,7 +79,7 @@ class MyApplication : Application() {
             pagodaVoToFirebaseMapper,ListMapperImpl(pagodaEntityToVoMapper),
         ListMapperImpl(pagodaVoToEntityMapper))
         val pagodaFirebaseDataSource = PagodaFirebaseDataSourceImpl(pagodaMapper,firestoreRef,firebaseStorageRef,firebaseAuthRef)
-        val pagodaRoomDataSource = PagodaRoomDataSourceImpl(pagodaMapper)
+        val pagodaRoomDataSource = PagodaRoomDataSourceImpl(pagodaMapper,roomDatabase)
 
         val pagodaRepositoryImpl = PagodaRepositoryImpl(pagodaFirebaseDataSource,pagodaRoomDataSource)
 

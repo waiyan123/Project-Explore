@@ -5,7 +5,7 @@ import com.itachi.core.domain.ItemVO
 
 interface UserItemsView : BaseView{
 
-    fun showUserItems(items : ArrayList<ItemVO>)
+    fun showUserItems(items : List<ItemVO>)
 
     fun showError(str : String)
 

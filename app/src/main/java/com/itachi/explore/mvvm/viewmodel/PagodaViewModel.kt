@@ -64,6 +64,7 @@ class PagodaViewModel @Inject constructor(
                 when(resource) {
                     is Resource.Success -> {
                         resource.data?.let { list ->
+                            Log.d("test---","pagoda list in viewmodel ${list.size}")
                             pagodaListLiveData.postValue(list)
                             pagodaList.clear()
                             pagodaList.addAll(list)
