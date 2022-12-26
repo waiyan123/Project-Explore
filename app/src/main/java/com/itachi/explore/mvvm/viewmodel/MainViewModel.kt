@@ -44,9 +44,6 @@ class MainViewModel @Inject constructor(
                     is Resource.Loading -> {
 
                     }
-                    else -> {
-
-                    }
                 }
             }
         }

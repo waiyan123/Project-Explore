@@ -167,21 +167,15 @@ class ActivityDetail : BaseActivity(),View.OnClickListener{
         val viewItem = intent.getSerializableExtra(EXTRA_EVENT_ID_VIEW) as ViewVO?
         val ancientItem = intent.getSerializableExtra(EXTRA_EVENT_ID_ANCIENT) as AncientVO?
 
-        when {
-            pagodaItem!=null -> {
-                setUpSlider(pagodaItem.photos)
-                mViewModel.setupItemVO(pagodaItem)
-            }
-            viewItem!=null -> {
-                setUpSlider(viewItem.photos)
-                mViewModel.setupItemVO(viewItem)
-            }
-            ancientItem!=null -> {
-                setUpSlider(ancientItem.photos)
-                mViewModel.setupItemVO(ancientItem)
-
-            }
+        val item = when {
+            pagodaItem != null -> pagodaItem
+            viewItem != null -> viewItem
+            ancientItem != null -> ancientItem
+            else -> return
         }
+        setUpSlider(item.photos)
+        mViewModel.setupItemVO(item)
+
         img_setting.setOnClickListener(this)
         img_back.setOnClickListener(this)
 

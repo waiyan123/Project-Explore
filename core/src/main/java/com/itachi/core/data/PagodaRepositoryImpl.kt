@@ -12,8 +12,7 @@ class PagodaRepositoryImpl(
     private val pagodaRoomDataSource: PagodaRoomDataSource
 ) : PagodaRepository {
 
-    override fun getPagodaBanner(): Flow<Resource<List<String>>> =
-        pagodaFirebaseDataSource.getPagodaBanner()
+    override fun getPagodaBanner(): Flow<Resource<List<String>>> = pagodaFirebaseDataSource.getPagodaBanner()
 
     override fun getAllPagodas(): Flow<Resource<List<PagodaVO>>> =
         pagodaRoomDataSource.getAllPagodas()
