@@ -10,9 +10,9 @@ class PagodaMapper(
     private val pagodaEntityListToVOListMapper : ListMapperImpl<PagodaEntity, PagodaVO>,
     private val pagodaVoListToEntityListMapper : ListMapperImpl<PagodaVO, PagodaEntity>
 ) {
-    fun entityToVO(pagodaEntity: PagodaEntity) = pagodaEntityToVoMapper.map(pagodaEntity)
-    fun voToEntity(pagodaVO : PagodaVO) = pagodaVoToEntityMapper.map(pagodaVO)
-    fun voToFirebaseHashmap(pagodaVO: PagodaVO) = pagodaVoToFirebaseMapper.map(pagodaVO)
-    fun entityListToVOList(pagodaEntities : List<PagodaEntity>) = pagodaEntityListToVOListMapper.map(pagodaEntities)
-    fun voListToEntityList(pagodaVoList : List<PagodaVO>) = pagodaVoListToEntityListMapper.map(pagodaVoList)
+    fun entityToVO(pagodaEntity: PagodaEntity?) = pagodaEntityToVoMapper.map(pagodaEntity)
+    fun voToEntity(pagodaVO : PagodaVO?) = pagodaVoToEntityMapper.map(pagodaVO)
+    fun voToFirebaseHashmap(pagodaVO: PagodaVO?) = pagodaVoToFirebaseMapper.map(pagodaVO)
+    fun entityListToVOList(pagodaEntities : List<PagodaEntity>?) = pagodaEntityListToVOListMapper.map(pagodaEntities)
+    fun voListToEntityList(pagodaVoList : List<PagodaVO>?) = pagodaVoListToEntityListMapper.map(pagodaVoList)
 }

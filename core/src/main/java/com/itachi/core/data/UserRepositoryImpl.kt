@@ -12,61 +12,44 @@ class UserRepositoryImpl(
     private val userRoomDataSource: UserRoomDataSource
 ) : UserRepository {
 
-    override fun addUser(userVO: UserVO): Flow<Resource<UserVO>> = flow {
-        userFirebaseDataSource.addUser(userVO).collect { resource ->
-            resource.data?.let {
-                userRoomDataSource.addUser(it)
-                emit(resource)
-            }
-        }
-    }
-
-    @OptIn(FlowPreview::class)
-    override fun getUserById(userId: String?): Flow<Resource<UserVO>> = flow {
-
-        userRoomDataSource.getUser(userId)
-            .onEach {
-                emit(Resource.Success(it))
-            }
-            .flatMapConcat {
-                userFirebaseDataSource.getUserById(userId)
-            }
-            .collect { resourceFirebase->
-                resourceFirebase.data?.let { userVO->
-                    userRoomDataSource.addUser(userVO)
-                    emit(resourceFirebase)
+    override fun addUser(userVO: UserVO): Flow<Resource<UserVO>> =
+        userFirebaseDataSource.addUser(userVO)
+            .onEach { resource ->
+                resource.data?.let {
+                    userRoomDataSource.addUser(it)
                 }
             }
 
-    }
+    override fun getUserById(userId: String?): Flow<Resource<UserVO>> =
+        userRoomDataSource.getUser(userId)
+            .flatMapConcat { userFirebaseDataSource.getUserById(userId) }
+            .onEach { resource ->
+                resource.data?.let {
+                    userRoomDataSource.addUser(it)
+                }
+            }
 
-    override fun deleteUser(
-        userVO: UserVO
-    ): Flow<Resource<String>> = flow {
-        userFirebaseDataSource.delete(userVO).collect { resource ->
-            resource.data?.let {
+
+    override fun deleteUser(userVO: UserVO): Flow<Resource<String>> =
+        userFirebaseDataSource.delete(userVO)
+            .onEach { resource ->
+                resource.data?.let {
+                    userRoomDataSource.deleteUser()
+                }
+            }
+
+    override fun updateUser(userVO: UserVO): Flow<Resource<UserVO>> =
+        userFirebaseDataSource.update(userVO)
+            .onEach { resource ->
+                resource.data?.let {
+                    userRoomDataSource.updateUser(it)
+                }
+            }
+
+    override fun signOut(): Flow<Resource<String>> =
+        userFirebaseDataSource.signOut()
+            .onEach {
                 userRoomDataSource.deleteUser()
             }
-            emit(resource)
-        }
-    }
-
-    override fun updateUser(userVO: UserVO): Flow<Resource<UserVO>> = flow {
-        userFirebaseDataSource.update(userVO).collect { resource ->
-            resource.data?.let {
-                userRoomDataSource.updateUser(it)
-            }
-            emit(resource)
-        }
-    }
-
-    override fun signOut(): Flow<Resource<String>> = flow {
-        userFirebaseDataSource.signOut().collect { resource ->
-            resource.data?.let {
-                userRoomDataSource.deleteUser()
-            }
-            emit(resource)
-        }
-    }
 
 }

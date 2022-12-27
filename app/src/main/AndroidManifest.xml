@@ -34,6 +34,7 @@
         </activity>
 
         <activity android:name=".activities.LoginActivity"
+            android:screenOrientation="portrait"
             >
 
         </activity>
@@ -45,18 +46,24 @@
 
         </activity>
 
-        <activity android:name=".activities.PagodasActivity"/>
+        <activity android:name=".activities.PagodasActivity"
+            android:screenOrientation="portrait"/>
 
         <activity android:name=".activities.FormActivity"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+            android:windowSoftInputMode="stateHidden|adjustPan"
+            android:screenOrientation="portrait"/>
 
-        <activity android:name=".activities.ActivityDetail"/>
+        <activity android:name=".activities.ActivityDetail"
+            android:screenOrientation="portrait"/>
 
-        <activity android:name=".activities.ViewsActivity"/>
+        <activity android:name=".activities.ViewsActivity"
+            android:screenOrientation="portrait"/>
 
-        <activity android:name=".activities.PreviewActivity"/>
+        <activity android:name=".activities.PreviewActivity"
+            android:screenOrientation="portrait"/>
 
-        <activity android:name=".activities.AncientActivity"/>
+        <activity android:name=".activities.AncientActivity"
+            android:screenOrientation="portrait"/>
 
         <meta-data android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"/>
@@ -82,10 +89,11 @@
             >
         </activity>
 
-        <activity android:name=".activities.IntroActivity"/>
+        <activity android:name=".activities.IntroActivity"
+            android:screenOrientation="portrait"/>
 
         <activity android:name=".activities.UserProfileActivity"
-            android:screenOrientation="fullSensor"/>
+            android:screenOrientation="portrait"/>
 
     </application>
 
