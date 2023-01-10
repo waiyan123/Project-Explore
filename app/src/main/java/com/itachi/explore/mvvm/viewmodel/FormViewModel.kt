@@ -19,7 +19,8 @@ import com.sangcomz.fishbun.adapter.image.impl.GlideAdapter
 import com.sangcomz.fishbun.define.Define
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.FlowCollector
+import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.launch
 import me.myatminsoe.mdetect.MDetect
@@ -62,7 +63,9 @@ class FormViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            getUserUseCase().collect { resource ->
+            getUserUseCase()
+                .buffer()
+                .collect(FlowCollector{ resource ->
                 when (resource) {
                     is Resource.Success -> {
                         resource.data?.let {
@@ -78,17 +81,18 @@ class FormViewModel @Inject constructor(
 
                     }
                 }
-            }
+            })
         }
         checkLanguage()
     }
 
     private fun checkLanguage() {
         viewModelScope.launch {
-            getLanguageUseCase().collect {
-
+            getLanguageUseCase()
+                .buffer()
+                .collect(FlowCollector{
                 language.postValue(it)
-            }
+            })
         }
     }
 
@@ -208,7 +212,7 @@ class FormViewModel @Inject constructor(
                             .flatMapConcat {
                                 uploadPhotosUseCase(mPickupImages)
                             }
-                            .collect {resource->
+                            .collect(FlowCollector{resource->
                                 resource.data?.let { photoList ->
                                     photoList.forEach {
                                         val uploadedPhotoVO = UploadedPhotoVO(it.url,mUserVO.user_id,pagodaVO.item_id,
@@ -218,7 +222,7 @@ class FormViewModel @Inject constructor(
                                     pagodaVO.photos = photoList
                                     updatePagoda(pagodaVO)
                                 }
-                            }
+                            })
                     } else {
                         updatePagoda(pagodaVO)
                     }
@@ -290,15 +294,16 @@ class FormViewModel @Inject constructor(
 
     private suspend fun updatePagoda(pagodaVO: PagodaVO) {
         updatePagodaUseCase(pagodaVO)
+            .buffer()
             .collect { resource ->
                 when (resource) {
                     is Resource.Success -> {
                         progressLoading.postValue(false)
-                        successMsg.postValue(resource.data)
+                        successMsg.postValue(resource.data ?: "")
                     }
                     is Resource.Error -> {
                         progressLoading.postValue(false)
-                        errorMsg.postValue(resource.message)
+                        errorMsg.postValue(resource.message ?: "Unexpected error occur")
                     }
                 }
             }
@@ -307,15 +312,16 @@ class FormViewModel @Inject constructor(
 
     private suspend fun updateView(viewVO: ViewVO) {
         updateViewUseCase(viewVO)
+            .buffer()
             .collect { resource ->
                 when (resource) {
                     is Resource.Success -> {
                         progressLoading.postValue(false)
-                        successMsg.postValue(resource.data)
+                        successMsg.postValue(resource.data ?: "")
                     }
                     is Resource.Error -> {
                         progressLoading.postValue(false)
-                        errorMsg.postValue(resource.message)
+                        errorMsg.postValue(resource.message ?: "Unexpected error occur")
                     }
 
                 }
@@ -326,15 +332,16 @@ class FormViewModel @Inject constructor(
     private fun updateAncient(ancientVO: AncientVO) {
         viewModelScope.launch {
             updateAncientUseCase(ancientVO)
+                .buffer()
                 .collect { resource ->
                     when (resource) {
                         is Resource.Success -> {
                             progressLoading.postValue(false)
-                            successMsg.postValue(resource.data)
+                            successMsg.postValue(resource.data ?: "")
                         }
                         is Resource.Error -> {
                             progressLoading.postValue(false)
-                            errorMsg.postValue(resource.message)
+                            errorMsg.postValue(resource.message ?: "Unexpected error occur")
                         }
 
                     }
@@ -370,6 +377,7 @@ class FormViewModel @Inject constructor(
             pickupImageError.postValue(false)
             viewModelScope.launch {
                 uploadPhotosUseCase(mPickupImages)
+                    .buffer()
                     .collect {resource->
                     resource.data?.let { photoList ->
                         photoList.forEach {
@@ -379,14 +387,15 @@ class FormViewModel @Inject constructor(
                         }
                         pagodaVO.photos = photoList
                         addPagodaUseCase(pagodaVO)
+                            .buffer()
                             .collect { resource ->
                                 when (resource) {
                                     is Resource.Success -> {
-                                        successMsg.postValue(resource.data)
+                                        successMsg.postValue(resource.data ?: "")
                                         progressLoading.postValue(false)
                                     }
                                     is Resource.Error -> {
-                                        errorMsg.postValue(resource.message)
+                                        errorMsg.postValue(resource.message ?: "Unexpected error occur")
                                         progressLoading.postValue(false)
                                     }
 
@@ -437,7 +446,9 @@ class FormViewModel @Inject constructor(
         if (mPickupImages.size > 0) {
             pickupImageError.postValue(false)
             viewModelScope.launch {
-                uploadPhotosUseCase(mPickupImages).collect {resource->
+                uploadPhotosUseCase(mPickupImages)
+                    .buffer()
+                    .collect {resource->
                     resource.data?.let { photoList ->
                         photoList.forEach {
                             val uploadedPhotoVO = UploadedPhotoVO(it.url,mUserVO.user_id,viewVO.item_id,
@@ -446,14 +457,15 @@ class FormViewModel @Inject constructor(
                         }
                         viewVO.photos = photoList
                         addViewUseCase(viewVO)
+                            .buffer()
                             .collect { resource ->
                                 when (resource) {
                                     is Resource.Success -> {
-                                        successMsg.postValue(resource.data)
+                                        successMsg.postValue(resource.data ?: "")
                                         progressLoading.postValue(false)
                                     }
                                     is Resource.Error -> {
-                                        errorMsg.postValue(resource.message)
+                                        errorMsg.postValue(resource.message ?: "Unexpected error occur")
                                         progressLoading.postValue(false)
                                     }
 
@@ -496,7 +508,9 @@ class FormViewModel @Inject constructor(
             pickupImageError.postValue(false)
             progressLoading.postValue(true)
             viewModelScope.launch {
-                uploadPhotosUseCase(mPickupImages).collect {resource->
+                uploadPhotosUseCase(mPickupImages)
+                    .buffer()
+                    .collect {resource->
                     resource.data?.let { photoList ->
                         photoList.forEach {
                             val uploadedPhotoVO = UploadedPhotoVO(it.url,mUserVO.user_id,ancientVO.item_id,
@@ -505,14 +519,15 @@ class FormViewModel @Inject constructor(
                         }
                         ancientVO.photos = photoList
                         addAncientUseCase(ancientVO)
+                            .buffer()
                             .collect { resource ->
                                 when (resource) {
                                     is Resource.Success -> {
-                                        successMsg.postValue(resource.data)
+                                        successMsg.postValue(resource.data ?: "")
                                         progressLoading.postValue(false)
                                     }
                                     is Resource.Error -> {
-                                        errorMsg.postValue(resource.message)
+                                        errorMsg.postValue(resource.message ?: "Unexpected error occur")
                                         progressLoading.postValue(false)
                                     }
                                 }

@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.itachi.core.domain.UploadedPhotoVO
 import com.itachi.explore.R
 import com.itachi.explore.adapters.recycler.ViewsRecyclerAdapter
-import com.itachi.explore.mvvm.viewmodel.MyViewModelProviderFactory
 import com.itachi.explore.mvvm.viewmodel.ViewsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_views.*
@@ -49,9 +48,6 @@ class ViewsActivity : BaseActivity(),View.OnClickListener{
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
             setContentView(R.layout.activity_views)
-
-//        mViewModel = ViewModelProvider(this, MyViewModelProviderFactory)
-//            .get(ViewsViewModel::class.java)
 
             setUpRecyclerView()
 

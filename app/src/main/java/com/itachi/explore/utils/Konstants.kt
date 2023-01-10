@@ -9,6 +9,8 @@ const val TEST_ADS_BANNER = "ca-app-pub-3940256099942544/6300978111"
 const val TEST_ADS_INTERSTITIAL = "ca-app-pub-3940256099942544/1033173712"
 //const val YOUTUBE_KEY = "API_KEY"
 
+const val IMMEDIATE_UPDATE_REQUEST_CODE = 1
+
 //for users
 const val USER = "users" //collection id
 const val USER_EMAIL = "email"

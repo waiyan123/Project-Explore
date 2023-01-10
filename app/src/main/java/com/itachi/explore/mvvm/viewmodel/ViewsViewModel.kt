@@ -12,6 +12,8 @@ import com.itachi.core.interactors.GetAllViewsPhotoUseCase
 import com.itachi.core.interactors.GetLanguageUseCase
 import com.itachi.explore.utils.LANGUAGE
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.FlowCollector
+import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import me.myatminsoe.mdetect.MDetect
@@ -40,7 +42,8 @@ class ViewsViewModel @Inject constructor(
     fun showPhotoList(): MutableLiveData<List<UploadedPhotoVO>> {
         viewModelScope.launch {
             getAllViewsPhotoUseCase()
-                .collect {resource->
+                .buffer()
+                .collect(FlowCollector{ resource->
                     when(resource) {
                         is Resource.Success -> {
                             resource.data?.let {
@@ -48,13 +51,13 @@ class ViewsViewModel @Inject constructor(
                             }
                         }
                         is Resource.Error -> {
-                            errorMsg.postValue(resource.message)
+                            errorMsg.postValue(resource.message ?: "Unexpected error occur")
                         }
                         is Resource.Loading -> {
 
                         }
                     }
-                }
+                })
 
         }
         return uploadedPhotoVOList
@@ -63,9 +66,10 @@ class ViewsViewModel @Inject constructor(
     fun checkLanguage(): MutableLiveData<String> {
         viewModelScope.launch {
             getLanguageUseCase()
-                .collect {
+                .buffer()
+                .collect(FlowCollector{
                     checkLanguage.postValue(it)
-                }
+                })
         }
         return checkLanguage
     }

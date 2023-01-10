@@ -11,16 +11,9 @@ class AncientMapper(
     private val ancientVoListToEntityListMapper: ListMapper<AncientVO, AncientEntity>
 ) : AncientMapperFunctions {
 
-    override fun entityToVO(ancientEntity: AncientEntity) =
-        ancientEntityToVoMapper.map(ancientEntity)
-
-    override fun voToEntity(ancientVO: AncientVO) = ancientVoToEntityMapper.map(ancientVO)
-    override fun voToFirebaseHashmap(ancientVO: AncientVO) =
-        ancientVoToFirebaseMapper.map(ancientVO)
-
-    override fun entityListToVOList(ancientEntities: List<AncientEntity>) =
-        ancientEntityListToVOListMapper.map(ancientEntities)
-
-    override fun voListToEntityList(ancientVoList: List<AncientVO>) =
-        ancientVoListToEntityListMapper.map(ancientVoList)
+    override fun entityToVO(ancientEntity: AncientEntity?) = ancientEntityToVoMapper.map(ancientEntity)
+    override fun voToEntity(ancientVO: AncientVO?) = ancientVoToEntityMapper.map(ancientVO)
+    override fun voToFirebaseHashmap(ancientVO: AncientVO?) = ancientVoToFirebaseMapper.map(ancientVO)
+    override fun entityListToVOList(ancientEntities: List<AncientEntity>?) = ancientEntityListToVOListMapper.map(ancientEntities)
+    override fun voListToEntityList(ancientVoList: List<AncientVO>?) = ancientVoListToEntityListMapper.map(ancientVoList)
 }

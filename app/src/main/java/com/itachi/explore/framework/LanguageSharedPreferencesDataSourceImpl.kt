@@ -3,7 +3,9 @@ package com.itachi.explore.framework
 import android.content.SharedPreferences
 import com.itachi.core.data.sharedpreferences.LanguageSharedPreferencesDataSource
 import com.itachi.explore.utils.LANGUAGE
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import me.myatminsoe.mdetect.MDetect
 
 class LanguageSharedPreferencesDataSourceImpl(
@@ -29,5 +31,5 @@ class LanguageSharedPreferencesDataSourceImpl(
                 }
             }
         }
-    }
+    }.flowOn(Dispatchers.IO)
 }

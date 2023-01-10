@@ -14,7 +14,6 @@ import com.itachi.core.interactors.*
 import com.itachi.explore.di.applicationModule
 import com.itachi.explore.framework.*
 import com.itachi.explore.framework.mappers.*
-import com.itachi.explore.mvvm.viewmodel.MyViewModelProviderFactory
 import com.itachi.explore.persistence.MyDatabase
 import com.itachi.explore.third_parties.GlideLoadingService
 import dagger.hilt.android.HiltAndroidApp
@@ -104,36 +103,6 @@ class MyApplication : Application() {
         val firebaseAuth = FirebaseAuth.getInstance()
         val userRoomDataSource = UserRoomDataSourceImpl(firebaseAuth,userMapper,roomDatabase)
         val userRepositoryImpl = UserRepositoryImpl(userFirebaseDataSource,userRoomDataSource)
-
-        MyViewModelProviderFactory.inject(
-            Interactors(
-                AddUserUseCase(userRepositoryImpl),
-                AddAncientUseCase(ancientRepository),
-                AddPagodaUseCase(pagodaRepositoryImpl),
-                AddViewUseCase(viewRepository),
-                AddAllAncientsUseCase(ancientRepository),
-                AddAllViewsUseCase(viewRepository),
-                DeleteUserUseCase(userRepositoryImpl),
-                DeleteAncientUseCase(ancientRepository),
-                DeletePagodaUseCase(pagodaRepositoryImpl),
-                DeleteViewUseCase(viewRepository),
-                DeleteAllAncientsUseCase(ancientRepository),
-                DeleteAllPagodasUseCase(pagodaRepositoryImpl),
-                DeleteAllViewsUseCase(viewRepository),
-                GetUserUseCase(userRepositoryImpl),
-                GetAncientByIdUseCase(ancientRepository),
-                GetPagodaByIdUseCase(pagodaRepositoryImpl),
-                GetViewByIdUseCase(viewRepository),
-                GetAllAncientUseCase(ancientRepository),
-                GetAllPagodasUseCase(pagodaRepositoryImpl),
-                GetAllViewsUseCase(viewRepository),
-                GetAllViewsPhotoUseCase(viewRepository),
-                UpdateUserUseCase(userRepositoryImpl),
-                UpdateAncientUseCase(ancientRepository),
-                UpdatePagodaUseCase(pagodaRepositoryImpl),
-                UpdateViewUseCase(viewRepository)
-            )
-        )
 
     }
 }

@@ -9,7 +9,8 @@ import com.itachi.core.interactors.GetAllAncientUseCase
 import com.itachi.core.interactors.GetAncientBackgroundUseCase
 import com.itachi.core.interactors.GetLanguageUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.FlowCollector
+import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -29,19 +30,20 @@ class AncientViewModel @Inject constructor(
     fun getAncientBg() : MutableLiveData<String>{
         viewModelScope.launch {
             getAncientBackgroundUseCase()
-                .collect { resource->
+                .buffer()
+                .collect(FlowCollector{ resource->
                     when(resource) {
                         is Resource.Success -> {
-                            ancientBgImage.postValue(resource.data)
+                            ancientBgImage.postValue(resource.data ?: "")
                         }
                         is Resource.Error -> {
-                            errorStr.postValue(resource.message)
+                            errorStr.postValue(resource.message ?: "Unexpected error occur")
                         }
                         is Resource.Loading -> {
 
                         }
                     }
-                }
+                })
         }
         return ancientBgImage
     }
@@ -49,6 +51,7 @@ class AncientViewModel @Inject constructor(
     fun getAncients() : MutableLiveData<List<AncientVO>>{
         viewModelScope.launch {
             getAllAncientUseCase()
+                .buffer()
                 .collect {resource->
                     when(resource) {
                         is Resource.Success -> {
@@ -57,7 +60,7 @@ class AncientViewModel @Inject constructor(
                             }
                         }
                         is Resource.Error -> {
-                            errorStr.postValue(resource.message)
+                            errorStr.postValue(resource.message ?: "Unexpected error occur!")
                         }
                         is Resource.Loading -> {
 
@@ -78,6 +81,7 @@ class AncientViewModel @Inject constructor(
     fun checkLanguage() : MutableLiveData<String>{
         viewModelScope.launch {
             getLanguageUseCase()
+                .buffer()
                 .collect {
                     checkLanguage.postValue(it)
                 }

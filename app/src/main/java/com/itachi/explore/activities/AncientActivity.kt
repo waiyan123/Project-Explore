@@ -20,8 +20,6 @@ import com.bumptech.glide.request.transition.Transition
 import com.itachi.core.domain.AncientVO
 import com.itachi.explore.R
 import com.itachi.explore.mvvm.viewmodel.AncientViewModel
-import com.itachi.explore.mvvm.viewmodel.AppViewmodel
-import com.itachi.explore.mvvm.viewmodel.MyViewModelProviderFactory
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

@@ -26,8 +26,6 @@ import com.itachi.core.domain.PagodaVO
 import com.itachi.core.domain.ViewVO
 import com.itachi.explore.R
 import com.itachi.explore.mvvm.viewmodel.FormViewModel
-import com.itachi.explore.mvvm.viewmodel.LoginViewModel
-import com.itachi.explore.mvvm.viewmodel.MyViewModelProviderFactory
 import dagger.hilt.android.AndroidEntryPoint
 import me.myatminsoe.mdetect.MDetect
 import me.myatminsoe.mdetect.Rabbit

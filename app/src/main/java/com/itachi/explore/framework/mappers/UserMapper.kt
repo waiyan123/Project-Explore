@@ -11,7 +11,7 @@ class UserMapper(
     private val userVoToEntityMapper: UserVoToEntityMapper,
     private val userVoToFirebaseMapper: UserVoToFirebaseMapper
 ) {
-    fun entityToVO(userEntity: UserEntity) = userEntityToVoMapper.map(userEntity)
-    fun voToEntity(userVO: UserVO) = userVoToEntityMapper.map(userVO)
-    fun voToFirebaseHashmap(userVO: UserVO) = userVoToFirebaseMapper.map(userVO)
+    fun entityToVO(userEntity: UserEntity?) = userEntityToVoMapper.map(userEntity)
+    fun voToEntity(userVO: UserVO?) = userVoToEntityMapper.map(userVO)
+    fun voToFirebaseHashmap(userVO: UserVO?) = userVoToFirebaseMapper.map(userVO)
 }

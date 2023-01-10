@@ -7,7 +7,9 @@ import com.itachi.core.domain.UserVO
 import com.itachi.core.common.Resource
 import com.itachi.explore.framework.mappers.UserMapper
 import com.itachi.explore.persistence.MyDatabase
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.withContext
 import org.koin.core.KoinComponent
 
 class UserRoomDataSourceImpl(
@@ -17,7 +19,9 @@ class UserRoomDataSourceImpl(
 ) : UserRoomDataSource {
 
     override suspend fun addUser(userVO: UserVO) {
-        database.userDao().insertUser(userMapper.voToEntity(userVO))
+        withContext(Dispatchers.IO) {
+            database.userDao().insertUser(userMapper.voToEntity(userVO))
+        }
     }
 
     override fun getUser(userId: String?): Flow<UserVO> =
@@ -25,16 +29,23 @@ class UserRoomDataSourceImpl(
             .map {
                 userMapper.entityToVO(it)
             }
+            .flowOn(Dispatchers.IO)
 
     override suspend fun deleteUser() {
-        database.userDao().deleteUser()
+        withContext(Dispatchers.IO) {
+            database.userDao().deleteUser()
+        }
     }
 
     override suspend fun updateUser(userVO: UserVO) {
-        database.userDao().insertUser(userMapper.voToEntity(userVO))
+        withContext(Dispatchers.IO) {
+            database.userDao().insertUser(userMapper.voToEntity(userVO))
+        }
     }
 
     private suspend fun getAllUsers(): List<UserVO> =
-        database.userDao().getAllUsers()
-            .map { userMapper.entityToVO(it) }
+        withContext(Dispatchers.IO) {
+            database.userDao().getAllUsers()
+                .map { userMapper.entityToVO(it) }
+        }
 }

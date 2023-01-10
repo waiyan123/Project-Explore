@@ -1,6 +1,7 @@
 package com.itachi.explore.mvvm.viewmodel
 
 import android.content.Intent
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,6 +12,7 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.itachi.core.domain.PhotoVO
 import com.itachi.core.domain.UserVO
 import com.itachi.core.interactors.AddUserUseCase
@@ -19,16 +21,18 @@ import com.itachi.explore.R
 import com.itachi.explore.activities.LoginActivity
 import com.itachi.core.common.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.koin.core.KoinComponent
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val addUserUseCase : AddUserUseCase,
-    private val auth : FirebaseAuth,
-    private val getLanguageUseCase : GetLanguageUseCase
+    private val addUserUseCase: AddUserUseCase,
+    private val auth: FirebaseAuth,
+    private val getLanguageUseCase: GetLanguageUseCase
 ) : ViewModel(), KoinComponent {
 
     val loginSuccess = MutableLiveData<Boolean>()
@@ -40,17 +44,19 @@ class LoginViewModel @Inject constructor(
     private val REQ_ONE_TAP = 1
 
     init {
-        isAlreadyLogin.postValue(auth.currentUser!=null)
+        isAlreadyLogin.postValue(auth.currentUser != null)
         viewModelScope.launch {
-            getLanguageUseCase().collect {
+            getLanguageUseCase()
+                .onEach{
                 language.postValue(it)
             }
+                .collect()
         }
     }
 
     fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-
         when (requestCode) {
+
             REQ_ONE_TAP -> {
                 val task = GoogleSignIn.getSignedInAccountFromIntent(data)
                 handleSignInResult(task)
@@ -81,10 +87,11 @@ class LoginViewModel @Inject constructor(
 
     }
 
-    private fun loginToFirebase(account : GoogleSignInAccount) {
+    private fun loginToFirebase(account: GoogleSignInAccount) {
         val credential = GoogleAuthProvider.getCredential(account.idToken, null)
         auth.signInWithCredential(credential)
             .addOnCompleteListener {
+                Log.d("test---","addOnComplete")
                 val userId = auth.currentUser!!.uid
                 viewModelScope.launch {
                     addUserUseCase(
@@ -100,26 +107,28 @@ class LoginViewModel @Inject constructor(
                             "",
                             false
                         )
-                    ).collect {
-                        when (it) {
-                            is Resource.Success -> {
+                    )
+                        .onEach{
+                            when (it) {
+                                is Resource.Success -> {
 
-                                it.data?.let {
-                                    loginSuccess.postValue(true)
-                                    displayLoading.postValue(false)
+                                    it.data?.let {
+                                        loginSuccess.postValue(true)
+                                        displayLoading.postValue(false)
+                                    }
                                 }
-                            }
-                            is Resource.Error -> {
-                                it.message?.let {errorMsg->
-                                    errorMessage.postValue(errorMsg)
-                                    displayLoading.postValue(false)
+                                is Resource.Error -> {
+                                    it.message?.let { errorMsg ->
+                                        errorMessage.postValue(errorMsg)
+                                        displayLoading.postValue(false)
+                                    }
                                 }
-                            }
-                            is Resource.Loading -> {
-                                displayLoading.postValue(true)
+                                is Resource.Loading -> {
+                                    displayLoading.postValue(true)
+                                }
                             }
                         }
-                    }
+                        .collect()
                 }
             }
     }

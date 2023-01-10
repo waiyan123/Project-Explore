@@ -12,7 +12,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.itachi.explore.R
 import com.itachi.explore.mvvm.viewmodel.LoginViewModel
-import com.itachi.explore.mvvm.viewmodel.MyViewModelProviderFactory
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_login.*
 
@@ -51,7 +50,6 @@ class LoginActivity : BaseActivity() {
         startActivity(intent)
         finish()
     }
-
 
     companion object {
         fun newIntent(context: Context): Intent {

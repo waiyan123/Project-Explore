@@ -3,9 +3,13 @@ package com.itachi.explore.di
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.room.Room
+import com.google.android.play.core.appupdate.AppUpdateManager
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.storage.FirebaseStorage
 import com.itachi.core.data.LanguageRepositoryImpl
 import com.itachi.core.data.RemoteConfigRepository
@@ -35,6 +39,14 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object DaggerMainModule {
+
+    @Provides
+    @Singleton
+    fun providesAppUpdateManager(
+        @ApplicationContext context: Context
+    ) : AppUpdateManager {
+        return AppUpdateManagerFactory.create(context)
+    }
 
     @Provides
     @Singleton
@@ -217,6 +229,6 @@ object DaggerMainModule {
     @Provides
     @Singleton
     fun providesRemoteConfig() : FirebaseRemoteConfig {
-        return FirebaseRemoteConfig.getInstance()
+        return Firebase.remoteConfig
     }
 }

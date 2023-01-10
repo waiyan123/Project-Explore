@@ -10,6 +10,7 @@ import com.itachi.core.interactors.GetAllPagodasUseCase
 import com.itachi.core.interactors.GetLanguageUseCase
 import com.itachi.core.interactors.GetPagodaBannerUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -37,7 +38,9 @@ class PagodaViewModel @Inject constructor(
 
     private fun getBannerPhotos(){
         viewModelScope.launch {
-            getPagodaBannerUseCase().collect { resource->
+            getPagodaBannerUseCase()
+                .buffer()
+                .collect { resource->
                 when(resource) {
                     is Resource.Success -> {
                         resource.data?.let { list->
@@ -47,7 +50,7 @@ class PagodaViewModel @Inject constructor(
                         }
                     }
                     is Resource.Error -> {
-                        errorGettingBanner.postValue(resource.message)
+                        errorGettingBanner.postValue(resource.message ?: "Unexpected error occur")
                     }
                     is Resource.Loading -> {
 
@@ -60,7 +63,9 @@ class PagodaViewModel @Inject constructor(
     fun getPagodaList()  {
 
         viewModelScope.launch {
-            getAllPagodasUseCase().collect { resource->
+            getAllPagodasUseCase()
+                .buffer()
+                .collect { resource->
                 when(resource) {
                     is Resource.Success -> {
                         resource.data?.let { list ->
@@ -71,7 +76,7 @@ class PagodaViewModel @Inject constructor(
                         }
                     }
                     is Resource.Error -> {
-                        errorGettingPagodaList.postValue(resource.message)
+                        errorGettingPagodaList.postValue(resource.message ?: "Unexpected error occur")
                     }
                     is Resource.Loading -> {
 
@@ -91,7 +96,9 @@ class PagodaViewModel @Inject constructor(
 
     fun checkLanguage() : MutableLiveData<String>{
         viewModelScope.launch {
-            getLanguageUseCase().collect { lang->
+            getLanguageUseCase()
+                .buffer()
+                .collect { lang->
                 checkLanguage.postValue(lang)
             }
         }

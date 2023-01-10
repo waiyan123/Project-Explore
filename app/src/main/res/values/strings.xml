@@ -115,6 +115,14 @@
     <string name="intro_title_mm_unicode">ပြည်ရွှေဘို</string>
     <string name="intro_title_mm_zawgyi">ျပည္ေရႊဘုိ</string>
 
+    <string name="menu_edit_en">Edit</string>
+    <string name="menu_edit_mm_unicode">ပြုပြင်မယ်</string>
+    <string name="menu_edit_mm_zawgyi">ျပဳျပင္မယ္</string>
+
+    <string name="menu_delete_en">Delete</string>
+    <string name="menu_delete_mm_unicode">ဖျက်မယ်</string>
+    <string name="menu_delete_mm_zawgyi">ဖ်က္မယ္</string>
+
 
     <string name="intro_body_en">
 

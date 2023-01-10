@@ -11,6 +11,8 @@ import com.itachi.explore.utils.PAGODA_TYPE
 import com.itachi.explore.utils.VIEW_TYPE
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.FlowCollector
+import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.launch
@@ -41,9 +43,10 @@ class DetailsViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             getLanguageUseCase()
-                .collect {
+                .buffer()
+                .collect(FlowCollector{
                     language.postValue(it)
-                }
+                })
         }
     }
 
@@ -51,7 +54,9 @@ class DetailsViewModel @Inject constructor(
             when(itemVO.item_type){
                 PAGODA_TYPE -> {
                     viewModelScope.launch {
-                        getPagodaByIdUseCase(itemVO.item_id).collect { resource->
+                        getPagodaByIdUseCase(itemVO.item_id)
+                            .buffer()
+                            .collect(FlowCollector{resource->
                             when(resource) {
                                 is Resource.Success -> {
                                     resource.data?.let { pagodaVO->
@@ -65,12 +70,14 @@ class DetailsViewModel @Inject constructor(
 
                                 }
                             }
-                        }
+                        })
                     }
                 }
                 VIEW_TYPE -> {
                     viewModelScope.launch {
-                        getViewByIdUseCase(itemVO.item_id).collect { resource->
+                        getViewByIdUseCase(itemVO.item_id)
+                            .buffer()
+                            .collect(FlowCollector{ resource->
                             when(resource) {
                                 is Resource.Success -> {
                                     resource.data?.let { viewVO->
@@ -84,12 +91,14 @@ class DetailsViewModel @Inject constructor(
 
                                 }
                             }
-                        }
+                        })
                     }
                 }
                 ANCIENT_TYPE -> {
                     viewModelScope.launch {
-                        getAncientByIdUseCase(itemVO.item_id).collect { resource->
+                        getAncientByIdUseCase(itemVO.item_id)
+                            .buffer()
+                            .collect(FlowCollector{ resource->
                             when(resource) {
                                 is Resource.Success -> {
                                     resource.data?.let { ancientVO->
@@ -103,7 +112,7 @@ class DetailsViewModel @Inject constructor(
 
                                 }
                             }
-                        }
+                        })
                     }
                 }
 
@@ -115,7 +124,9 @@ class DetailsViewModel @Inject constructor(
         mItemVO.postValue(vo)
         itemVO = vo
         viewModelScope.launch {
-            getUserUseCase().collect { resource->
+            getUserUseCase()
+                .buffer()
+                .collect { resource->
                 when(resource) {
                     is Resource.Success -> {
                         resource.data?.let {
@@ -150,7 +161,7 @@ class DetailsViewModel @Inject constructor(
                                         }
                                     }
                                     is Resource.Error -> {
-                                        errorMsg.postValue(resource.message)
+                                        errorMsg.postValue(resource.message ?: "Unexpected error occur")
                                     }
                                     is Resource.Loading -> {
 
@@ -175,7 +186,7 @@ class DetailsViewModel @Inject constructor(
                                         }
                                     }
                                     is Resource.Error -> {
-                                        errorMsg.postValue(resource.message)
+                                        errorMsg.postValue(resource.message ?: "Unexpected error occur")
                                     }
                                     is Resource.Loading -> {
 
@@ -200,7 +211,7 @@ class DetailsViewModel @Inject constructor(
                                         }
                                     }
                                     is Resource.Error -> {
-                                        errorMsg.postValue(resource.message)
+                                        errorMsg.postValue(resource.message ?: "Unexpected error occur")
                                     }
                                     is Resource.Loading -> {
 

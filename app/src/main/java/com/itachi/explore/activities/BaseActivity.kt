@@ -1,14 +1,11 @@
 package com.itachi.explore.activities
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.view.Gravity
 import android.view.WindowManager
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.custom_toast.*
 import kotlinx.android.synthetic.main.custom_toast.view.*
 import kotlinx.android.synthetic.main.dialog_force_update.*
@@ -19,6 +16,8 @@ import android.net.Uri
 import android.util.Base64
 import android.util.Log
 import android.view.ViewGroup
+import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.itachi.explore.R
 import com.itachi.explore.utils.PERMISSION_STORAGE
@@ -86,15 +85,6 @@ abstract class BaseActivity : AppCompatActivity(){
         }
     }
 
-    fun setUpForceUpdateDialog() {
-        val dialogBuilder = AlertDialog.Builder(this)
-        val view = layoutInflater.inflate(R.layout.dialog_force_update, null)
-        dialogBuilder.setView(view)
-        alertDialog = dialogBuilder.create()
-        alertDialog!!.window!!.attributes.windowAnimations = R.style.DialogChosing
-        alertDialog!!.setCancelable(false)
-    }
-
     fun showSavableDialog() {
         val dialogBuilder = AlertDialog.Builder(this)
         val view = layoutInflater.inflate(R.layout.dialog_saveable,null)
@@ -103,18 +93,6 @@ abstract class BaseActivity : AppCompatActivity(){
         alertDialog?.let {
             it.window?.attributes?.windowAnimations = R.style.DialogChosing
             it.show()
-        }
-    }
-
-    fun showForceUpdateDialog() {
-
-        if(!alertDialog!!.isShowing){
-            alertDialog!!.show()
-        }
-
-        alertDialog!!.tv_update.setOnClickListener {
-            alertDialog!!.dismiss()
-            navigateToPlayStore()
         }
     }
 

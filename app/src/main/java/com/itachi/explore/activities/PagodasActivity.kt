@@ -14,7 +14,6 @@ import com.bumptech.glide.Glide
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.itachi.explore.R
 import com.itachi.explore.adapters.recycler.PagodasRecyclerAdapter
-import com.itachi.explore.mvvm.viewmodel.MyViewModelProviderFactory
 import com.itachi.explore.mvvm.viewmodel.PagodaViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_pagodas.*

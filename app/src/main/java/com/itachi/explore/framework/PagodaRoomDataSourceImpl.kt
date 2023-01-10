@@ -6,10 +6,9 @@ import com.itachi.core.data.db.PagodaRoomDataSource
 import com.itachi.core.domain.PagodaVO
 import com.itachi.explore.framework.mappers.PagodaMapper
 import com.itachi.explore.persistence.MyDatabase
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.withContext
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
@@ -20,11 +19,15 @@ class PagodaRoomDataSourceImpl(
 
     override suspend fun addPagoda(pagodaVO: PagodaVO) {
         Log.d("test---", "add pagoda")
-        database.pagodaDao().addPagoda(pagodaMapper.voToEntity(pagodaVO))
+        withContext(Dispatchers.IO) {
+            database.pagodaDao().addPagoda(pagodaMapper.voToEntity(pagodaVO))
+        }
     }
 
     override suspend fun deletePagoda(pagodaVO: PagodaVO) {
-        database.pagodaDao().deletePagodaById(pagodaVO.item_id)
+        withContext(Dispatchers.IO) {
+            database.pagodaDao().deletePagodaById(pagodaVO.item_id)
+        }
     }
 
     override fun getPagodaById(id: String): Flow<PagodaVO> =
@@ -32,23 +35,31 @@ class PagodaRoomDataSourceImpl(
             .map {
                 pagodaMapper.entityToVO(it)
             }
+            .flowOn(Dispatchers.IO)
 
     override fun getAllPagodas(): Flow<List<PagodaVO>> =
         database.pagodaDao().getPagodaList()
             .map {
                 pagodaMapper.entityListToVOList(it)
             }
+            .flowOn(Dispatchers.IO)
 
     override suspend fun updatePagoda(pagodaVO: PagodaVO) {
-        database.pagodaDao().addPagoda(pagodaMapper.voToEntity(pagodaVO))
+        withContext(Dispatchers.IO) {
+            database.pagodaDao().addPagoda(pagodaMapper.voToEntity(pagodaVO))
+        }
     }
 
     override suspend fun addAllPagodas(pagodaList: List<PagodaVO>) {
-        database.pagodaDao().insertPagodaList(pagodaMapper.voListToEntityList(pagodaList))
+        withContext(Dispatchers.IO) {
+            database.pagodaDao().insertPagodaList(pagodaMapper.voListToEntityList(pagodaList))
+        }
     }
 
     override suspend fun deleteAllPagodas() {
-        database.pagodaDao().deletePagodaList()
+        withContext(Dispatchers.IO) {
+            database.pagodaDao().deletePagodaList()
+        }
     }
 
 

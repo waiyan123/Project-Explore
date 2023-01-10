@@ -18,8 +18,10 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.itachi.core.domain.UserVO
+import com.itachi.explore.BuildConfig
 import com.itachi.explore.R
 import com.itachi.explore.mvvm.viewmodel.MainViewModel
+import com.itachi.explore.utils.IMMEDIATE_UPDATE_REQUEST_CODE
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.dialog_profile.*
@@ -27,16 +29,6 @@ import kotlinx.android.synthetic.main.dialog_profile.*
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity(), View.OnClickListener{
-
-    private fun dismissUpdate() {
-        if (alertDialog != null) {
-            alertDialog!!.dismiss()
-        }
-    }
-
-    private fun forceUpdate() {
-        showForceUpdateDialog()
-    }
 
     private fun isUploader(uploader: Boolean) {
 
@@ -108,22 +100,52 @@ class MainActivity : BaseActivity(), View.OnClickListener{
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+//        mViewModel.registerUpdateListener()
+
         mViewModel.language.observe(this, Observer {
             showLanguage(it)
         })
 
-        setUpForceUpdateDialog()
         loadAd()
         showAd()
 
         setUpClickListener()
 
+//        mViewModel.checkForInAppUpdate(this)
+//        mViewModel.downloadStatus.observe(this){
+//            Log.d("test---",it)
+//            showToast(it)
+//            if(it=="Download is completed"){
+//                mViewModel.unregisterListener()
+//                val versionCode = BuildConfig.VERSION_CODE
+//                Log.d("test---","$versionCode")
+//            }
+//        }
     }
 
     override fun onResume() {
         super.onResume()
         mViewModel.setUp()
+//        mViewModel.onResume(this)
+//        showToast(BuildConfig.VERSION_CODE.toString())
     }
+
+    override fun onDestroy() {
+        mViewModel.unregisterUpdateListener()
+        super.onDestroy()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == IMMEDIATE_UPDATE_REQUEST_CODE) {
+            if (resultCode != RESULT_OK) {
+                Log.d("test---", "Update flow failed! Result code: $resultCode")
+                // If the update is cancelled or fails,
+                // you can request to start the update again.
+            }
+        }
+    }
+
 
     private fun setUpClickListener() {
         card_pagoda.setOnClickListener(this)
@@ -139,12 +161,7 @@ class MainActivity : BaseActivity(), View.OnClickListener{
         fab_language.setOnClickListener(this)
         menu_item_english.setOnClickListener(this)
         menu_item_myanmar.setOnClickListener(this)
-        mViewModel.update.observe(this) {
-            if (it) {
-                forceUpdate()
-            }
-            else dismissUpdate()
-        }
+
         mViewModel.mUserVO.observe(this) {
             showUserInfo(it)
         }
@@ -243,6 +260,9 @@ class MainActivity : BaseActivity(), View.OnClickListener{
             }
             View.VISIBLE -> {
                 layout_language_chooser.visibility = View.GONE
+            }
+            View.INVISIBLE -> {
+                layout_language_chooser.visibility = View.VISIBLE
             }
         }
     }

@@ -9,35 +9,46 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.RadioGroup
+import androidx.activity.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.itachi.explore.R
 import com.itachi.explore.mvp.presenters.IntroPresenter
 import com.itachi.explore.mvp.views.IntroView
+import com.itachi.explore.mvvm.viewmodel.IntroViewModel
+import com.itachi.explore.mvvm.viewmodel.LoginViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_intro.*
 import kotlinx.android.synthetic.main.dialog_intro.*
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import me.myatminsoe.mdetect.MDetect
 import me.myatminsoe.mdetect.Rabbit
 
-
-class IntroActivity : BaseActivity(),IntroView,RadioGroup.OnCheckedChangeListener {
+@AndroidEntryPoint
+class IntroActivity : BaseActivity(),RadioGroup.OnCheckedChangeListener {
 
     override fun onCheckedChanged(p0: RadioGroup?, p1: Int) {
         when(p1) {
             R.id.toggle_eng -> {
-                mPresenter.setLanguage("en",this)
+//                mPresenter.setLanguage("en",this)
+                mViewModel.setLanguage("en")
             }
             R.id.toggle_mm -> {
-                mPresenter.setLanguage("mm",this)
+//                mPresenter.setLanguage("mm",this)
+                mViewModel.setLanguage("mm")
             }
         }
     }
 
-    override fun navigateToMainActivity() {
+    private fun navigateToMainActivity() {
         startActivity(MainActivity.newIntent(this))
         finish()
     }
 
-    override fun showIntro(intro: String) {
+    private fun showIntro(intro: String) {
                                                                 // changed to hard coded string
         var mIntro = intro
         if(!MDetect.isUnicode()) {
@@ -48,11 +59,11 @@ class IntroActivity : BaseActivity(),IntroView,RadioGroup.OnCheckedChangeListene
         tv_intro_body.text = mIntro
     }
 
-    override fun showError(error: String) {
+    private fun showError(error: String) {
         showToast(error)
     }
 
-    override fun checkLanguage(lang: String) {
+    private fun checkLanguage(lang: String) {
         when(lang) {
             "en" -> {
                 tv_continue.text = getString(R.string.continue_en)
@@ -117,19 +128,24 @@ class IntroActivity : BaseActivity(),IntroView,RadioGroup.OnCheckedChangeListene
         }
     }
 
-    private lateinit var mPresenter : IntroPresenter
+    private val mViewModel : IntroViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_intro)
         showIntroDialog()
 
-        mPresenter = ViewModelProviders.of(this).get(IntroPresenter::class.java)
-        mPresenter.initPresenter(this)
-        mPresenter.checkLanguage()
+        lifecycleScope.launch{
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                mViewModel.langStateFlow.collectLatest {
+                    checkLanguage(it)
+                }
+            }
+        }
 
         tv_continue.setOnClickListener {
-            mPresenter.onClickedContinue(cb_dont_show.isChecked)
+            mViewModel.onClickedContinue(cb_dont_show.isChecked)
+            navigateToMainActivity()
         }
 
         toggle_language.setOnCheckedChangeListener(this)

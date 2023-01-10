@@ -8,10 +8,9 @@ import com.itachi.explore.framework.mappers.ListMapperImpl
 import com.itachi.explore.framework.mappers.Mapper
 import com.itachi.explore.persistence.MyDatabase
 import com.itachi.explore.persistence.entities.AncientEntity
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.withContext
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
@@ -21,19 +20,28 @@ class AncientRoomDataSourceImpl(
 ) : AncientRoomDataSource {
 
     override suspend fun addAncient(ancientVO: AncientVO) {
-        database.ancientDao().addAncient(ancientMapper.voToEntity(ancientVO))
+        withContext(Dispatchers.IO) {
+            database.ancientDao().addAncient(ancientMapper.voToEntity(ancientVO))
+        }
     }
 
     override suspend fun addAllAncients(ancientList: List<AncientVO>) {
-        database.ancientDao().insertAncientList(ancientMapper.voListToEntityList(ancientList))
+        withContext(Dispatchers.IO) {
+            database.ancientDao().insertAncientList(ancientMapper.voListToEntityList(ancientList))
+        }
     }
 
     override suspend fun deleteAncient(ancientVO: AncientVO) {
-        database.ancientDao().deleteAncientById(ancientVO.item_id)
+        withContext(Dispatchers.IO) {
+            database.ancientDao().deleteAncientById(ancientVO.item_id)
+        }
     }
 
     override suspend fun deleteAllAncients() {
-        database.ancientDao().deleteAncientList()
+        withContext(Dispatchers.IO) {
+            database.ancientDao().deleteAncientList()
+        }
+
     }
 
     override fun getAncientById(id: String): Flow<AncientVO> =
@@ -41,15 +49,19 @@ class AncientRoomDataSourceImpl(
             .map {
                 ancientMapper.entityToVO(it)
             }
+            .flowOn(Dispatchers.IO)
 
     override fun getAllAncients(): Flow<List<AncientVO>> =
         database.ancientDao().getAncientsList()
             .map {
                 ancientMapper.entityListToVOList(it)
             }
+            .flowOn(Dispatchers.IO)
 
     override suspend fun update(ancientVO: AncientVO) {
-        database.ancientDao().updateAncient(ancientMapper.voToEntity(ancientVO))
+        withContext(Dispatchers.IO) {
+            database.ancientDao().updateAncient(ancientMapper.voToEntity(ancientVO))
+        }
     }
 
 }

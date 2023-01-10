@@ -57,7 +57,9 @@ class UserProfileViewModel @Inject constructor(
 
     fun getUser(userVO: UserVO?) {
         viewModelScope.launch {
-            getUserUseCase(userVO?.user_id).collect { resource ->
+            getUserUseCase(userVO?.user_id)
+                .buffer()
+                .collect(FlowCollector{ resource ->
                 when (resource) {
                     is Resource.Success -> {
                         resource.data?.let {
@@ -72,7 +74,7 @@ class UserProfileViewModel @Inject constructor(
 
                     }
                 }
-            }
+            })
         }
         if (userVO == null) editable.postValue(true)
     }
@@ -86,7 +88,8 @@ class UserProfileViewModel @Inject constructor(
         progressLoadingLiveData.postValue(true)
         viewModelScope.launch {
             updateUserUseCase(mUserVO)
-                .collect { resource ->
+                .buffer()
+                .collect(FlowCollector{ resource ->
                     when (resource) {
                         is Resource.Success -> {
                             resource.data?.let {
@@ -105,7 +108,7 @@ class UserProfileViewModel @Inject constructor(
                     onEdit.postValue(false)
                     onEditStatus = false
                     progressLoadingLiveData.postValue(false)
-                }
+                })
         }
     }
 
@@ -167,7 +170,7 @@ class UserProfileViewModel @Inject constructor(
                 .flatMapConcat {
                     uploadPhotosUseCase(listOf(dialogModel.imagePath))
                 }
-                .collect { resource ->
+                .collect(FlowCollector{ resource ->
                     when (resource) {
                         is Resource.Success -> {
                             resource.data?.let {
@@ -193,7 +196,7 @@ class UserProfileViewModel @Inject constructor(
 
                         }
                     }
-                }
+                })
         }
     }
 
@@ -220,14 +223,14 @@ class UserProfileViewModel @Inject constructor(
                     .flatMapConcat {
                         getAncientsByUserIdUseCase(vo.user_id)
                     }
-                    .collect {
+                    .collect(FlowCollector{
                         it.data?.let {list->
                             itemList.addAll(list)
                         }
                         _itemListStateFlow.value = itemList
                         itemListLiveData.postValue(itemList)
 
-                    }
+                    })
 
 
             }

@@ -10,6 +10,8 @@ import com.itachi.explore.utils.ANCIENT_TYPE
 import com.itachi.explore.utils.PAGODA_TYPE
 import com.itachi.explore.utils.VIEW_TYPE
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.FlowCollector
+import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -50,7 +52,9 @@ class PreviewViewModel @Inject constructor(
         when (uploadedPhotoVO.item_type) {
             PAGODA_TYPE -> {
                 viewModelScope.launch {
-                    getPagodaByIdUseCase(uploadedPhotoVO.item_id).collect { resource->
+                    getPagodaByIdUseCase(uploadedPhotoVO.item_id)
+                        .buffer()
+                        .collect(FlowCollector{ resource->
                         when(resource) {
                             is Resource.Success-> {
                                 resource.data?.let {pagodaVO ->
@@ -58,18 +62,19 @@ class PreviewViewModel @Inject constructor(
                                 }
                             }
                             is Resource.Error-> {
-                                errorMessageLiveData.postValue(resource.message)
+                                errorMessageLiveData.postValue(resource.message ?: "Unexpected error occur")
                             }
                             is Resource.Loading -> {
 
                             }
                         }
-                    }
+                    })
                 }
             }
             VIEW_TYPE -> {
                 viewModelScope.launch {
                     getViewByIdUseCase(uploadedPhotoVO.item_id)
+                        .buffer()
                         .collect { resource->
                             when(resource) {
                                 is Resource.Success -> {
@@ -78,7 +83,7 @@ class PreviewViewModel @Inject constructor(
                                     }
                                 }
                                 is Resource.Error -> {
-                                    errorMessageLiveData.postValue(resource.message)
+                                    errorMessageLiveData.postValue(resource.message ?: "Unexpected error occur")
                                 }
                                 is Resource.Loading -> {
 
@@ -90,6 +95,7 @@ class PreviewViewModel @Inject constructor(
             ANCIENT_TYPE -> {
                 viewModelScope.launch {
                     getAncientByIdUseCase(uploadedPhotoVO.item_id)
+                        .buffer()
                         .collect {resource->
                             when(resource) {
                                 is Resource.Success -> {
@@ -98,7 +104,7 @@ class PreviewViewModel @Inject constructor(
                                     }
                                 }
                                 is Resource.Error -> {
-                                    errorMessageLiveData.postValue(resource.message)
+                                    errorMessageLiveData.postValue(resource.message ?: "Unexpected error occur")
                                 }
                                 is Resource.Loading -> {
 
@@ -113,6 +119,7 @@ class PreviewViewModel @Inject constructor(
     private fun getUploader(id : String) {
         viewModelScope.launch {
             getUserUseCase(id)
+                .buffer()
                 .collect { resource->
                     resource.data?.let {
                         uploaderVO.postValue(it)
@@ -125,6 +132,7 @@ class PreviewViewModel @Inject constructor(
     private fun checkLanguage() {
         viewModelScope.launch {
             getLanguageUseCase()
+                .buffer()
                 .collect {
                     language.postValue(it)
                 }
