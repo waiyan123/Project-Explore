@@ -1,41 +1,48 @@
 package com.itachi.explore.activities
 
 import android.os.Bundle
-import androidx.lifecycle.ViewModelProviders
+import androidx.activity.viewModels
 import com.itachi.explore.R
-import com.itachi.explore.mvp.presenters.SplashPresenter
-import com.itachi.explore.mvp.views.SplashView
+import com.itachi.explore.mvvm.viewmodel.SplashViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.dialog_loading.*
 
-class SplashActivity : BaseActivity(),SplashView{
-    override fun navigateToMain() {
+@AndroidEntryPoint
+class SplashActivity : BaseActivity(){
+    private fun navigateToMain() {
         startActivity(MainActivity.newIntent(this))
         finish()
     }
 
-    override fun navigateToLogin() {
+    private fun navigateToLogin() {
         startActivity(LoginActivity.newIntent(this))
         finish()
     }
 
-    override fun navigateToIntro() {
+    private fun navigateToIntro() {
         startActivity(IntroActivity.newIntent(this))
         finish()
     }
 
-    override fun checkLanguage(lang: String) {
-
-    }
-
-    lateinit var mPresenter : SplashPresenter
+    private val mViewModel : SplashViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
 
-        mPresenter = ViewModelProviders.of(this).get(SplashPresenter::class.java)
-        mPresenter.initPresenter(this)
-        mPresenter.checkLanguage()
+        mViewModel.navigationScreenLiveData.observe(this){screenDestination->
+            when(screenDestination){
+                "main" -> {
+                    navigateToMain()
+                }
+                "intro" -> {
+                    navigateToIntro()
+                }
+                "login" -> {
+                    navigateToLogin()
+                }
+            }
+        }
 //        getKeyHashForFacebook()
 
         val timer = object : Thread() {
@@ -48,7 +55,7 @@ class SplashActivity : BaseActivity(),SplashView{
                 } catch (e: Exception) {
                     e.printStackTrace()
                 } finally {
-                    mPresenter.checkAlreadyLogin()
+                    mViewModel.checkAlreadyLogin()
                 }
             }
         }
