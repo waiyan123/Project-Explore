@@ -1,21 +1,18 @@
 package com.itachi.explore.framework
 
-import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.itachi.core.common.Resource
-import com.itachi.core.data.network.AncientFirebaseDataSource
-import com.itachi.core.domain.AncientVO
+import com.itachi.core.data.firebase.AncientFirebaseDataSource
+import com.itachi.core.domain.models.AncientVO
 import com.itachi.explore.framework.mappers.AncientMapper
 import com.itachi.explore.persistence.entities.AncientEntity
 import com.itachi.explore.utils.*
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class AncientFirebaseDataSourceImpl(

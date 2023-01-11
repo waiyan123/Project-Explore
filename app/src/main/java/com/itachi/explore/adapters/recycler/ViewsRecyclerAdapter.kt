@@ -2,7 +2,7 @@ package com.itachi.explore.adapters.recycler
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.itachi.core.domain.UploadedPhotoVO
+import com.itachi.core.domain.models.UploadedPhotoVO
 import com.itachi.explore.R
 import com.itachi.explore.viewholders.ViewsViewHolder
 

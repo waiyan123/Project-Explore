@@ -1,11 +1,10 @@
 package com.itachi.explore.framework
 
-import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import com.itachi.core.data.network.UserFirebaseDataSource
-import com.itachi.core.domain.UserVO
+import com.itachi.core.data.firebase.UserFirebaseDataSource
+import com.itachi.core.domain.models.UserVO
 import com.itachi.core.common.Resource
 import com.itachi.explore.framework.mappers.UserMapper
 import com.itachi.explore.utils.USER
@@ -14,7 +13,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 
 class UserFirebaseDataSourceImpl(

@@ -3,8 +3,8 @@ package com.itachi.explore.mvvm.viewmodel
 import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.itachi.core.interactors.GetLanguageUseCase
-import com.itachi.core.interactors.SetLanguageUseCase
+import com.itachi.core.domain.usecases.GetLanguageUseCase
+import com.itachi.core.domain.usecases.SetLanguageUseCase
 import com.itachi.explore.utils.DONT_SHOW_INTRO
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*

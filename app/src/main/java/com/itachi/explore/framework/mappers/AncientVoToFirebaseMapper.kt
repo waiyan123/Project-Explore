@@ -1,6 +1,6 @@
 package com.itachi.explore.framework.mappers
 
-import com.itachi.core.domain.AncientVO
+import com.itachi.core.domain.models.AncientVO
 import com.itachi.explore.utils.*
 
 open class AncientVoToFirebaseMapper : Mapper<AncientVO,HashMap<String,Any>> {

@@ -1,6 +1,6 @@
 package com.itachi.explore.third_parties
 
-import com.itachi.core.domain.PhotoVO
+import com.itachi.core.domain.models.PhotoVO
 import ss.com.bannerslider.adapters.SliderAdapter
 import ss.com.bannerslider.viewholder.ImageSlideViewHolder
 

@@ -1,23 +1,16 @@
 package com.itachi.explore.mvvm.viewmodel
 
-import android.content.SharedPreferences
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.itachi.core.common.Resource
-import com.itachi.core.data.ViewRepository
-import com.itachi.core.data.ViewRepositoryImpl
-import com.itachi.core.domain.UploadedPhotoVO
-import com.itachi.core.interactors.GetAllViewsPhotoUseCase
-import com.itachi.core.interactors.GetLanguageUseCase
-import com.itachi.explore.utils.LANGUAGE
+import com.itachi.core.domain.models.UploadedPhotoVO
+import com.itachi.core.domain.usecases.GetAllViewsPhotoUseCase
+import com.itachi.core.domain.usecases.GetLanguageUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.buffer
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import me.myatminsoe.mdetect.MDetect
-import org.koin.core.KoinComponent
 import javax.inject.Inject
 
 @HiltViewModel

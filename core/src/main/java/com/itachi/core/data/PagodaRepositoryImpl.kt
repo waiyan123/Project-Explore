@@ -1,10 +1,10 @@
 package com.itachi.core.data
 
 import com.itachi.core.common.Resource
-import com.itachi.core.data.db.PagodaRoomDataSource
-import com.itachi.core.data.network.PagodaFirebaseDataSource
-import com.itachi.core.data.network.PhotoFirebaseDataSource
-import com.itachi.core.domain.PagodaVO
+import com.itachi.core.data.room.PagodaRoomDataSource
+import com.itachi.core.data.firebase.PagodaFirebaseDataSource
+import com.itachi.core.domain.models.PagodaVO
+import com.itachi.core.domain.repositories.PagodaRepository
 import kotlinx.coroutines.flow.*
 
 class PagodaRepositoryImpl(

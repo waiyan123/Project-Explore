@@ -1,9 +1,6 @@
 package com.itachi.explore.framework.mappers
 
-import com.itachi.core.domain.AncientVO
-import com.itachi.core.domain.PhotoVO
-import com.itachi.core.domain.UserVO
-import com.itachi.explore.persistence.entities.AncientEntity
+import com.itachi.core.domain.models.UserVO
 import com.itachi.explore.persistence.entities.UserEntity
 
 class UserMapper(

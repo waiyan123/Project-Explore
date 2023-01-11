@@ -2,8 +2,7 @@ package com.itachi.explore.viewholders
 
 import android.view.View
 import com.bumptech.glide.Glide
-import com.itachi.core.domain.PhotoVO
-import com.itachi.core.domain.UploadedPhotoVO
+import com.itachi.core.domain.models.PhotoVO
 import kotlinx.android.synthetic.main.rv_item_related_views.view.*
 
 class RelatedViewsViewHolder (itemView: View, val adapterOnClick : (PhotoVO) -> Unit) : BaseViewHolder<PhotoVO>(itemView){

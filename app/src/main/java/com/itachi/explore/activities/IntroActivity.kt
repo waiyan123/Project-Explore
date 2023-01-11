@@ -11,14 +11,10 @@ import android.view.Window
 import android.widget.RadioGroup
 import androidx.activity.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.itachi.explore.R
-import com.itachi.explore.mvp.presenters.IntroPresenter
-import com.itachi.explore.mvp.views.IntroView
 import com.itachi.explore.mvvm.viewmodel.IntroViewModel
-import com.itachi.explore.mvvm.viewmodel.LoginViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_intro.*
 import kotlinx.android.synthetic.main.dialog_intro.*

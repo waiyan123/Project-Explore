@@ -1,7 +1,7 @@
 package com.itachi.explore.framework.mappers
 
-import com.itachi.core.domain.PagodaVO
-import com.itachi.core.domain.PhotoVO
+import com.itachi.core.domain.models.PagodaVO
+import com.itachi.core.domain.models.PhotoVO
 import com.itachi.explore.persistence.entities.PagodaEntity
 import javax.inject.Inject
 

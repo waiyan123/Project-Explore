@@ -1,9 +1,6 @@
 package com.itachi.explore.framework.mappers
 
-import android.util.Log
-import com.itachi.core.domain.UserVO
-import com.itachi.core.domain.ViewVO
-import com.itachi.explore.persistence.entities.PhotoEntity
+import com.itachi.core.domain.models.UserVO
 import com.itachi.explore.utils.*
 
 class UserVoToFirebaseMapper : Mapper<UserVO,HashMap<String,Any>> {

@@ -7,10 +7,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.itachi.core.common.Resource
-import com.itachi.core.domain.ItemVO
-import com.itachi.core.domain.PhotoVO
-import com.itachi.core.domain.UserVO
-import com.itachi.core.interactors.*
+import com.itachi.core.domain.models.ItemVO
+import com.itachi.core.domain.models.PhotoVO
+import com.itachi.core.domain.models.UserVO
+import com.itachi.core.domain.usecases.*
 import com.itachi.explore.mvvm.model.UserProfileUploadDialogModel
 import com.itachi.explore.utils.REQUEST_BACKGROUND_PIC
 import com.itachi.explore.utils.REQUEST_PROFILE_PIC

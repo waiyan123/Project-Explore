@@ -3,12 +3,12 @@ package com.itachi.explore.di
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import com.itachi.core.data.AncientRepository
+import com.itachi.core.domain.repositories.AncientRepository
 import com.itachi.core.data.AncientRepositoryImpl
-import com.itachi.core.data.db.AncientRoomDataSource
-import com.itachi.core.data.network.AncientFirebaseDataSource
-import com.itachi.core.domain.AncientVO
-import com.itachi.core.interactors.*
+import com.itachi.core.data.room.AncientRoomDataSource
+import com.itachi.core.data.firebase.AncientFirebaseDataSource
+import com.itachi.core.domain.models.AncientVO
+import com.itachi.core.domain.usecases.*
 import com.itachi.explore.framework.AncientFirebaseDataSourceImpl
 import com.itachi.explore.framework.AncientRoomDataSourceImpl
 import com.itachi.explore.framework.mappers.*
@@ -121,10 +121,10 @@ object DaggerAncientModule {
     @Provides
     @Singleton
     fun providesAncientMapper(
-        ancientEntityToVoMapper: Mapper<AncientEntity,AncientVO>,
+        ancientEntityToVoMapper: Mapper<AncientEntity, AncientVO>,
         ancientVoToEntityMapper: Mapper<AncientVO,AncientEntity>,
         ancientVoToFirebaseMapper: Mapper<AncientVO,HashMap<String,Any>>,
-        ancientEntityListToVoListMapper : ListMapper<AncientEntity,AncientVO>,
+        ancientEntityListToVoListMapper : ListMapper<AncientEntity, AncientVO>,
         ancientVoListToEntityListMapper : ListMapper<AncientVO,AncientEntity>
     ) : AncientMapper {
         return AncientMapper(ancientEntityToVoMapper,ancientVoToEntityMapper,ancientVoToFirebaseMapper,
@@ -136,8 +136,8 @@ object DaggerAncientModule {
     @Provides
     @Singleton
     fun providesAncientEntityListToVoListMapper(
-        mapper : Mapper<AncientEntity,AncientVO>
-    ) : ListMapper<AncientEntity,AncientVO> {
+        mapper : Mapper<AncientEntity, AncientVO>
+    ) : ListMapper<AncientEntity, AncientVO> {
         return ListMapperImpl(mapper)
     }
     @Provides
@@ -149,7 +149,7 @@ object DaggerAncientModule {
     }
     @Provides
     @Singleton
-    fun providesAncientEntityToVoMapper() : Mapper<AncientEntity,AncientVO>{
+    fun providesAncientEntityToVoMapper() : Mapper<AncientEntity, AncientVO>{
         return AncientEntityToVoMapper()
     }
     @Provides

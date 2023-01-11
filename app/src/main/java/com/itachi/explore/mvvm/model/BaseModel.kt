@@ -3,7 +3,7 @@ package com.itachi.explore.mvvm.model
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import com.itachi.core.domain.PhotoVO
+import com.itachi.core.domain.models.PhotoVO
 import com.itachi.explore.utils.ITEM_ID
 import com.itachi.explore.utils.PHOTO_PATH
 import com.itachi.explore.utils.UPLOADED_PHOTO
@@ -37,7 +37,7 @@ abstract class BaseModel {
 
     }
 
-    fun deleteUserPhoto(photo : PhotoVO?,item_id: String) {
+    fun deleteUserPhoto(photo : PhotoVO?, item_id: String) {
         val photoRef = firebaseStorage.getReference(PHOTO_PATH).child(photo!!.id!!)
         photoRef.delete().addOnCompleteListener {
 

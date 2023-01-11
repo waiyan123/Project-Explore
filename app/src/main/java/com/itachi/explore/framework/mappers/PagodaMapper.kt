@@ -1,6 +1,6 @@
 package com.itachi.explore.framework.mappers
 
-import com.itachi.core.domain.PagodaVO
+import com.itachi.core.domain.models.PagodaVO
 import com.itachi.explore.persistence.entities.PagodaEntity
 
 class PagodaMapper(

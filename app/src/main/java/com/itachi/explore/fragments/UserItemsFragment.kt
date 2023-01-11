@@ -8,25 +8,21 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.*
 import androidx.recyclerview.widget.GridLayoutManager
-import com.itachi.core.domain.AncientVO
-import com.itachi.core.domain.ItemVO
-import com.itachi.core.domain.PagodaVO
-import com.itachi.core.domain.ViewVO
+import com.itachi.core.domain.models.AncientVO
+import com.itachi.core.domain.models.ItemVO
+import com.itachi.core.domain.models.PagodaVO
+import com.itachi.core.domain.models.ViewVO
 import com.itachi.explore.R
 import com.itachi.explore.activities.ActivityDetail
 import com.itachi.explore.activities.FormActivity
 import com.itachi.explore.adapters.recycler.UserItemsRecyclerAdapter
-import com.itachi.explore.mvp.views.UserItemsView
 import com.itachi.explore.utils.ANCIENT_TYPE
 import com.itachi.explore.utils.PAGODA_TYPE
 import com.itachi.explore.utils.VIEW_TYPE
 import com.itachi.explore.mvvm.viewmodel.UserProfileViewModel
 import kotlinx.android.synthetic.main.fragment_user_items.*
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 
 class UserItemsFragment : Fragment(){
 

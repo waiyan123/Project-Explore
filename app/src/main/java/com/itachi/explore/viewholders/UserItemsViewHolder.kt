@@ -3,7 +3,7 @@ package com.itachi.explore.viewholders
 import android.os.CountDownTimer
 import android.view.View
 import com.bumptech.glide.Glide
-import com.itachi.core.domain.ItemVO
+import com.itachi.core.domain.models.ItemVO
 import com.itachi.explore.R
 import kotlinx.android.synthetic.main.rv_user_items.view.*
 import me.myatminsoe.mdetect.MDetect

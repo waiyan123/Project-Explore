@@ -2,7 +2,7 @@ package com.itachi.explore.viewholders
 
 import android.view.View
 import com.bumptech.glide.Glide
-import com.itachi.core.domain.AncientVO
+import com.itachi.core.domain.models.AncientVO
 import com.itachi.explore.R
 import kotlinx.android.synthetic.main.rv_item_ancient.view.*
 import me.myatminsoe.mdetect.MDetect

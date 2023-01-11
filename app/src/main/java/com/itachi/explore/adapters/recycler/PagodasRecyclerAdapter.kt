@@ -2,7 +2,7 @@ package com.itachi.explore.adapters.recycler
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.itachi.core.domain.PagodaVO
+import com.itachi.core.domain.models.PagodaVO
 import com.itachi.explore.R
 import com.itachi.explore.viewholders.PagodaViewHolder
 

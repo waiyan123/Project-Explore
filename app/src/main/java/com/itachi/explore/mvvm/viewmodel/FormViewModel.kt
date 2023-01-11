@@ -9,9 +9,9 @@ import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.itachi.core.domain.*
 import com.itachi.core.common.Resource
-import com.itachi.core.interactors.*
+import com.itachi.core.domain.models.*
+import com.itachi.core.domain.usecases.*
 import com.itachi.explore.utils.*
 import com.sangcomz.fishbun.FishBun
 import com.sangcomz.fishbun.MimeType

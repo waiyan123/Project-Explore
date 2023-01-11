@@ -8,8 +8,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
-import android.view.animation.OvershootInterpolator
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
@@ -17,8 +15,7 @@ import com.google.android.gms.ads.*
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
-import com.itachi.core.domain.UserVO
-import com.itachi.explore.BuildConfig
+import com.itachi.core.domain.models.UserVO
 import com.itachi.explore.R
 import com.itachi.explore.mvvm.viewmodel.MainViewModel
 import com.itachi.explore.utils.IMMEDIATE_UPDATE_REQUEST_CODE

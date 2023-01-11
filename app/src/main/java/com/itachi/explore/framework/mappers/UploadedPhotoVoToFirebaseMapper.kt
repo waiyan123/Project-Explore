@@ -1,7 +1,6 @@
 package com.itachi.explore.framework.mappers
 
-import com.itachi.core.domain.PhotoVO
-import com.itachi.core.domain.UploadedPhotoVO
+import com.itachi.core.domain.models.UploadedPhotoVO
 import com.itachi.explore.utils.*
 
 open class UploadedPhotoVoToFirebaseMapper : Mapper<UploadedPhotoVO,HashMap<String,Any>>{

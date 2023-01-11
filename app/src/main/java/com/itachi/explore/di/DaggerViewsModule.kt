@@ -5,11 +5,11 @@ import android.content.SharedPreferences
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import com.itachi.core.data.ViewRepository
+import com.itachi.core.domain.repositories.ViewRepository
 import com.itachi.core.data.ViewRepositoryImpl
-import com.itachi.core.data.db.ViewRoomDataSource
-import com.itachi.core.data.network.ViewFirebaseDataSource
-import com.itachi.core.interactors.*
+import com.itachi.core.data.room.ViewRoomDataSource
+import com.itachi.core.data.firebase.ViewFirebaseDataSource
+import com.itachi.core.domain.usecases.*
 import com.itachi.explore.framework.ViewFirebaseDataSourceImpl
 import com.itachi.explore.framework.ViewRoomDataSourceImpl
 import com.itachi.explore.framework.mappers.*

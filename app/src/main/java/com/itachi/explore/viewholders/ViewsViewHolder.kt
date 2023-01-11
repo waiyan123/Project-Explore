@@ -3,7 +3,7 @@ package com.itachi.explore.viewholders
 import android.view.View
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.itachi.core.domain.UploadedPhotoVO
+import com.itachi.core.domain.models.UploadedPhotoVO
 import com.itachi.explore.R
 import kotlinx.android.synthetic.main.item_views.view.*
 

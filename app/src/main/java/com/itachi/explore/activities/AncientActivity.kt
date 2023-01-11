@@ -13,11 +13,9 @@ import android.graphics.Bitmap
 import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
-import com.itachi.core.domain.AncientVO
+import com.itachi.core.domain.models.AncientVO
 import com.itachi.explore.R
 import com.itachi.explore.mvvm.viewmodel.AncientViewModel
 import dagger.hilt.android.AndroidEntryPoint

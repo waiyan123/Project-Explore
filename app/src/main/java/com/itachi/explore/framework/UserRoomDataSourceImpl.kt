@@ -1,16 +1,13 @@
 package com.itachi.explore.framework
 
-import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
-import com.itachi.core.data.db.UserRoomDataSource
-import com.itachi.core.domain.UserVO
-import com.itachi.core.common.Resource
+import com.itachi.core.data.room.UserRoomDataSource
+import com.itachi.core.domain.models.UserVO
 import com.itachi.explore.framework.mappers.UserMapper
 import com.itachi.explore.persistence.MyDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.withContext
-import org.koin.core.KoinComponent
 
 class UserRoomDataSourceImpl(
     private val auth: FirebaseAuth,

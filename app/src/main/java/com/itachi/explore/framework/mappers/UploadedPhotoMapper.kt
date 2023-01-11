@@ -1,10 +1,10 @@
 package com.itachi.explore.framework.mappers
 
-import com.itachi.core.domain.UploadedPhotoVO
+import com.itachi.core.domain.models.UploadedPhotoVO
 import com.itachi.explore.persistence.entities.UploadedPhotoEntity
 
 class UploadedPhotoMapper(
-    private val uploadedPhotoEntityToVoMapper : Mapper<UploadedPhotoEntity,UploadedPhotoVO>,
+    private val uploadedPhotoEntityToVoMapper : Mapper<UploadedPhotoEntity, UploadedPhotoVO>,
     private val uploadedPhotoVoToEntityMapper : Mapper<UploadedPhotoVO,UploadedPhotoEntity>,
     private val uploadedPhotoVoToFirebaseMapper : Mapper<UploadedPhotoVO,HashMap<String,Any>>
 ) : UploadedPhotoMapperFunctions{

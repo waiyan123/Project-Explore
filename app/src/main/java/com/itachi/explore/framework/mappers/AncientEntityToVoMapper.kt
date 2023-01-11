@@ -1,10 +1,10 @@
 package com.itachi.explore.framework.mappers
 
-import com.itachi.core.domain.AncientVO
-import com.itachi.core.domain.PhotoVO
+import com.itachi.core.domain.models.AncientVO
+import com.itachi.core.domain.models.PhotoVO
 import com.itachi.explore.persistence.entities.AncientEntity
 
-open class AncientEntityToVoMapper : Mapper<AncientEntity,AncientVO> {
+open class AncientEntityToVoMapper : Mapper<AncientEntity, AncientVO> {
 
     override fun map(input: AncientEntity?): AncientVO {
         if(input!=null) {

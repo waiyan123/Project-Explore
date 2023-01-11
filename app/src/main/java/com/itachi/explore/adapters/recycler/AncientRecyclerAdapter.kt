@@ -2,7 +2,7 @@ package com.itachi.explore.adapters.recycler
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.itachi.core.domain.AncientVO
+import com.itachi.core.domain.models.AncientVO
 import com.itachi.explore.R
 import com.itachi.explore.viewholders.AncientViewHolder
 

@@ -1,13 +1,12 @@
 package com.itachi.core.data
 
 import com.itachi.core.common.Resource
-import com.itachi.core.data.db.ViewRoomDataSource
-import com.itachi.core.data.network.ViewFirebaseDataSource
-import com.itachi.core.domain.PagodaVO
-import com.itachi.core.domain.UploadedPhotoVO
-import com.itachi.core.domain.ViewVO
+import com.itachi.core.data.room.ViewRoomDataSource
+import com.itachi.core.data.firebase.ViewFirebaseDataSource
+import com.itachi.core.domain.models.UploadedPhotoVO
+import com.itachi.core.domain.models.ViewVO
+import com.itachi.core.domain.repositories.ViewRepository
 import kotlinx.coroutines.flow.*
-import javax.inject.Inject
 
 class ViewRepositoryImpl(
     private val viewFirebaseDataSource: ViewFirebaseDataSource,

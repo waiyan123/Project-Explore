@@ -3,13 +3,11 @@ package com.itachi.explore.activities
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.itachi.core.domain.UploadedPhotoVO
+import com.itachi.core.domain.models.UploadedPhotoVO
 import com.itachi.explore.R
 import com.itachi.explore.adapters.recycler.ViewsRecyclerAdapter
 import com.itachi.explore.mvvm.viewmodel.ViewsViewModel

@@ -1,10 +1,10 @@
 package com.itachi.core.data
 
 import com.itachi.core.common.Resource
-import com.itachi.core.data.db.AncientRoomDataSource
-import com.itachi.core.data.network.AncientFirebaseDataSource
-import com.itachi.core.domain.AncientVO
-import com.itachi.core.domain.ItemVO
+import com.itachi.core.data.room.AncientRoomDataSource
+import com.itachi.core.data.firebase.AncientFirebaseDataSource
+import com.itachi.core.domain.models.AncientVO
+import com.itachi.core.domain.repositories.AncientRepository
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
 

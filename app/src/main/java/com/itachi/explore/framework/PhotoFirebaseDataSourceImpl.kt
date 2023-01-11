@@ -2,17 +2,15 @@ package com.itachi.explore.framework
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import com.google.android.gms.tasks.Continuation
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
 import com.itachi.core.common.Resource
-import com.itachi.core.data.network.PhotoFirebaseDataSource
-import com.itachi.core.domain.PhotoVO
-import com.itachi.core.domain.UploadedPhotoVO
-import com.itachi.explore.framework.mappers.UploadedPhotoMapper
+import com.itachi.core.data.firebase.PhotoFirebaseDataSource
+import com.itachi.core.domain.models.PhotoVO
+import com.itachi.core.domain.models.UploadedPhotoVO
 import com.itachi.explore.framework.mappers.UploadedPhotoMapperFunctions
 import com.itachi.explore.utils.ITEM_ID
 import com.itachi.explore.utils.PHOTO_PATH

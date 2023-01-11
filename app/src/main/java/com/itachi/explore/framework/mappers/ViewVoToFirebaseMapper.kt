@@ -1,9 +1,7 @@
 package com.itachi.explore.framework.mappers
 
-import com.itachi.core.domain.AncientVO
-import com.itachi.core.domain.ViewVO
+import com.itachi.core.domain.models.ViewVO
 import com.itachi.explore.utils.*
-import javax.inject.Inject
 
 class ViewVoToFirebaseMapper : Mapper<ViewVO,HashMap<String,Any>> {
     override fun map(input: ViewVO?): HashMap<String,Any> {

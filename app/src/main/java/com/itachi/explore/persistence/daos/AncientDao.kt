@@ -1,11 +1,9 @@
 package com.itachi.explore.persistence.daos
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.itachi.core.domain.AncientVO
 import com.itachi.explore.persistence.entities.AncientEntity
 import kotlinx.coroutines.flow.Flow
 

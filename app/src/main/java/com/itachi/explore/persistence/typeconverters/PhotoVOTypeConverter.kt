@@ -3,7 +3,6 @@ package com.itachi.explore.persistence.typeconverters
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.itachi.core.domain.PhotoVO
 import com.itachi.explore.persistence.entities.PhotoEntity
 
 class PhotoVOTypeConverter {

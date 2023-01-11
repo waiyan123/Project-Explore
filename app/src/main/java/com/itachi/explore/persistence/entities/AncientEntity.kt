@@ -3,7 +3,6 @@ package com.itachi.explore.persistence.entities
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.itachi.core.domain.PhotoVO
 import java.io.Serializable
 
 @Entity(tableName = "ancient_table")

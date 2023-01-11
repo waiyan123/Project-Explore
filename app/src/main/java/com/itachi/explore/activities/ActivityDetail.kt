@@ -8,8 +8,7 @@ import android.util.Log
 import android.view.*
 import androidx.activity.viewModels
 import androidx.appcompat.widget.PopupMenu
-import com.google.android.youtube.player.internal.v
-import com.itachi.core.domain.*
+import com.itachi.core.domain.models.*
 import com.itachi.explore.R
 import com.itachi.explore.mvvm.viewmodel.DetailsViewModel
 import com.itachi.explore.third_parties.PagodaSliderAdapter
@@ -18,7 +17,6 @@ import com.itachi.explore.utils.PAGODA_TYPE
 import com.itachi.explore.utils.VIEW_TYPE
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_detail.*
-import kotlinx.android.synthetic.main.dialog_post_detail.*
 import me.myatminsoe.mdetect.MDetect
 import me.myatminsoe.mdetect.Rabbit
 

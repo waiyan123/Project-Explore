@@ -3,8 +3,6 @@ package com.itachi.explore.persistence
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.itachi.core.domain.PagodaVO
-import com.itachi.core.domain.UserVO
 import com.itachi.explore.persistence.daos.AncientDao
 import com.itachi.explore.persistence.daos.PagodaDao
 import com.itachi.explore.persistence.daos.UserDao

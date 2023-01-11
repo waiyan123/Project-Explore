@@ -1,11 +1,8 @@
 package com.itachi.explore.framework.mappers
 
-import com.itachi.core.domain.PagodaVO
-import com.itachi.core.domain.PhotoVO
-import com.itachi.core.domain.ViewVO
-import com.itachi.explore.persistence.entities.PagodaEntity
+import com.itachi.core.domain.models.PhotoVO
+import com.itachi.core.domain.models.ViewVO
 import com.itachi.explore.persistence.entities.ViewEntity
-import javax.inject.Inject
 
 class ViewEntityToVoMapper : Mapper<ViewEntity, ViewVO> {
 

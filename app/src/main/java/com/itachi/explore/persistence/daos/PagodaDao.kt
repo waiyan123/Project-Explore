@@ -1,14 +1,10 @@
 package com.itachi.explore.persistence.daos
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.itachi.core.domain.PagodaVO
-import com.itachi.explore.persistence.entities.AncientEntity
 import com.itachi.explore.persistence.entities.PagodaEntity
-import io.reactivex.Completable
 import kotlinx.coroutines.flow.Flow
 
 @Dao

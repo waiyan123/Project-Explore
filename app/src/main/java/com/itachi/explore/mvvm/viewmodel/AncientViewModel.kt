@@ -4,10 +4,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.itachi.core.common.Resource
-import com.itachi.core.domain.AncientVO
-import com.itachi.core.interactors.GetAllAncientUseCase
-import com.itachi.core.interactors.GetAncientBackgroundUseCase
-import com.itachi.core.interactors.GetLanguageUseCase
+import com.itachi.core.domain.models.AncientVO
+import com.itachi.core.domain.usecases.GetAllAncientUseCase
+import com.itachi.core.domain.usecases.GetAncientBackgroundUseCase
+import com.itachi.core.domain.usecases.GetLanguageUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.buffer

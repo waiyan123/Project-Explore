@@ -1,8 +1,6 @@
 package com.itachi.explore.framework.mappers
 
-import com.itachi.core.domain.PhotoVO
-import com.itachi.core.domain.UploadedPhotoVO
-import com.itachi.explore.persistence.entities.PhotoEntity
+import com.itachi.core.domain.models.UploadedPhotoVO
 import com.itachi.explore.persistence.entities.UploadedPhotoEntity
 
 class UploadedPhotoVoToEntityMapper : Mapper<UploadedPhotoVO, UploadedPhotoEntity> {

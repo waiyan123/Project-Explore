@@ -14,7 +14,7 @@ import androidx.activity.viewModels
 import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.itachi.core.domain.UserVO
+import com.itachi.core.domain.models.UserVO
 import com.itachi.explore.R
 import com.itachi.explore.adapters.pager.UserProfilePagerAdapter
 import com.itachi.explore.fragments.UserItemsFragment

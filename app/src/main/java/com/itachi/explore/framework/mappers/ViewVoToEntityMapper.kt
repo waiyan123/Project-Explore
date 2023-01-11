@@ -1,6 +1,6 @@
 package com.itachi.explore.framework.mappers
 
-import com.itachi.core.domain.ViewVO
+import com.itachi.core.domain.models.ViewVO
 import com.itachi.explore.persistence.entities.PhotoEntity
 import com.itachi.explore.persistence.entities.ViewEntity
 

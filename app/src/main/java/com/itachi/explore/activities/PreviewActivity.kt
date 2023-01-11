@@ -7,15 +7,11 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.bumptech.glide.Glide
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.itachi.core.domain.*
+import com.itachi.core.domain.models.*
 import com.itachi.explore.R
 import com.itachi.explore.adapters.recycler.RelatedViewsRecyclerAdapter
-import com.itachi.explore.mvp.presenters.PreviewPresenter
-import com.itachi.explore.mvp.views.PreviewView
 import com.itachi.explore.mvvm.viewmodel.PreviewViewModel
 import com.itachi.explore.utils.ANCIENT_TYPE
 import com.itachi.explore.utils.PAGODA_TYPE

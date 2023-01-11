@@ -1,25 +1,19 @@
 package com.itachi.explore.framework
 
-import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.itachi.core.common.Resource
-import com.itachi.core.data.network.ViewFirebaseDataSource
-import com.itachi.core.domain.ItemVO
-import com.itachi.core.domain.UploadedPhotoVO
-import com.itachi.core.domain.ViewVO
-import com.itachi.explore.framework.mappers.PagodaMapper
+import com.itachi.core.data.firebase.ViewFirebaseDataSource
+import com.itachi.core.domain.models.UploadedPhotoVO
+import com.itachi.core.domain.models.ViewVO
 import com.itachi.explore.framework.mappers.ViewMapper
-import com.itachi.explore.persistence.entities.PagodaEntity
 import com.itachi.explore.persistence.entities.UploadedPhotoEntity
 import com.itachi.explore.utils.*
-import io.reactivex.Observable
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import javax.inject.Inject
 
 class ViewFirebaseDataSourceImpl(private val viewMapper: ViewMapper,
                                  firestoreRef : FirebaseFirestore,

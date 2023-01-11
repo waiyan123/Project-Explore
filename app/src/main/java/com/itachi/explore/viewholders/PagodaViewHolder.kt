@@ -2,7 +2,7 @@ package com.itachi.explore.viewholders
 
 import android.view.View
 import com.bumptech.glide.Glide
-import com.itachi.core.domain.PagodaVO
+import com.itachi.core.domain.models.PagodaVO
 import kotlinx.android.synthetic.main.rv_item_pagoda.view.*
 import me.myatminsoe.mdetect.MDetect
 import me.myatminsoe.mdetect.Rabbit

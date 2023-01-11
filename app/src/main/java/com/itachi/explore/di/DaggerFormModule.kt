@@ -5,12 +5,16 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.itachi.core.data.*
-import com.itachi.core.data.db.PagodaRoomDataSource
-import com.itachi.core.data.network.PagodaFirebaseDataSource
-import com.itachi.core.data.network.PhotoFirebaseDataSource
-import com.itachi.core.domain.PagodaVO
-import com.itachi.core.domain.UploadedPhotoVO
-import com.itachi.core.interactors.*
+import com.itachi.core.data.room.PagodaRoomDataSource
+import com.itachi.core.data.firebase.PagodaFirebaseDataSource
+import com.itachi.core.data.firebase.PhotoFirebaseDataSource
+import com.itachi.core.domain.models.PagodaVO
+import com.itachi.core.domain.models.UploadedPhotoVO
+import com.itachi.core.domain.repositories.AncientRepository
+import com.itachi.core.domain.repositories.PagodaRepository
+import com.itachi.core.domain.repositories.PhotoRepository
+import com.itachi.core.domain.repositories.ViewRepository
+import com.itachi.core.domain.usecases.*
 import com.itachi.explore.framework.PagodaFirebaseDataSourceImpl
 import com.itachi.explore.framework.PagodaRoomDataSourceImpl
 import com.itachi.explore.framework.PhotoFirebaseDataSourceImpl
@@ -40,7 +44,7 @@ object DaggerFormModule {
     @Singleton
     fun providesGetPagoda(
         pagodaRepository: PagodaRepository
-    ) : GetPagodaByIdUseCase{
+    ) : GetPagodaByIdUseCase {
         return GetPagodaByIdUseCase(pagodaRepository)
     }
 
@@ -48,7 +52,7 @@ object DaggerFormModule {
     @Singleton
     fun providesDeletePagoda(
         pagodaRepository : PagodaRepository
-    ) : DeletePagodaUseCase{
+    ) : DeletePagodaUseCase {
         return DeletePagodaUseCase(pagodaRepository)
     }
 
@@ -89,7 +93,7 @@ object DaggerFormModule {
     @Singleton
     fun providesUploadPhotoUseCase(
         photoRepository: PhotoRepository
-    ) : UploadPhotosUseCase{
+    ) : UploadPhotosUseCase {
         return UploadPhotosUseCase(photoRepository)
     }
 
@@ -141,7 +145,7 @@ object DaggerFormModule {
 
     @Provides
     @Singleton
-    fun providesUploadedPhotoEntityToVoMapper() : Mapper<UploadedPhotoEntity,UploadedPhotoVO> {
+    fun providesUploadedPhotoEntityToVoMapper() : Mapper<UploadedPhotoEntity, UploadedPhotoVO> {
         return UploadedPhotoEntityToVoMapper()
     }
 
@@ -175,7 +179,7 @@ object DaggerFormModule {
         pagodaEntityToVoMapper: PagodaEntityToVoMapper,
         pagodaVoToEntityMapper: PagodaVoToEntityMapper,
         pagodaVoToFirebaseMapper : PagodaVoToFirebaseMapper,
-        pagodaEntityListToVoListMapper : ListMapper<PagodaEntity,PagodaVO>,
+        pagodaEntityListToVoListMapper : ListMapper<PagodaEntity, PagodaVO>,
         pagodaVoListToEntityListMapper : ListMapper<PagodaVO,PagodaEntity>
     ) : PagodaMapper {
         return PagodaMapper(pagodaEntityToVoMapper,pagodaVoToEntityMapper,pagodaVoToFirebaseMapper,
@@ -186,7 +190,7 @@ object DaggerFormModule {
 
     @Provides
     @Singleton
-    fun providesPagodaEntityToVoMapper() : Mapper<PagodaEntity,PagodaVO> {
+    fun providesPagodaEntityToVoMapper() : Mapper<PagodaEntity, PagodaVO> {
         return PagodaEntityToVoMapper()
     }
 
@@ -205,8 +209,8 @@ object DaggerFormModule {
     @Provides
     @Singleton
     fun providesPagodaEntityListToVoListMapper(
-        mapper : Mapper<PagodaEntity,PagodaVO>
-    ) : ListMapper<PagodaEntity,PagodaVO> {
+        mapper : Mapper<PagodaEntity, PagodaVO>
+    ) : ListMapper<PagodaEntity, PagodaVO> {
         return ListMapperImpl(mapper)
     }
 

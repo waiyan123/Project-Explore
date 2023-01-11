@@ -13,13 +13,13 @@ import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.storage.FirebaseStorage
 import com.itachi.core.data.LanguageRepositoryImpl
 import com.itachi.core.data.RemoteConfigRepository
-import com.itachi.core.data.UserRepository
+import com.itachi.core.domain.repositories.UserRepository
 import com.itachi.core.data.UserRepositoryImpl
-import com.itachi.core.data.db.UserRoomDataSource
-import com.itachi.core.data.network.FirebaseRemoteConfigDataSource
-import com.itachi.core.data.network.UserFirebaseDataSource
+import com.itachi.core.data.room.UserRoomDataSource
+import com.itachi.core.data.firebase.FirebaseRemoteConfigDataSource
+import com.itachi.core.data.firebase.UserFirebaseDataSource
 import com.itachi.core.data.sharedpreferences.LanguageSharedPreferencesDataSource
-import com.itachi.core.interactors.*
+import com.itachi.core.domain.usecases.*
 import com.itachi.explore.framework.FirebaseRemoteConfigDataSourceImpl
 import com.itachi.explore.framework.LanguageSharedPreferencesDataSourceImpl
 import com.itachi.explore.framework.UserFirebaseDataSourceImpl
@@ -60,7 +60,7 @@ object DaggerMainModule {
     @Singleton
     fun providesGetUser(
         userRepository: UserRepository
-    ) : GetUserUseCase{
+    ) : GetUserUseCase {
         return GetUserUseCase(userRepository)
     }
 
@@ -150,7 +150,7 @@ object DaggerMainModule {
     @Singleton
     fun providesGetLanguage(
         languageRepository: LanguageRepositoryImpl
-    ) : GetLanguageUseCase{
+    ) : GetLanguageUseCase {
         return GetLanguageUseCase(languageRepository)
     }
 
@@ -201,30 +201,6 @@ object DaggerMainModule {
     ) : FirebaseRemoteConfigDataSource {
         return FirebaseRemoteConfigDataSourceImpl(firebaseRemoteConfig)
     }
-
-//    @Provides
-//    @Singleton
-//    fun providesFirebaseFirestore() : FirebaseFirestore {
-//        return FirebaseFirestore.getInstance()
-//    }
-//
-//    @Provides
-//    @Singleton
-//    fun providesFirebaseStorage() : FirebaseStorage {
-//        return FirebaseStorage.getInstance()
-//    }
-//
-//    @Provides
-//    @Singleton
-//    fun providesFirebaseAuth() : FirebaseAuth {
-//        return FirebaseAuth.getInstance()
-//    }
-
-//    @Provides
-//    @Singleton
-//    fun providesSharedPreferences(@ApplicationContext context: Context) : SharedPreferences {
-//        return context.getSharedPreferences(LANGUAGE, Context.MODE_PRIVATE)
-//    }
 
     @Provides
     @Singleton

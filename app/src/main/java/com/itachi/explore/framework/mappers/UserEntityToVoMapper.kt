@@ -1,11 +1,8 @@
 package com.itachi.explore.framework.mappers
 
-import com.itachi.core.domain.PhotoVO
-import com.itachi.core.domain.UserVO
-import com.itachi.core.domain.ViewVO
-import com.itachi.explore.persistence.entities.PhotoEntity
+import com.itachi.core.domain.models.PhotoVO
+import com.itachi.core.domain.models.UserVO
 import com.itachi.explore.persistence.entities.UserEntity
-import com.itachi.explore.persistence.entities.ViewEntity
 
 class UserEntityToVoMapper : Mapper<UserEntity, UserVO> {
 

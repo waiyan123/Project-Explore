@@ -10,21 +10,20 @@ import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateOptions
 import com.google.android.play.core.install.InstallStateUpdatedListener
 import com.google.android.play.core.install.model.AppUpdateType
-import com.google.android.play.core.install.model.AppUpdateType.IMMEDIATE
 import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import com.itachi.core.domain.UserVO
+import com.itachi.core.domain.models.UserVO
 import com.itachi.core.common.Resource
-import com.itachi.core.interactors.*
+import com.itachi.core.domain.usecases.GetLanguageUseCase
+import com.itachi.core.domain.usecases.GetUserUseCase
+import com.itachi.core.domain.usecases.SetLanguageUseCase
+import com.itachi.core.domain.usecases.SignOut
 import com.itachi.explore.BuildConfig
 import com.itachi.explore.utils.IMMEDIATE_UPDATE_REQUEST_CODE
-import com.itachi.explore.utils.VERSION_CODE_KEY
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.buffer
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

@@ -1,31 +1,19 @@
 package com.itachi.explore.framework
 
-import android.annotation.SuppressLint
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.itachi.core.common.Resource
-import com.itachi.core.data.network.AncientFirebaseDataSource
-import com.itachi.core.data.network.PagodaFirebaseDataSource
-import com.itachi.core.domain.ItemVO
-import com.itachi.core.domain.PagodaVO
-import com.itachi.core.domain.PhotoVO
-import com.itachi.explore.framework.mappers.AncientMapper
+import com.itachi.core.data.firebase.PagodaFirebaseDataSource
+import com.itachi.core.domain.models.PagodaVO
 import com.itachi.explore.framework.mappers.PagodaMapper
 import com.itachi.explore.persistence.entities.PagodaEntity
 import com.itachi.explore.utils.*
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.launch
 
 class PagodaFirebaseDataSourceImpl(
     private val pagodaMapper: PagodaMapper,

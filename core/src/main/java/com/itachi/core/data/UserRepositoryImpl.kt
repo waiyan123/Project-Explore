@@ -1,10 +1,10 @@
 package com.itachi.core.data
 
-import com.itachi.core.data.db.UserRoomDataSource
-import com.itachi.core.data.network.UserFirebaseDataSource
-import com.itachi.core.domain.UserVO
+import com.itachi.core.data.room.UserRoomDataSource
+import com.itachi.core.data.firebase.UserFirebaseDataSource
+import com.itachi.core.domain.models.UserVO
 import com.itachi.core.common.Resource
-import kotlinx.coroutines.FlowPreview
+import com.itachi.core.domain.repositories.UserRepository
 import kotlinx.coroutines.flow.*
 
 class UserRepositoryImpl(
