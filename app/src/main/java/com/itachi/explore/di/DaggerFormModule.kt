@@ -25,15 +25,16 @@ import com.itachi.explore.persistence.entities.UploadedPhotoEntity
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @Module
-@InstallIn(SingletonComponent::class)
+@InstallIn(ViewModelComponent::class)
 object DaggerFormModule {
+
     @Provides
-    @Singleton
     fun providesAddPagodaUseCase(
         pagodaRepository: PagodaRepository
     ) : AddPagodaUseCase {
@@ -41,7 +42,6 @@ object DaggerFormModule {
     }
 
     @Provides
-    @Singleton
     fun providesGetPagoda(
         pagodaRepository: PagodaRepository
     ) : GetPagodaByIdUseCase {
@@ -49,7 +49,6 @@ object DaggerFormModule {
     }
 
     @Provides
-    @Singleton
     fun providesDeletePagoda(
         pagodaRepository : PagodaRepository
     ) : DeletePagodaUseCase {
@@ -57,7 +56,6 @@ object DaggerFormModule {
     }
 
     @Provides
-    @Singleton
     fun providesGetAllPagodas(
         pagodaRepository: PagodaRepository
     ) : GetAllPagodasUseCase {
@@ -65,7 +63,6 @@ object DaggerFormModule {
     }
 
     @Provides
-    @Singleton
     fun providesUpdatePagoda(
         pagodaRepository: PagodaRepository
     ) : UpdatePagodaUseCase {
@@ -73,7 +70,13 @@ object DaggerFormModule {
     }
 
     @Provides
-    @Singleton
+    fun providesGetPagodasByUserIdUseCase(
+        pagodaRepository: PagodaRepository
+    ) : GetPagodasByUserIdUseCase {
+        return GetPagodasByUserIdUseCase(pagodaRepository)
+    }
+
+    @Provides
     fun providesGetPagodaBanner(
         pagodaRepository: PagodaRepository
     ) : GetPagodaBannerUseCase {
@@ -81,7 +84,6 @@ object DaggerFormModule {
     }
 
     @Provides
-    @Singleton
     fun providesPagodaRepository(
         pagodaFirebaseDataSource: PagodaFirebaseDataSource,
         pagodaRoomDataSource : PagodaRoomDataSource
@@ -90,7 +92,6 @@ object DaggerFormModule {
     }
 
     @Provides
-    @Singleton
     fun providesUploadPhotoUseCase(
         photoRepository: PhotoRepository
     ) : UploadPhotosUseCase {
@@ -98,7 +99,6 @@ object DaggerFormModule {
     }
 
     @Provides
-    @Singleton
     fun providesDeletePhotoUseCase(
         photoRepository: PhotoRepository
     ) : DeletePhotoUseCase {
@@ -106,7 +106,6 @@ object DaggerFormModule {
     }
 
     @Provides
-    @Singleton
     fun providesUploadPhotoUrlUseCase(
         photoRepository: PhotoRepository
     ) : UploadPhotoUrlUseCase {
@@ -114,7 +113,6 @@ object DaggerFormModule {
     }
 
     @Provides
-    @Singleton
     fun providesPhotoRepository(
         photoFirebaseDataSource: PhotoFirebaseDataSource
     ) : PhotoRepository {
@@ -122,7 +120,6 @@ object DaggerFormModule {
     }
 
     @Provides
-    @Singleton
     fun providesPhotoFirebaseDataSource(
         uploadedPhotoMapper: UploadedPhotoMapperFunctions,
         firestoreRef : FirebaseFirestore,
@@ -133,7 +130,6 @@ object DaggerFormModule {
     }
 
     @Provides
-    @Singleton
     fun providesUploadedPhotoMapper(
         uploadedPhotoEntityToVoMapper: Mapper<UploadedPhotoEntity, UploadedPhotoVO>,
         uploadedPhotoVoToEntityMapper: Mapper<UploadedPhotoVO,UploadedPhotoEntity>,
@@ -144,26 +140,22 @@ object DaggerFormModule {
     }
 
     @Provides
-    @Singleton
     fun providesUploadedPhotoEntityToVoMapper() : Mapper<UploadedPhotoEntity, UploadedPhotoVO> {
         return UploadedPhotoEntityToVoMapper()
     }
 
     @Provides
-    @Singleton
     fun providesUploadedPhotoVoToEntityMapper() : Mapper<UploadedPhotoVO,UploadedPhotoEntity> {
         return UploadedPhotoVoToEntityMapper()
     }
 
     @Provides
-    @Singleton
     fun providesUploadedPhotoVoToFirebaseMapper() : Mapper<UploadedPhotoVO,HashMap<String,Any>> {
         return UploadedPhotoVoToFirebaseMapper()
     }
 
 
     @Provides
-    @Singleton
     fun providesPagodaFirebaseDataSource(
         pagodaMapper : PagodaMapper,
         firestoreRef: FirebaseFirestore,
@@ -174,7 +166,6 @@ object DaggerFormModule {
     }
 
     @Provides
-    @Singleton
     fun providesPagodaMapper(
         pagodaEntityToVoMapper: PagodaEntityToVoMapper,
         pagodaVoToEntityMapper: PagodaVoToEntityMapper,
@@ -189,25 +180,21 @@ object DaggerFormModule {
     }
 
     @Provides
-    @Singleton
     fun providesPagodaEntityToVoMapper() : Mapper<PagodaEntity, PagodaVO> {
         return PagodaEntityToVoMapper()
     }
 
     @Provides
-    @Singleton
     fun providesPagodaVoToEntityMapper() : Mapper<PagodaVO,PagodaEntity> {
         return PagodaVoToEntityMapper()
     }
 
     @Provides
-    @Singleton
     fun providesPagodaVoToFirebaseMapper() :Mapper<PagodaVO,HashMap<String,Any>> {
         return PagodaVoToFirebaseMapper()
     }
 
     @Provides
-    @Singleton
     fun providesPagodaEntityListToVoListMapper(
         mapper : Mapper<PagodaEntity, PagodaVO>
     ) : ListMapper<PagodaEntity, PagodaVO> {
@@ -215,7 +202,6 @@ object DaggerFormModule {
     }
 
     @Provides
-    @Singleton
     fun providesPagodaVoListToEntityListMapper(
         mapper : Mapper<PagodaVO,PagodaEntity>
     ) : ListMapper<PagodaVO,PagodaEntity> {
@@ -224,36 +210,11 @@ object DaggerFormModule {
 
 
     @Provides
-    @Singleton
     fun providesPagodaRoomDataSource(
         pagodaMapper: PagodaMapper,
         database : MyDatabase
     ) : PagodaRoomDataSource {
         return PagodaRoomDataSourceImpl(pagodaMapper,database)
-    }
-
-    @Provides
-    @Singleton
-    fun providesGetPagodasByUserIdUseCase(
-        pagodaRepository: PagodaRepository
-    ) : GetPagodasByUserIdUseCase {
-        return GetPagodasByUserIdUseCase(pagodaRepository)
-    }
-
-    @Provides
-    @Singleton
-    fun providesGetViewsByUserIdUseCase(
-        viewRepository: ViewRepository
-    ) : GetViewsByUserIdUseCase {
-        return GetViewsByUserIdUseCase(viewRepository)
-    }
-
-    @Provides
-    @Singleton
-    fun providesGetAncientsByUserIdUseCase(
-        ancientRepository: AncientRepository
-    ) : GetAncientsByUserIdUseCase {
-        return GetAncientsByUserIdUseCase(ancientRepository)
     }
 
 }

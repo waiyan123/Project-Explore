@@ -18,16 +18,16 @@ import com.itachi.explore.utils.LANGUAGE
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @Module
-@InstallIn(SingletonComponent::class)
+@InstallIn(ViewModelComponent::class)
 object DaggerViewsModule {
 
     @Provides
-    @Singleton
     fun providesAddView(
         viewRepository: ViewRepository
     ) : AddViewUseCase {
@@ -35,7 +35,6 @@ object DaggerViewsModule {
     }
 
     @Provides
-    @Singleton
     fun providesAddAllViews(
         viewRepository: ViewRepository
     ) : AddAllViewsUseCase {
@@ -43,7 +42,6 @@ object DaggerViewsModule {
     }
 
     @Provides
-    @Singleton
     fun providesDeleteAllViews(
         viewRepository: ViewRepository
     ) : DeleteAllViewsUseCase {
@@ -51,7 +49,6 @@ object DaggerViewsModule {
     }
 
     @Provides
-    @Singleton
     fun providesDeleteView(
         viewRepository: ViewRepository
     ) : DeleteViewUseCase {
@@ -59,7 +56,6 @@ object DaggerViewsModule {
     }
 
     @Provides
-    @Singleton
     fun providesGetAllViews(
         viewRepository: ViewRepository
     ) : GetAllViewsUseCase {
@@ -67,7 +63,6 @@ object DaggerViewsModule {
     }
 
     @Provides
-    @Singleton
     fun providesGetAllViewsPhoto(
         viewRepository: ViewRepository
     ) : GetAllViewsPhotoUseCase {
@@ -75,7 +70,6 @@ object DaggerViewsModule {
     }
 
     @Provides
-    @Singleton
     fun providesGetViewById(
         viewRepository: ViewRepository
     ) : GetViewByIdUseCase {
@@ -83,7 +77,6 @@ object DaggerViewsModule {
     }
 
     @Provides
-    @Singleton
     fun providesUpdateView(
         viewRepository: ViewRepository
     ) : UpdateViewUseCase {
@@ -91,7 +84,13 @@ object DaggerViewsModule {
     }
 
     @Provides
-    @Singleton
+    fun providesGetViewsByUserIdUseCase(
+        viewRepository: ViewRepository
+    ) : GetViewsByUserIdUseCase {
+        return GetViewsByUserIdUseCase(viewRepository)
+    }
+
+    @Provides
     fun providesViewRepository(
         viewFirebaseDataSource: ViewFirebaseDataSource,
         viewRoomDataSource: ViewRoomDataSource
@@ -100,7 +99,6 @@ object DaggerViewsModule {
     }
 
     @Provides
-    @Singleton
     fun providesViewFirebaseDataSource(
         viewMapper: ViewMapper,
         firebaseFirestore: FirebaseFirestore,
@@ -116,7 +114,6 @@ object DaggerViewsModule {
     }
 
     @Provides
-    @Singleton
     fun providesViewRoomDataSource(
         viewMapper: ViewMapper,
         database: MyDatabase
@@ -125,31 +122,26 @@ object DaggerViewsModule {
     }
 
     @Provides
-    @Singleton
     fun providesViewMapper(): ViewMapper {
         return ViewMapper()
     }
 
     @Provides
-    @Singleton
     fun providesFirebaseFirestore() : FirebaseFirestore {
         return FirebaseFirestore.getInstance()
     }
 
     @Provides
-    @Singleton
     fun providesFirebaseStorage() : FirebaseStorage {
         return FirebaseStorage.getInstance()
     }
 
     @Provides
-    @Singleton
     fun providesFirebaseAuth() : FirebaseAuth {
         return FirebaseAuth.getInstance()
     }
 
     @Provides
-    @Singleton
     fun providesSharedPreferences(@ApplicationContext context: Context) : SharedPreferences{
         return context.getSharedPreferences(LANGUAGE, Context.MODE_PRIVATE)
     }

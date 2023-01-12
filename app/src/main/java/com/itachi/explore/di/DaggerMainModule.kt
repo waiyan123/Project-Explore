@@ -32,16 +32,16 @@ import com.itachi.explore.persistence.MyDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @Module
-@InstallIn(SingletonComponent::class)
+@InstallIn(ViewModelComponent::class)
 object DaggerMainModule {
 
     @Provides
-    @Singleton
     fun providesAppUpdateManager(
         @ApplicationContext context: Context
     ) : AppUpdateManager {
@@ -49,7 +49,6 @@ object DaggerMainModule {
     }
 
     @Provides
-    @Singleton
     fun providesAddUser(
         userRepository : UserRepository
     ) : AddUserUseCase {
@@ -57,7 +56,6 @@ object DaggerMainModule {
     }
 
     @Provides
-    @Singleton
     fun providesGetUser(
         userRepository: UserRepository
     ) : GetUserUseCase {
@@ -65,7 +63,6 @@ object DaggerMainModule {
     }
 
     @Provides
-    @Singleton
     fun providesUpdateUserUseCase(
         userRepository: UserRepository
     ) : UpdateUserUseCase {
@@ -73,7 +70,6 @@ object DaggerMainModule {
     }
 
     @Provides
-    @Singleton
     fun providesSignOut(
         userRepository: UserRepository
     ) : SignOut {
@@ -81,7 +77,6 @@ object DaggerMainModule {
     }
 
     @Provides
-    @Singleton
     fun providesUserDataSource(
         userRoomDataSource: UserRoomDataSource,
         userFirebaseDataSource: UserFirebaseDataSource
@@ -90,7 +85,6 @@ object DaggerMainModule {
     }
 
     @Provides
-    @Singleton
     fun providesUserRoomDataSource(
         auth : FirebaseAuth,
         userMapper: UserMapper,
@@ -100,7 +94,6 @@ object DaggerMainModule {
     }
 
     @Provides
-    @Singleton
     fun providesMyRoomDatabase(@ApplicationContext context: Context) : MyDatabase {
         return Room.databaseBuilder(context, MyDatabase::class.java, "My Database")
             .allowMainThreadQueries()
@@ -109,7 +102,6 @@ object DaggerMainModule {
     }
 
     @Provides
-    @Singleton
     fun providesUserFirebaseDataSource(userMapper: UserMapper,
                                        firestoreRef : FirebaseFirestore,
                                        firebaseStorage: FirebaseStorage,
@@ -119,7 +111,6 @@ object DaggerMainModule {
     }
 
     @Provides
-    @Singleton
     fun providesUserMapper(userEntityToVoMapper: UserEntityToVoMapper,
                            userVoToEntityMapper: UserVoToEntityMapper,
                            userVoToFirebaseMapper: UserVoToFirebaseMapper
@@ -128,26 +119,22 @@ object DaggerMainModule {
     }
 
     @Provides
-    @Singleton
     fun providesUserEntityToVoMapper() : UserEntityToVoMapper {
         return UserEntityToVoMapper()
     }
 
     @Provides
-    @Singleton
     fun providesUserVoToEntityMapper() : UserVoToEntityMapper {
         return UserVoToEntityMapper()
     }
 
     @Provides
-    @Singleton
     fun providesUserVoToFirebaseMapper() : UserVoToFirebaseMapper {
         return UserVoToFirebaseMapper()
     }
 
 
     @Provides
-    @Singleton
     fun providesGetLanguage(
         languageRepository: LanguageRepositoryImpl
     ) : GetLanguageUseCase {
@@ -155,7 +142,6 @@ object DaggerMainModule {
     }
 
     @Provides
-    @Singleton
     fun providesLanguageRepository(
         languageSharedPreferencesDataSource: LanguageSharedPreferencesDataSource
     ) : LanguageRepositoryImpl {
@@ -163,7 +149,6 @@ object DaggerMainModule {
     }
 
     @Provides
-    @Singleton
     fun providesLanguageSharedPreferencesDataSource(
         sharedPreferences : SharedPreferences
     ) : LanguageSharedPreferencesDataSource {
@@ -171,7 +156,6 @@ object DaggerMainModule {
     }
 
     @Provides
-    @Singleton
     fun providesSetLanguage(
         languageRepository: LanguageRepositoryImpl
     ) : SetLanguageUseCase {
@@ -179,7 +163,6 @@ object DaggerMainModule {
     }
 
     @Provides
-    @Singleton
     fun providesCheckAppVersionUpdate(
         remoteConfigRepository: RemoteConfigRepository
     ) : CheckAppVersionUpdate {
@@ -187,7 +170,6 @@ object DaggerMainModule {
     }
 
     @Provides
-    @Singleton
     fun providesRemoteConfigRepository(
         firebaseRemoteConfigDataSource: FirebaseRemoteConfigDataSource
     ) : RemoteConfigRepository {
@@ -195,7 +177,6 @@ object DaggerMainModule {
     }
 
     @Provides
-    @Singleton
     fun providesFirebaseRemoteConfigRepository(
         firebaseRemoteConfig : FirebaseRemoteConfig
     ) : FirebaseRemoteConfigDataSource {
@@ -203,7 +184,6 @@ object DaggerMainModule {
     }
 
     @Provides
-    @Singleton
     fun providesRemoteConfig() : FirebaseRemoteConfig {
         return Firebase.remoteConfig
     }

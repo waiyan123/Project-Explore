@@ -17,16 +17,16 @@ import com.itachi.explore.persistence.entities.AncientEntity
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 
 @Module
-@InstallIn(SingletonComponent::class)
+@InstallIn(ViewModelComponent::class)
 object DaggerAncientModule {
 
     @Provides
-    @Singleton
     fun providesAddAllAncients(
         ancientRepository : AncientRepository
     ) : AddAllAncientsUseCase {
@@ -34,7 +34,6 @@ object DaggerAncientModule {
     }
 
     @Provides
-    @Singleton
     fun providesAddAncient(
         ancientRepository: AncientRepository
     ) : AddAncientUseCase {
@@ -42,7 +41,6 @@ object DaggerAncientModule {
     }
 
     @Provides
-    @Singleton
     fun providesDeleteAllAncients(
         ancientRepository: AncientRepository
     ) : DeleteAllAncientsUseCase {
@@ -50,7 +48,6 @@ object DaggerAncientModule {
     }
 
     @Provides
-    @Singleton
     fun providesDeleteAncient(
         ancientRepository: AncientRepository
     ) : DeleteAncientUseCase {
@@ -58,7 +55,6 @@ object DaggerAncientModule {
     }
 
     @Provides
-    @Singleton
     fun providesGetAllAncient(
         ancientRepository: AncientRepository
     ) : GetAllAncientUseCase {
@@ -66,7 +62,6 @@ object DaggerAncientModule {
     }
 
     @Provides
-    @Singleton
     fun providesGetAncientById(
         ancientRepository: AncientRepository
     ) : GetAncientByIdUseCase {
@@ -74,7 +69,6 @@ object DaggerAncientModule {
     }
 
     @Provides
-    @Singleton
     fun providesUpdateAncient(
         ancientRepository: AncientRepository
     ) : UpdateAncientUseCase {
@@ -82,7 +76,6 @@ object DaggerAncientModule {
     }
 
     @Provides
-    @Singleton
     fun providesGetAncientBackground(
         ancientRepository: AncientRepository
     ) : GetAncientBackgroundUseCase {
@@ -90,7 +83,13 @@ object DaggerAncientModule {
     }
 
     @Provides
-    @Singleton
+    fun providesGetAncientsByUserIdUseCase(
+        ancientRepository: AncientRepository
+    ) : GetAncientsByUserIdUseCase {
+        return GetAncientsByUserIdUseCase(ancientRepository)
+    }
+
+    @Provides
     fun providesAncientRepository(
         ancientFirebaseDataSource: AncientFirebaseDataSource,
         ancientRoomDataSource: AncientRoomDataSource
@@ -99,7 +98,6 @@ object DaggerAncientModule {
     }
 
     @Provides
-    @Singleton
     fun providesAncientFirebaseDataSource(
         ancientMapper: AncientMapper,
         firestoreRef : FirebaseFirestore,
@@ -110,7 +108,6 @@ object DaggerAncientModule {
     }
 
     @Provides
-    @Singleton
     fun providesAncientRoomDataSource(
         ancientMapper: AncientMapper,
         database : MyDatabase
@@ -119,7 +116,6 @@ object DaggerAncientModule {
     }
 
     @Provides
-    @Singleton
     fun providesAncientMapper(
         ancientEntityToVoMapper: Mapper<AncientEntity, AncientVO>,
         ancientVoToEntityMapper: Mapper<AncientVO,AncientEntity>,
@@ -134,31 +130,30 @@ object DaggerAncientModule {
     }
 
     @Provides
-    @Singleton
     fun providesAncientEntityListToVoListMapper(
         mapper : Mapper<AncientEntity, AncientVO>
     ) : ListMapper<AncientEntity, AncientVO> {
         return ListMapperImpl(mapper)
     }
+
     @Provides
-    @Singleton
     fun providesAncientVoListToEntityListMapper(
         mapper : Mapper<AncientVO,AncientEntity>
     ) : ListMapper<AncientVO,AncientEntity> {
         return ListMapperImpl(mapper)
     }
+
     @Provides
-    @Singleton
     fun providesAncientEntityToVoMapper() : Mapper<AncientEntity, AncientVO>{
         return AncientEntityToVoMapper()
     }
+
     @Provides
-    @Singleton
     fun providesAncientVoToEntityMapper() : Mapper<AncientVO,AncientEntity> {
         return AncientVoToEntityMapper()
     }
+
     @Provides
-    @Singleton
     fun providesAncientVoToFirebaseMapper() : Mapper<AncientVO,HashMap<String,Any>> {
         return AncientVoToFirebaseMapper()
     }
